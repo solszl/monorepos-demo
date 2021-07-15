@@ -1,4 +1,5 @@
 import EventEmitter from "event-emitter";
+import { nanoid } from "nanoid";
 
 /**
  * 组件基类
@@ -8,6 +9,7 @@ import EventEmitter from "event-emitter";
 class Component {
   constructor() {
     EventEmitter(this);
+    this.id = nanoid(8);
   }
 
   destroy() {}

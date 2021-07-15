@@ -5155,6 +5155,11 @@ mime-types@^2.1.12, mime-types@~2.1.19:
   dependencies:
     mime-db "1.48.0"
 
+mime@>=2.4.6:
+  version "2.5.2"
+  resolved "https://registry.nlark.com/mime/download/mime-2.5.2.tgz?cache=0&sync_timestamp=1618846922439&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fmime%2Fdownload%2Fmime-2.5.2.tgz#6e3dc6cc2b9510643830e5f19d5cb753da5eeabe"
+  integrity sha1-bj3GzCuVEGQ4MOXxnVy3U9pe6r4=
+
 mimic-fn@^2.1.0:
   version "2.1.0"
   resolved "https://registry.npm.taobao.org/mimic-fn/download/mimic-fn-2.1.0.tgz?cache=0&sync_timestamp=1617823583529&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmimic-fn%2Fdownload%2Fmimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
@@ -5357,6 +5362,11 @@ mute-stream@0.0.8, mute-stream@~0.0.4:
   version "0.0.8"
   resolved "https://registry.npm.taobao.org/mute-stream/download/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha1-FjDEKyJR/4HiooPelqVJfqkuXg0=
+
+nanoid@^3.1.23:
+  version "3.1.23"
+  resolved "https://registry.nlark.com/nanoid/download/nanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
+  integrity sha1-90QIbOfCvEfuCoRyV01ceOQYOoE=
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -5656,6 +5666,11 @@ onetime@^5.1.0, onetime@^5.1.2:
   integrity sha1-0Oluu1awdHbfHdnEgG5SN5hcpF4=
   dependencies:
     mimic-fn "^2.1.0"
+
+opener@1:
+  version "1.5.2"
+  resolved "https://registry.nlark.com/opener/download/opener-1.5.2.tgz?cache=0&sync_timestamp=1618847055043&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fopener%2Fdownload%2Fopener-1.5.2.tgz#5d37e1f35077b9dcac4301372271afdeb2a13598"
+  integrity sha1-XTfh81B3udysQwE3InGv3rKhNZg=
 
 optionator@^0.9.1:
   version "0.9.1"
@@ -6512,6 +6527,14 @@ rollup-plugin-polyfill-node@^0.6.2:
   integrity sha1-3qYuAPXMLBdOS0ZUtdqrebGpL8M=
   dependencies:
     "@rollup/plugin-inject" "^4.0.0"
+
+rollup-plugin-serve@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npm.taobao.org/rollup-plugin-serve/download/rollup-plugin-serve-1.1.0.tgz#0654a57021a21b903340c69940f7463706e8288d"
+  integrity sha1-BlSlcCGiG5AzQMaZQPdGNwboKI0=
+  dependencies:
+    mime ">=2.4.6"
+    opener "1"
 
 rollup-plugin-terser@^7.0.2:
   version "7.0.2"
