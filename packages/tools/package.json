@@ -6,6 +6,10 @@
   "author": "solszl <solszl@163.com>",
   "license": "ISC",
   "main": "lib/tools.js",
+  "folder": [
+    "lib",
+    "dist"
+  ],
   "directories": {
     "lib": "lib",
     "test": "__tests__"

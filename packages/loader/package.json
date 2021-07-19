@@ -21,9 +21,14 @@
     "url": "git+https://github.com/solszl/monorepos-demo.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "start": "yarn dev",
+    "dev": "rollup -w -c ./rollup.config.js"
   },
   "bugs": {
     "url": "https://github.com/solszl/monorepos-demo/issues"
+  },
+  "dependencies": {
+    "@rollup/plugin-html": "^0.2.3",
+    "@saga/dicom": "^1.0.0"
   }
 }

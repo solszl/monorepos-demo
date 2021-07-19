@@ -1897,6 +1897,11 @@
     magic-string "^0.25.7"
     resolve "^1.17.0"
 
+"@rollup/plugin-html@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.nlark.com/@rollup/plugin-html/download/@rollup/plugin-html-0.2.3.tgz#bed48fc18dbde345c0ef09b0b53a165d7bd3b7cd"
+  integrity sha1-vtSPwY2940XA7wmwtToWXXvTt80=
+
 "@rollup/plugin-inject@^4.0.0":
   version "4.0.2"
   resolved "https://registry.npm.taobao.org/@rollup/plugin-inject/download/@rollup/plugin-inject-4.0.2.tgz#55b21bb244a07675f7fdde577db929c82fc17395"
