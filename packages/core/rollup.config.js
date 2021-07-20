@@ -20,10 +20,5 @@ export default {
     babel({ exclude: "node_modules/**", runtimeHelpers: true }),
     nodeResolve({ extensions: [".js"], browser: true }),
     commonjs(),
-    serve({
-      open: true,
-      openPage: "./index.html",
-      contentBase: [__dirname, ""],
-    }),
   ],
 };

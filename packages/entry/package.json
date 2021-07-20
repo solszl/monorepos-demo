@@ -1,5 +1,5 @@
 {
-  "name": "@saga/loader",
+  "name": "@saga/entry",
   "version": "0.0.0",
   "description": "> TODO: description",
   "author": "zhenliang.sun <solszl@163.com>",
@@ -11,7 +11,7 @@
     "test": "__tests__"
   },
   "files": [
-    "src"
+    "lib"
   ],
   "publishConfig": {
     "registry": "https://registry.npm.taobao.org"
@@ -21,13 +21,16 @@
     "url": "git+https://github.com/solszl/monorepos-demo.git"
   },
   "scripts": {
-    "start": "yarn dev",
-    "dev": "rollup -w -c ./rollup.config.js"
+    "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
     "url": "https://github.com/solszl/monorepos-demo/issues"
   },
   "dependencies": {
-    "@saga/dicom": "^0.0.0"
+    "@saga/core": "^0.0.0",
+    "@saga/dicom": "^0.0.0",
+    "@saga/loader": "^0.0.0",
+    "@saga/tools": "^0.0.0",
+    "@saga/viewer": "^0.0.0"
   }
 }

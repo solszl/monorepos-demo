@@ -6,7 +6,6 @@ class Core {
   constructor(option = {}) {
     this.option = option;
     this.initialize();
-    console.log("init completed");
   }
 
   initialize() {
@@ -14,9 +13,6 @@ class Core {
     this.stage = new Stage();
     this.stage.fps = +option.fps || 30;
     this.renderer = new Renderer(this.stage);
-
-    const com = new Component();
-    window.com = com;
   }
 }
 
