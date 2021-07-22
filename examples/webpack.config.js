@@ -45,7 +45,7 @@ const config = {
           loader: "worker-loader",
           options: { inline: true, fallback: false },
         },
-        include: [resolve("examples")],
+        include: [resolve("examples"), resolve("packages")],
       },
     ],
   },

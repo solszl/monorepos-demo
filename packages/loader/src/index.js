@@ -1,2 +1,3 @@
 import Loader from "./loader";
-export { Loader };
+import Resource from "./resource";
+export { Loader, Resource };
