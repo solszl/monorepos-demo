@@ -26,7 +26,8 @@ class CacheManager {
   }
 
   /**
-   *
+   * 如果seriesId 和 plane都不传，就清空所有cache
+   * 如果只传了seriesId， 就清空对应seriesId的cache
    *
    * @param { string } seriesId
    * @param { string } plane

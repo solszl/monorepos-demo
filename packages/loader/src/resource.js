@@ -1,11 +1,21 @@
 import LoaderManager from "./loader-manager";
 import CacheManager from "./cache-manager";
+import PreloadManager from "./preload";
+import TaskManager from "./task-manager";
 
 class Resource {
   constructor() {
+    // 加载管理器
     this.loaderManager = new LoaderManager();
+    // 预加载管理器
+    this.preloadManager = new PreloadManager();
+    // 缓存管理器
     this.cacheManager = new CacheManager();
+    // 任务管理器
+    this.taskManager = new TaskManager();
     this.loaderManager.cacheManager = this.cacheManager;
+    this.loaderManager.taskManager = this.taskManager;
+    this.preloadManager.taskManager = this.taskManager;
   }
 
   /**
@@ -18,7 +28,7 @@ class Resource {
    */
   addItemUrls(seriesId, imageUrls, plane = "axis") {
     imageUrls.forEach((url, index) => {
-      this.loaderManager.taskManager.addTask({ seriesId, url, plane, index });
+      this.taskManager.addTask({ seriesId, url, plane, index });
     });
   }
 
@@ -48,21 +58,23 @@ class Resource {
         return;
       }
 
-      // TODO: load item and cache it.
-      const task = this.loaderManager.taskManager.getTask(seriesId, plane, index);
+      const task = this.taskManager.getTask(seriesId, plane, index)[0];
       if (!task) {
         console.error(`not have task ${seriesId}, ${plane}, ${index}.`);
         return;
       }
 
       task.resolve = resolve;
-      this.loaderManager.taskManager.addPendingTask(task);
+      this.taskManager.addPendingTask(task);
+      this.taskManager.sort(this.taskManager.pendingTask);
+
+      this.preloadManager.buildPreloadTask({ seriesId, plane, index });
       this.loaderManager.load();
     });
+  }
 
-    // const { image1 } = await this.loaderManager.load();
-    // this.cacheManager.cacheItem(seriesId, { key: index, value: image1 }, plane);
-    // return image1;
+  loadSeries(seriesId, plane) {
+    this.loaderManager.loadSeries(seriesId, plane);
   }
 
   purgeCache(seriesId, plane) {

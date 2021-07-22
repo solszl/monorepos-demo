@@ -32,11 +32,31 @@ class TaskManager {
     tasks.sort((a, b) => a.priority - b.priority);
   }
 
-  getTask(seriesId, plane, index) {
-    const task = this.tasks.find((task) => {
-      return task.seriesId === seriesId && task.plane === plane && task.index === index;
-    });
-    return task;
+  // getTask(seriesId, plane, index) {
+  //   const task = this.tasks.find((task) => {
+  //     return task.seriesId === seriesId && task.plane === plane && task.index === index;
+  //   });
+  //   return task;
+  // }
+
+  /**
+   * 参数顺序为,seriesId, plane, index 可以都不传
+   *
+   * @param {*} args
+   * @return {*}
+   * @memberof TaskManager
+   */
+  getTask(...args) {
+    const { length } = args;
+    const [seriesId, plane, index] = args;
+    const fn0 = (task) => task;
+    const fn1 = (task) => task.seriesId === seriesId;
+    const fn2 = (task) => task.seriesId === seriesId && task.plane === plane;
+    const fn3 = (task) =>
+      task.seriesId === seriesId && task.plane === plane && task.index === index;
+    const sortFn = [fn0, fn1, fn2, fn3];
+
+    return this.getTasks().filter(sortFn[length]);
   }
 
   hasPendingTask() {

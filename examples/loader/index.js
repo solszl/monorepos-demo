@@ -15,31 +15,26 @@ fetchData(seriesId).then((json) => {
     return `${fs}/${i.storagePath}`;
   });
 
-  resource.addItemUrls(seriesId, imageUrls, "axis");
-  resource.addItemUrls(seriesId, imageUrls, "cpr-lm");
-  resource.addItemUrls(seriesId, imageUrls, "lumen-lm");
+  const urls = imageUrls.slice(0, 100);
+  resource.addItemUrls(seriesId, urls, "axis");
+  resource.addItemUrls(seriesId, urls, "cpr-lm");
+  resource.addItemUrls(seriesId, urls, "lumen-lm");
 
   setTimeout(async () => {
-    const tmp = Array.from(new Array(20), (_, i) => i + 1);
-    for (const i of tmp) {
-      const ii = await resource.getImage(seriesId, i, "cpr-lm");
-      console.log(ii);
-    }
+    const ii = await resource.getImage(seriesId, 10, "lumen-lm");
+    console.log(ii);
   }, 500);
 
-  setTimeout(async () => {
-    const tmp = Array.from(new Array(20), (_, i) => i + 1);
-    for (const i of tmp) {
-      const ii = await resource.getImage(seriesId, i, "axis");
-      console.log(ii);
-    }
-  }, 500);
+  // setTimeout(async () => {
+  //   const tmp = Array.from(new Array(20), (_, i) => i + 1);
+  //   for (const i of tmp) {
+  //     const ii = await resource.getImage(seriesId, i, "axis");
+  //     console.log(ii);
+  //   }
+  // }, 500);
+
+  setTimeout(() => {
+    // resource.loadSeries(seriesId, "lumen-lm");
+  }, 3000);
   console.log(resource);
-
-  // await aaa(seriesId, 0, "axis");
-  // await aaa(seriesId, 0, "cpr");
-  // await aaa(seriesId, 0, "lumen-lm");
-  // await aaa(seriesId, 0, "vmip");
 });
-
-const aaa = async (seriesId, index, plane) => {};

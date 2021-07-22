@@ -1,4 +1,3 @@
-import TaskManager from "./task-manager";
 import LoaderWorker from "./workers/loader.worker";
 import PromiseWorker from "promise-worker";
 
@@ -8,7 +7,7 @@ const isXP = /Windows NT 5\.1.+Chrome\/49/.test(navigator.userAgent);
 class LoaderManager {
   constructor() {
     this.workers = [];
-    this.taskManager = new TaskManager();
+    this.taskManager = null;
     this.cacheManager = null;
 
     this.initLoader();
@@ -16,48 +15,43 @@ class LoaderManager {
 
   initLoader() {
     // 非xp留出一个加载线程供其他请求
-    const workerCount = isXP ? 2 : Math.max(navigator.hardwareConcurrency - 1, 0);
+    const workerCount = isXP ? 2 : Math.min(navigator.hardwareConcurrency - 1, 5);
 
     this.workers = Array.from(new Array(workerCount), (_, i) => i + 1).map((i) => {
       const worker = new LoaderWorker();
       const promiseWorker = new PromiseWorker(worker);
       promiseWorker.id = i;
       promiseWorker.working = false;
-      // worker.onmessage = (e) => {
-      //   console.log("加载完了");
-      //   this.workerCallback(worker, e);
-      // };
       return promiseWorker;
     });
 
     console.log(this.workers);
   }
 
-  // workerCallback(worker, e) {
-  //   worker.working = false;
-  // }
-
   async load() {
-    // for (const worker of this.workers) {
-    //   if (!worker.working && this.taskManager.hasPendingTask()) {
-    //     worker.working = true;
-    //     const task = this.taskManager.pendingTask.shift();
-    //     worker.postMessage(task);
-    //   }
-    // }
-
+    // 如果有挂载任务，返回
     if (!this.taskManager.hasPendingTask()) {
       return;
     }
 
+    // 如果没有可用的worker返回，并且启动worker检查，看什么时候有空闲worker再继续下载
     if (this.workers.length === 0) {
-      this.startCheck();
+      this._startCheck();
+      return;
+    }
+
+    const task = this.taskManager.pendingTask.shift();
+    // 加载的任务，如果已经缓存了。就过
+    const { seriesId: ts, index: ti, plane: tp, resolve: tr } = task;
+    const cacheItem = this.cacheManager.getItem(ts, ti, tp);
+    if (cacheItem) {
+      tr?.(cacheItem);
+      this._startCheck();
       return;
     }
 
     const worker = this.workers.shift();
     worker.working = true;
-    const task = this.taskManager.pendingTask.shift();
     const { resolve } = task;
     delete task.resolve;
     const data = await worker.postMessage(task);
@@ -66,20 +60,33 @@ class LoaderManager {
 
     const { seriesId, plane, index } = task;
     this.cacheManager.cacheItem(seriesId, { key: index, value: data }, plane);
-    resolve(data);
+    this._startCheck(); // 可能有更好的办法？？？
+    resolve?.(data);
   }
 
-  startCheck() {
+  loadSeries(seriesId, plane) {
+    const tasks = this.taskManager.getTask(seriesId, plane);
+    while (tasks.length) {
+      this.taskManager.addPendingTask(tasks.shift());
+    }
+    this.taskManager.sort(this.taskManager.pendingTask);
+    this.workers.forEach(() => {
+      this.load();
+    });
+  }
+
+  _startCheck() {
+    // 只有还有剩余worker，就干活
     if (this.workers.length > 0) {
       this.load();
       return;
     }
 
     if (!this.taskManager.hasPendingTask()) {
-      cancelAnimationFrame(this.xx);
+      cancelAnimationFrame(this._rafInterval);
       return;
     }
-    this.xx = requestAnimationFrame(this.startCheck.bind(this));
+    this._rafInterval = requestAnimationFrame(this._startCheck.bind(this));
   }
 }
 
