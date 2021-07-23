@@ -16,10 +16,11 @@ class Resource {
     this.loaderManager.cacheManager = this.cacheManager;
     this.loaderManager.taskManager = this.taskManager;
     this.preloadManager.taskManager = this.taskManager;
+
+    window.__TX_RESOURCE__ = this;
   }
 
   /**
-   *
    *
    * @param { string} seriesId
    * @param { Array } imageUrls

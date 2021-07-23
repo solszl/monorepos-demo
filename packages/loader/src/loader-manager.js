@@ -58,8 +58,9 @@ class LoaderManager {
     worker.working = false;
     this.workers.push(worker);
 
-    const { seriesId, plane, index } = task;
-    this.cacheManager.cacheItem(seriesId, { key: index, value: data }, plane);
+    const { seriesId, plane, index, image } = data;
+    this.cacheManager.cacheItem(seriesId, { key: index, value: image }, plane);
+
     this._startCheck(); // 可能有更好的办法？？？
     resolve?.(data);
   }

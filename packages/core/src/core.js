@@ -6,6 +6,8 @@ class Core {
   constructor(option = {}) {
     this.option = option;
     this.initialize();
+
+    window.__TX_CORE__ = this;
   }
 
   initialize() {

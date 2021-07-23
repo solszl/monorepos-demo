@@ -21,9 +21,13 @@ fetchData(seriesId).then((json) => {
   setTimeout(async () => {
     const data = [1, 2];
     data.forEach(async (i) => {
-      const ii = await resource.getImage(seriesId, i, "axis");
-      console.log(ii);
+      resource.getImage(seriesId, i, "axis");
     });
   }, 500);
+
+  setTimeout(async () => {
+    let cacheItem = await resource.getImage(seriesId, 10, "axis");
+    console.log(cacheItem);
+  }, 2000);
   console.log(resource);
 });
