@@ -70,8 +70,20 @@ class TaskManager {
    * @memberof TaskManager
    */
   addPendingTask(task) {
-    task.priority = Date.now();
-    this.pendingTask.push(task);
+    // 插队的时候，先在pending队列里找一下，是否已经存在对应task，如果有的话，更新task的优先级。否则插入新的task
+    const existIndex = this.pendingTask.findIndex((t) => {
+      return t.plane === task.plane && t.seriesId === task.seriesId && t.index === task.index;
+    });
+
+    if (existIndex !== -1) {
+      const oldTask = this.pendingTask[existIndex];
+      oldTask.priority = Date.now();
+      this.pendingTask.splice(existIndex, 1, oldTask);
+    } else {
+      task.priority = Date.now();
+      this.pendingTask.push(task);
+    }
+
     this.sort(this.pendingTask);
   }
 }
