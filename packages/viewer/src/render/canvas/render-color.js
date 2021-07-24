@@ -4,15 +4,23 @@
  * @param { HTMLCanvasElement } renderCanvas
  */
 export const renderColorImage = (image, lut, renderCanvas) => {
-  // 默认使用alpha 通道的数据渲染
+  const { samplesPerPixel, pixelData } = image;
   const { width, height } = renderCanvas;
   const ctx = renderCanvas.getContext("2d");
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, width, height);
   ctx.imageSmoothingEnabled = false;
 
-  let imageDataIndex = 3;
-  let numPixels = width * height;
-  let offset = invert ? 255 : 0;
+  const renderCanvasData = ctx.getImageData(0, 0, width, height);
+  let imageDataIndex = 0;
+  let numPixels = width * height * samplesPerPixel;
   let i = 0;
+  while (i < numPixels * samplesPerPixel) {
+    renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Red
+    renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Green
+    renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Blue
+    renderCanvasData.data[imageDataIndex++] = 255;
+  }
+
+  ctx.putImageData(renderCanvasData, 0, 0);
 };
