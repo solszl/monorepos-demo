@@ -1,6 +1,7 @@
 import EventEmitter from "event-emitter";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
 
+const ALPHABET = "0123456789abcdef";
 /**
  * 组件基类
  *
@@ -9,7 +10,7 @@ import { nanoid } from "nanoid";
 class Component {
   constructor() {
     EventEmitter(this);
-    this.id = nanoid(8);
+    this.id = customAlphabet(ALPHABET, 8)();
   }
 
   destroy() {}

@@ -1,0 +1,4 @@
+IRenderer接口
+{
+  render(image, displayState);
+}

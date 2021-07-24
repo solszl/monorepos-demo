@@ -3,11 +3,19 @@ class AbstractViewport extends Component {
   constructor(option = {}) {
     super();
 
+    this.core = option.core;
+    this.renderSchedule = this.core.renderSchedule; // from core instance.
+    this.el = option.el;
     this.iframe = null;
-    this.el = this.config.el;
+
+    this.width = -1;
+    this.height = -1;
+    this.init();
   }
 
-  init() {}
+  init() {
+    this.initResize();
+  }
 
   initResize() {
     this.iframe = document.createElement("iframe");
@@ -16,11 +24,20 @@ class AbstractViewport extends Component {
     this.el.style.overflow = "hidden";
     this.el.insertBefore(this.iframe, this.el.firstChild);
     this.iframe.contentWindow.onresize = (e) => {
-      // resize
+      const { width, height } = this._getRootSize();
+      this.width = width;
+      this.height = height;
     };
   }
 
-  initRenderer() {}
+  _getRootSize() {
+    let { clientWidth, clientHeight } = this.el;
+    return { width: clientWidth, height: clientHeight };
+  }
+
+  static create() {
+    console.error("need implemented by subclass.");
+  }
 }
 
 export default AbstractViewport;

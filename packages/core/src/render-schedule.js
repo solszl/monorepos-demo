@@ -1,10 +1,10 @@
 import { INTERNAL_EVENT } from "./internal";
 import Stage from "./stage";
-class Renderer {
+class RenderSchedule {
   /**
-   * Creates an instance of Renderer.
+   * Creates an instance of RenderSchedule.
    * @param { Stage } stage
-   * @memberof Renderer
+   * @memberof RenderSchedule
    */
   constructor(stage) {
     /** 延迟渲染队列 */
@@ -19,7 +19,7 @@ class Renderer {
    *
    * @param {*} fn
    * @param {*} args
-   * @memberof Renderer
+   * @memberof RenderSchedule
    */
   invalidate(fn, ...args) {
     this.deferredQueue.set(fn, args);
@@ -28,7 +28,7 @@ class Renderer {
   /**
    * 立即进行渲染
    *
-   * @memberof Renderer
+   * @memberof RenderSchedule
    */
   validateNow() {
     this.onValidate();
@@ -38,7 +38,7 @@ class Renderer {
    * 生效函数，该函数通常被stage.enter_frame事件 和 validateNow 函数调用。
    *
    * @return {*}
-   * @memberof Renderer
+   * @memberof RenderSchedule
    */
   onValidate() {
     const { size } = this.deferredQueue;
@@ -59,4 +59,4 @@ class Renderer {
   }
 }
 
-export default Renderer;
+export default RenderSchedule;

@@ -1,6 +1,6 @@
 import Core from "./core";
 import Stage from "./stage";
-import Renderer from "./renderer";
+import RenderSchedule from "./render-schedule";
 import Component from "./component";
 
-export { Core, Stage, Renderer, Component };
+export { Core, Stage, RenderSchedule, Component };

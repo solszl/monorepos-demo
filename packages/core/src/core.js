@@ -1,5 +1,5 @@
 import Component from "./component";
-import Renderer from "./renderer";
+import RenderSchedule from "./render-schedule";
 import Stage from "./stage";
 
 class Core {
@@ -14,7 +14,7 @@ class Core {
     const { option } = this;
     this.stage = new Stage();
     this.stage.fps = +option.fps || 30;
-    this.renderer = new Renderer(this.stage);
+    this.renderSchedule = new RenderSchedule(this.stage);
   }
 }
 
