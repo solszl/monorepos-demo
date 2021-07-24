@@ -1,4 +1,5 @@
 IRenderer接口
 {
   render(image, displayState);
+  resize(width, height);
 }

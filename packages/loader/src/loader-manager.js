@@ -62,7 +62,7 @@ class LoaderManager {
     this.cacheManager.cacheItem(seriesId, { key: index, value: image }, plane);
 
     this._startCheck(); // 可能有更好的办法？？？
-    resolve?.(data);
+    resolve?.(image);
   }
 
   loadSeries(seriesId, plane) {

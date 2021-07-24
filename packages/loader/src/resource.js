@@ -56,6 +56,8 @@ class Resource {
       const image = this.cacheManager.getItem(seriesId, index, plane);
       if (image) {
         resolve(image);
+        this.preloadManager.buildPreloadTask({ seriesId, plane, index });
+        this.loaderManager.load();
         return;
       }
 

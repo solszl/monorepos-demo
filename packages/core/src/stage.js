@@ -15,23 +15,36 @@ class Stage {
   constructor() {
     EventEmitter(this);
     this._fps = 30;
-    this.fpsInterval = ~~1000 / this._fps;
+    this.fpsInterval = Math.ceil(1000 / this._fps);
     this.lastRenderTime = Date.now();
-    this.render();
   }
 
   render() {
+    const { isRunning } = this;
+    if (!isRunning) {
+      return;
+    }
     const { lastRenderTime, fpsInterval } = this;
     const now = Date.now();
     const elapsed = now - lastRenderTime;
     if (elapsed < fpsInterval) {
+      CRAF(this.rafInterval);
       this.rafInterval = RAF(this.render.bind(this));
       return;
     }
 
     this.lastRenderTime = now;
     this.emit(INTERNAL_EVENT.ENTER_FRAME);
+  }
+
+  startRender() {
+    this.isRunning = true;
     this.rafInterval = RAF(this.render.bind(this));
+  }
+
+  stopRender() {
+    this.isRunning = false;
+    CRAF(this.rafInterval);
   }
 
   set fps(val) {
@@ -45,7 +58,7 @@ class Stage {
       return;
     }
 
-    this.fpsInterval = ~~(1000 / +val);
+    this.fpsInterval = Math.ceil(1000 / +val);
   }
 
   get fps() {

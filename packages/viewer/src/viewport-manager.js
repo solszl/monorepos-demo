@@ -1,7 +1,7 @@
 import CanvasRenderer from "./render/canvas";
 import WebglRenderer from "./render/webgl";
 import { webglSupported } from "./render/webgl/utils";
-import StandardViewport from "./viewports/standard";
+import { StandardViewport } from "./viewports";
 class ViewportManager {
   constructor() {
     this.viewports = {};
@@ -29,6 +29,7 @@ class ViewportManager {
     viewport.renderer = renderer; // 设置渲染器
     const { id } = viewport;
     this.viewports[id] = viewport;
+    return viewport;
   }
 
   removeViewport(id) {

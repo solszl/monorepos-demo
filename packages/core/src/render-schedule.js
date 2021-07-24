@@ -23,6 +23,7 @@ class RenderSchedule {
    */
   invalidate(fn, ...args) {
     this.deferredQueue.set(fn, args);
+    this.stage.startRender();
   }
 
   /**
@@ -43,6 +44,7 @@ class RenderSchedule {
   onValidate() {
     const { size } = this.deferredQueue;
     if (size === 0) {
+      this.stage.stopRender();
       return;
     }
 
