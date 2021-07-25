@@ -41,7 +41,7 @@ fetchData(seriesId).then((json) => {
   setTimeout(async () => {
     const image = await resource.getImage(seriesId, currentIndex, "standard");
     standard.showImage(image);
-  }, 500);
+  }, 0);
 });
 
 document.addEventListener("wheel", async (e) => {

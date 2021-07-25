@@ -6,11 +6,6 @@ class WebglRenderer {
 
   async render(image, displayState) {}
 
-  resize(width, height) {
-    this.renderCanvas.width = width;
-    this.renderCanvas.height = height;
-  }
-
   get renderData() {
     return this.renderCanvas;
   }

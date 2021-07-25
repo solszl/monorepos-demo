@@ -1,8 +1,9 @@
-const lutCache = {};
+let lutCache = {};
 export const getLut = (image, displayState) => {
   const { wwwc, invert = false } = displayState;
   let { windowWidth, windowCenter } = image;
   if (wwwc?.ww && wwwc?.wc) {
+    const { ww, wc } = wwwc;
     windowCenter = wc;
     windowWidth = ww;
   }

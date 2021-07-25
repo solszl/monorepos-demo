@@ -1,4 +1,6 @@
 import { Component, RenderSchedule } from "@saga/core";
+import { validate } from "../validator";
+import { applyTransform } from "../transform/apply";
 class AbstractViewport extends Component {
   constructor(option = {}) {
     super();
@@ -7,7 +9,7 @@ class AbstractViewport extends Component {
     this.core = option.core;
     /** @type { RenderSchedule } */
     this.renderSchedule = this.core.renderSchedule; // from core instance.
-    this._renderer = null;
+    this.renderer = null;
     this.el = option.el;
     this.canvas = null;
     this.iframe = null;
@@ -15,7 +17,11 @@ class AbstractViewport extends Component {
     this.width = -1;
     this.height = -1;
 
-    this.displayState = {};
+    this.displayState = {
+      flip: { h: false, v: false },
+      scale: 1,
+    };
+
     this.init();
   }
 
@@ -48,46 +54,102 @@ class AbstractViewport extends Component {
       const { width, height } = this._getRootSize();
       this.width = width;
       this.height = height;
-      this.renderer.resize(width, height);
     };
   }
 
-  _getRootSize() {
-    let { clientWidth, clientHeight } = this.el;
-    return { width: clientWidth, height: clientHeight };
-  }
-
   showImage(image) {
+    this.image = image;
+    this._displayChanged = true;
     this.renderSchedule.invalidate(this.render.bind(this), image);
   }
 
   async render(image) {
-    const { displayState } = this;
-    await this.renderer.render(image, displayState);
+    let needDraw = false;
+
+    if (this._displayChanged) {
+      const { displayState } = this;
+      await this.renderer.render(image, displayState);
+      this._displayChanged = false;
+      needDraw = true;
+    }
 
     const { canvas } = this;
-    const { width, height } = canvas;
-    // 使用renderData 进行绘制
     const ctx = canvas.getContext("2d");
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, width, height);
-    // 矩阵变换
-
-    // 绘制
     const { renderData } = this.renderer;
     const { width: rw, height: rh } = renderData;
-    ctx.drawImage(renderData, 0, 0, rw, rh, 0, 0, rw, rh);
-    this.emit("image_rendered");
+
+    if (needDraw) {
+      const { width, height } = canvas;
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, width, height);
+    }
+
+    if (this._flipChanged || this._positionChanged || this._rotateChanged || this._scaleChanged) {
+      const matrix = applyTransform(this.displayState, canvas, renderData);
+      ctx.setTransform(...matrix);
+      // 矩阵变换
+      this._flipChanged = false;
+      this._positionChanged = false;
+      this._rotateChanged = false;
+      this._scaleChanged = false;
+      needDraw = true;
+    }
+
+    // 绘制
+    if (needDraw) {
+      // 使用renderData 进行绘制
+      ctx.drawImage(renderData, 0, 0, rw, rh, 0, 0, rw, rh);
+      this.emit("image_rendered");
+      needDraw = false;
+    }
   }
 
-  set renderer(val) {
-    this._renderer = val;
-    const { width, height } = this._getRootSize();
-    this.renderer.resize(width, height);
+  setWWWC(val) {
+    this._propertySetter({ wwwc: val }, "_displayChanged");
   }
 
-  get renderer() {
-    return this._renderer;
+  setInvert(val) {
+    this._propertySetter({ invert: val }, "_displayChanged");
+  }
+
+  setOffset(val) {
+    this._propertySetter({ offset: val }, "_positionChanged");
+  }
+
+  setRotation(val) {
+    this._propertySetter({ rotate: val }, "_rotateChanged");
+  }
+
+  setFlipV(val) {
+    this._propertySetter({ flip: { v: val } }, "_flipChanged");
+  }
+
+  setFlipH(val) {
+    this._propertySetter({ flip: { h: val } }, "_flipChanged");
+  }
+
+  setScale(val) {
+    this._propertySetter({ scale: val }, "_scaleChanged");
+  }
+
+  setTranslation(val) {
+    this._propertySetter({ translation: val }, "_positionChanged");
+  }
+
+  _getRootSize() {
+    let { clientWidth, clientHeight } = this.el;
+    this._positionChanged = clientWidth !== clientHeight;
+    return { width: clientWidth, height: clientHeight };
+  }
+
+  _propertySetter(val, effectProperty) {
+    if (!validate(this.displayState, val)) {
+      return;
+    }
+
+    Object.assign(this.displayState, val);
+    this[effectProperty] = true;
+    this.renderSchedule.invalidate(this.render.bind(this), this.image);
   }
 
   static create() {
