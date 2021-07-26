@@ -15,8 +15,7 @@ fetchData(seriesId).then((json) => {
     return `${fs}/${i.storagePath}`;
   });
 
-  const urls = imageUrls.slice(0, 100);
-  resource.addItemUrls(seriesId, urls, "axis");
+  resource.addItemUrls(seriesId, imageUrls, "axis");
 
   setTimeout(async () => {
     const data = [1, 2];

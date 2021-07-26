@@ -1,9 +1,9 @@
 import TaskManager from "./task-manager";
 
 /** @type { number } 前预载多少个 */
-const PRE_COUNT = 2;
+const PRE_COUNT = 8;
 /** @type { number } 后预载多少个 */
-const SUF_COUNT = 2;
+const SUF_COUNT = 4;
 class PreloadManager {
   constructor() {
     /** @type {TaskManager} */

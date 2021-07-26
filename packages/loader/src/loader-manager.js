@@ -61,8 +61,9 @@ class LoaderManager {
     const { seriesId, plane, index, image } = data;
     this.cacheManager.cacheItem(seriesId, { key: index, value: image }, plane);
 
-    this._startCheck(); // 可能有更好的办法？？？
     resolve?.(image);
+    await this.delay(100); // 减压、涓流
+    this._startCheck(); // 可能有更好的办法？？？
   }
 
   loadSeries(seriesId, plane) {
@@ -88,6 +89,12 @@ class LoaderManager {
       return;
     }
     this._rafInterval = requestAnimationFrame(this._startCheck.bind(this));
+  }
+
+  async delay(ms, value) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms, value);
+    });
   }
 }
 
