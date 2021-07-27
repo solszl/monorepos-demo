@@ -1,6 +1,7 @@
 import { Core } from "@saga/core";
 import ViewportManager from "../../packages/viewer/src";
 import { Resource } from "@saga/loader";
+import Volume from "../../packages/viewer/src/algo/resample/volume";
 const seriesId = "1.3.46.670589.33.1.63758074643606917200002.5725553829146337340";
 const fs = "http://192.168.111.115:8000";
 let currentIndex = 10;
@@ -42,6 +43,16 @@ fetchData(seriesId).then((json) => {
     const image = await resource.getImage(seriesId, currentIndex, "standard");
     standard.showImage(image);
   }, 0);
+
+  resource.loadSeries(seriesId, "standard");
+  setTimeout(() => {
+    const data = resource.getImages(seriesId, "standard");
+    const volume = new Volume();
+    console.time("cost");
+    volume.pretreatmentData(data);
+    window.__VV__ = volume;
+    console.timeEnd("cost");
+  }, 7000);
 });
 
 document.addEventListener("wheel", async (e) => {

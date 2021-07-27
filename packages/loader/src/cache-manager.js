@@ -26,6 +26,26 @@ class CacheManager {
   }
 
   /**
+   *
+   *
+   * @param { string } seriesId
+   * @param { string } plane
+   * @return { Array<ImageObj> }
+   * @memberof CacheManager
+   */
+  getItems(seriesId, plane) {
+    const size = this.cache?.[seriesId]?.[plane]?.size ?? 0;
+    if (size === 0) {
+      return [];
+    }
+
+    const map = this.cache?.[seriesId]?.[plane];
+    return Array.from(map)
+      .sort((a, b) => a[0] - b[0])
+      .map((item) => item[1]);
+  }
+
+  /**
    * 如果seriesId 和 plane都不传，就清空所有cache
    * 如果只传了seriesId， 就清空对应seriesId的cache
    *

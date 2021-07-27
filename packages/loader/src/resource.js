@@ -83,6 +83,10 @@ class Resource {
   purgeCache(seriesId, plane) {
     this.cacheManager.purge(seriesId, plane);
   }
+
+  getImages(seriesId, plane) {
+    return this.cacheManager.getItems(seriesId, plane);
+  }
 }
 
 export default Resource;
