@@ -62,7 +62,7 @@ class LoaderManager {
     this.cacheManager.cacheItem(seriesId, { key: index, value: image }, plane);
 
     resolve?.(image);
-    await this.delay(10); // 减压、涓流
+    await this.delay(0); // 减压、涓流
     this._startCheck(); // 可能有更好的办法？？？
   }
 

@@ -1,8 +1,8 @@
 import { Core } from "@saga/core";
 import ViewportManager from "../../packages/viewer/src";
 import { Resource } from "@saga/loader";
-import Volume from "../../packages/viewer/src/algo/resample/volume";
-const seriesId = "1.3.46.670589.33.1.63758074643606917200002.5725553829146337340";
+import { Volume } from "@saga/viewer";
+const seriesId = "1.2.840.113704.7.32.07.5.1.4.76346.30000021060408361231300076202";
 const fs = "http://192.168.111.115:8000";
 let currentIndex = 10;
 const API_GRAY = "/api/v1/series/";
@@ -52,7 +52,7 @@ fetchData(seriesId).then((json) => {
     volume.pretreatmentData(data);
     window.__VV__ = volume;
     console.timeEnd("cost");
-  }, 7000);
+  }, 5000);
 });
 
 document.addEventListener("wheel", async (e) => {
@@ -61,19 +61,3 @@ document.addEventListener("wheel", async (e) => {
   const image = await resource.getImage(seriesId, currentIndex, "standard");
   standard.showImage(image);
 });
-
-// ====================== test begin=================
-const delay = async (ms, value) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms, value);
-  });
-};
-
-for (let i = 0; i < 10000; i++) {
-  setTimeout(async () => {
-    core.stage.startRender();
-    await delay(50);
-  }, Math.random() * 1000);
-}
-
-// ====================test end =====================
