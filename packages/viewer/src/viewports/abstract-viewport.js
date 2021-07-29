@@ -60,6 +60,9 @@ class AbstractViewport extends Component {
   showImage(image) {
     this.image = image;
     this._displayChanged = true;
+    if (this.render?.width !== image.columns || this.render?.height !== image.rows) {
+      this._sizeChanged = true;
+    }
     this.renderSchedule.invalidate(this.render.bind(this), image);
   }
 
@@ -84,7 +87,13 @@ class AbstractViewport extends Component {
       ctx.fillRect(0, 0, width, height);
     }
 
-    if (this._flipChanged || this._positionChanged || this._rotateChanged || this._scaleChanged) {
+    if (
+      this._flipChanged ||
+      this._positionChanged ||
+      this._rotateChanged ||
+      this._scaleChanged ||
+      this._sizeChanged
+    ) {
       const matrix = applyTransform(this.displayState, canvas, renderData);
       ctx.setTransform(...matrix);
       // 矩阵变换
@@ -92,6 +101,7 @@ class AbstractViewport extends Component {
       this._positionChanged = false;
       this._rotateChanged = false;
       this._scaleChanged = false;
+      this._sizeChanged = false;
       needDraw = true;
     }
 

@@ -48,7 +48,7 @@ class Resource {
   }
 
   cacheItem(seriesId, obj, plane = "axis") {
-    this.cacheManager.cache(seriesId, obj, plane);
+    this.cacheManager.cacheItem(seriesId, obj, plane);
   }
 
   async getImage(seriesId, index, plane = "axis") {

@@ -23,24 +23,24 @@ class Volume {
     this.dimensionInfo.spacing = spacing;
     this.dimensionInfo.origin = img0.imagePositionPatient;
     this.dimensionInfo.sizeInPx = [columns, rows, z];
-    this.dimensionInfo.sizeInPh = [
-      columns * spacing[0],
-      rows * spacing[1],
-      allImageData.length * spZ,
-    ];
-    this.dimensionInfo.vertexInPx = [
-      [0, 0, 0],
-      [columns, 0, 0],
-      [columns, rows, 0],
-      [0, rows, 0],
-      [0, 0, z],
-      [columns, 0, z],
-      [columns, rows, z],
-      [0, rows, z],
-    ];
+    // this.dimensionInfo.sizeInPh = [
+    //   columns * spacing[0],
+    //   rows * spacing[1],
+    //   allImageData.length * spZ,
+    // ];
+    // this.dimensionInfo.vertexInPx = [
+    //   [0, 0, 0],
+    //   [columns, 0, 0],
+    //   [columns, rows, 0],
+    //   [0, rows, 0],
+    //   [0, 0, z],
+    //   [columns, 0, z],
+    //   [columns, rows, z],
+    //   [0, rows, z],
+    // ];
     this.cubeEdges = this._getEdges();
 
-    this.data = new Uint8ClampedArray(perLength * z);
+    this.data = new Uint16Array(perLength * z);
     // orientation, position, spacing, thickness, betweenSliceThickness etc..
     allImageData.forEach((image, index) => {
       const { pixelData, minPixelValue, maxPixelValue } = image;
@@ -52,8 +52,45 @@ class Volume {
 
   isInVolume(point) {
     const [x, y, z] = this.dimensionInfo.sizeInPx;
-    const [px, py, pz] = point;
-    return px >= 0 && px <= x && py >= 0 && py <= y && pz >= 0 && pz <= z;
+    // const [px, py, pz] = point;
+    // return px >= 0 && px < x && py >= 0 && py < y && pz >= 0 && pz < z;
+
+    // return point.reduce((flag, p, index) => {
+    //   if (p >= 0 && p < this.dimensionInfo.sizeInPx[index]) {
+    //     return true;
+    //   }
+    //   return false;
+    // }, false);
+    // if (px < 0 || px >= x) {
+    //   return false;
+    // }
+
+    // if (py < 0 || py >= y) {
+    //   return false;
+    // }
+
+    // if (pz < 0 || pz >= z) {
+    //   return false;
+    // }
+
+    // return true;
+    if (point[0] < 0 || point[0] >= x) {
+      return false;
+    }
+    if (point[1] < 0 || point[1] >= y) {
+      return false;
+    }
+    if (point[2] < 0 || point[2] >= z) {
+      return false;
+    }
+    return true;
+  }
+
+  getValue(x, y, z) {
+    const [columns, rows, depth] = this.dimensionInfo.sizeInPx;
+    const offset = columns * rows * z;
+    const index = x * columns + y + offset;
+    return this.data[index];
   }
 
   /**

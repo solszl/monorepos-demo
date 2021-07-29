@@ -71,20 +71,20 @@ class Plane {
     }
 
     if (this._b !== 0 && !point2) {
-      let x2 = point2[0];
-      let z2 = point2[2] + 1;
+      let x2 = point[0];
+      let z2 = point[2] + 1;
       let y2 = -1 * ((this._a * x2 + this._c * z2 + this._d) / this._b);
       point2 = [x2, y2, z2];
     }
 
     if (this._c !== 0 && !point2) {
-      let y2 = point2[1];
-      let z2 = point2[2] + 1;
+      let y2 = point[1];
+      let z2 = point[2] + 1;
       let x2 = -1 * ((this._b * y2 + this._c * z2 + this._d) / this._a);
       point2 = [x2, y2, z2];
     }
 
-    this._defineUVFrom2Points(point2, point2);
+    this._defineUVFrom2Points(point, point2);
   }
 
   getEquation() {
@@ -114,19 +114,23 @@ class Plane {
   }
 
   getPoint() {
-    return this._p.slice();
+    // return this._p.slice();
+    return this._p;
   }
 
   getNVector() {
-    return this._n.slice();
+    // return this._n.slice();
+    return this._n;
   }
 
   getUVector() {
-    return this._u.slice();
+    // return this._u.slice();
+    return this._u;
   }
 
   getVVector() {
-    return this._v.slice();
+    // return this._v.slice();
+    return this._v;
   }
 
   buildOrthoU(plane) {
