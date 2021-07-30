@@ -1,9 +1,9 @@
 import decodeLittleEndian from "../decoders/decodeLittleEndian";
 import decodeBigEndian from "../decoders/decodeBigEndian";
 import decodeRLE from "../decoders/decodeRLE";
-// import decodeJPEGLS from "../decoders/decodeJPEGLS";
+import decodeJPEGLS from "../decoders/decodeJPEGLS";
 
-export const decode = (meta, pixelDataSource) => {
+export const decode = async (meta, pixelDataSource) => {
   const { transferSyntax } = meta;
   switch (transferSyntax) {
     case "1.2.840.10008.1.2":
@@ -19,7 +19,7 @@ export const decode = (meta, pixelDataSource) => {
       break;
     case "1.2.840.10008.1.2.4.80":
       // JPEG-LS Lossless Image Compression
-      // meta = decodeJPEGLS(meta, pixelDataSource);
+      meta = await decodeJPEGLS(meta, pixelDataSource);
       break;
     default:
       break;

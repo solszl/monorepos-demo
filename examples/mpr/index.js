@@ -1,12 +1,10 @@
 import { Core } from "@saga/core";
-import ViewportManager from "../../packages/viewer/src";
 import { Resource } from "@saga/loader";
-import { Volume, Plane, ObliqueSampler } from "@saga/viewer";
-const seriesId = "1.2.840.113704.7.32.07.5.1.4.76346.30000021060408361231300076202";
-const fs = "http://192.168.111.115:8000";
+import { Volume, Plane, ObliqueSampler, ViewportManager } from "@saga/viewer";
+const seriesId = "1.2.410.200010.1160924.3152.150159.175159.1169700.175159";
+const fs = "http://192.168.109.92:8000";
 let currentIndex = 100;
-const API_GRAY = "/api/v1/series/";
-const API_COLOR = "/api/v1/series/ssr/";
+const API = "/ct_chest/api/combine/";
 
 const core = new Core({ fps: 10 });
 const resource = new Resource();
@@ -14,6 +12,7 @@ const viewportManager = new ViewportManager();
 viewportManager.core = core;
 
 let plane;
+/** @type {ObliqueSampler} */
 let sampler;
 
 const standard = viewportManager.addViewport({
@@ -23,13 +22,13 @@ const standard = viewportManager.addViewport({
 });
 
 const fetchData = async (seriesId) => {
-  const url = `${API_GRAY}${seriesId}`;
+  const url = `${API}${seriesId}`;
   const json = await (await fetch(url)).json();
   return json;
 };
 
 fetchData(seriesId).then((json) => {
-  const imageUrls = json.data.images.map((i) => {
+  const imageUrls = json.series.images.map((i) => {
     return `${fs}/${i.storagePath}`;
   });
 
@@ -50,7 +49,7 @@ fetchData(seriesId).then((json) => {
     console.timeEnd("cost");
 
     plane = new Plane();
-    plane.makeFrom1Point1Vector([0, currentIndex, 0], [0, 1, 0]);
+    plane.makeFrom1Point1Vector([0, currentIndex, 0], [0, -1, 0]);
 
     sampler = new ObliqueSampler(volume, plane);
     sampler.update();
@@ -70,7 +69,7 @@ document.addEventListener("wheel", async (e) => {
   let offset = Math.sign(e.wheelDelta);
   currentIndex += offset;
 
-  plane.makeFrom1Point1Vector([0, currentIndex, 0], [0, 1, 0]);
+  plane.makeFrom1Point1Vector([0, currentIndex, 0], [0, -1, 0]);
   sampler.plane = plane;
   sampler.update();
   sampler.startSampling();
@@ -81,4 +80,6 @@ document.addEventListener("wheel", async (e) => {
   standard.showImage(tmpImage);
 
   resource.cacheItem(seriesId, { key: currentIndex, value: tmpImage }, "sagittal");
+
+  console.log("sagittal", currentIndex);
 });

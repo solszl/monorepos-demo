@@ -8,7 +8,7 @@ const getDataset = (arraybuffer) => {
   return DicomParser.parseDicom(byteArray);
 };
 
-const updateMetaForPixelData = (meta, pixelDataSource) => {
+const updateMetaForPixelData = async (meta, pixelDataSource) => {
   let result = null;
   const { transferSyntax } = meta;
   switch (transferSyntax) {
@@ -24,7 +24,7 @@ const updateMetaForPixelData = (meta, pixelDataSource) => {
     case "1.2.840.10008.1.2.5":
     // JPEG-LS Lossless Image Compression
     case "1.2.840.10008.1.2.4.80":
-      result = decode(meta, pixelDataSource);
+      result = await decode(meta, pixelDataSource);
       break;
     default:
       result = new Promise((resolve, reject) => {
@@ -35,7 +35,7 @@ const updateMetaForPixelData = (meta, pixelDataSource) => {
   return result;
 };
 
-const afterProcessing = (meta) => {
+const postprocess = (meta) => {
   meta.sizeInBytes = meta.pixelData.byteLength;
   if (!meta.minPixelValue || !meta.maxPixelValue) {
     const { min, max } = getMinMaxValues(meta.pixelData);
@@ -71,5 +71,5 @@ export const createImage = async (arrayBuffer) => {
   // origin pixelDataSource
   const pixelDataSource = getPixelData(dataset, meta);
   meta = await updateMetaForPixelData(meta, pixelDataSource);
-  return afterProcessing(meta);
+  return postprocess(meta);
 };

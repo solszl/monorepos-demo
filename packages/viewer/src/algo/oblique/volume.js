@@ -51,16 +51,20 @@ class Volume {
   }
 
   isInVolume(point) {
-    const [x, y, z] = this.dimensionInfo.sizeInPx;
+    // const [x, y, z] = this.dimensionInfo.sizeInPx;
     // const [px, py, pz] = point;
     // return px >= 0 && px < x && py >= 0 && py < y && pz >= 0 && pz < z;
 
+    // const { sizeInPx } = this.dimensionInfo;
     // return point.reduce((flag, p, index) => {
-    //   if (p >= 0 && p < this.dimensionInfo.sizeInPx[index]) {
+    //   if (p >= 0 && p <= sizeInPx[index]) {
     //     return true;
     //   }
     //   return false;
     // }, false);
+
+    // const [x, y, z] = this.dimensionInfo.sizeInPx;
+    // const [px, py, pz] = point;
     // if (px < 0 || px >= x) {
     //   return false;
     // }
@@ -74,29 +78,35 @@ class Volume {
     // }
 
     // return true;
-    if (point[0] < 0 || point[0] >= x) {
+
+    const { sizeInPx } = this.dimensionInfo;
+    if (point[0] < 0 || point[0] >= sizeInPx[0]) {
+      // console.log(point);
       return false;
     }
-    if (point[1] < 0 || point[1] >= y) {
+    if (point[1] < 0 || point[1] >= sizeInPx[1]) {
+      // console.log(point);
       return false;
     }
-    if (point[2] < 0 || point[2] >= z) {
+    if (point[2] < 0 || point[2] >= sizeInPx[2]) {
+      // console.log(point);
       return false;
     }
     return true;
   }
 
   getValue(x, y, z) {
-    const [columns, rows, depth] = this.dimensionInfo.sizeInPx;
-    const offset = columns * rows * z;
-    const index = x * columns + y + offset;
+    // const [columns, rows, depth] = this.dimensionInfo.sizeInPx; // speed up!
+    const { sizeInPx } = this.dimensionInfo;
+    const offset = sizeInPx[0] * sizeInPx[1] * z;
+    const index = x * sizeInPx[0] + y + offset;
     return this.data[index];
   }
 
   /**
    * 获取当前dicom体数据的外包围盒
    *
-   * @return {*}
+   * @return { array }
    * @memberof Volume
    */
   _getEdges() {

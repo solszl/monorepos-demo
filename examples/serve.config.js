@@ -12,8 +12,8 @@ const devServer = {
   },
   historyApiFallback: true,
   proxy: {
-    "/api": {
-      target: "http://192.168.111.115:13000",
+    "/ct_chest/api": {
+      target: "http://192.168.109.92:3000",
       changeOrigin: true,
       pathRewrite: {
         "^/api": "",

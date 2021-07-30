@@ -71,14 +71,13 @@ class ObliqueSampler {
     const startingSeed = this._getStartingSeed();
 
     this._planePolygon2D = [];
-    for (let i = 0; i < this.planePolygon.length; i++) {
+    for (let i = 0; i < this.planePolygon.length; i += 1) {
       var vertices3D = this.planePolygon[i];
       const dx = vertices3D[0] - startingSeed[0];
       const dy = vertices3D[1] - startingSeed[1];
       const dz = vertices3D[2] - startingSeed[2];
 
       // 假设 (startingSeed + a*u + b*v c*n = vertice3D)
-
       var commonDenom =
         u[0] * (n[1] * v[2] - v[1] * n[2]) +
         v[0] * (u[1] * n[2] - n[1] * u[2]) +
@@ -151,20 +150,6 @@ class ObliqueSampler {
       const value = this.volume.getValue(cubeCoords[0], cubeCoords[1], cubeCoords[2]);
       this.setImageValue(x, y, value);
 
-      // bottom
-      const bx = x;
-      const by = y + 1;
-      if (this.getMaskValue(bx, by) === 0) {
-        const isBottomInVolume = this._obliqueCoordsInVolume(
-          startingSeed,
-          bx - obliqueImageCenter[0],
-          by - obliqueImageCenter[1]
-        );
-        if (isBottomInVolume) {
-          pixelStack.push([bx, by]);
-        }
-      }
-
       // top
       const tx = x;
       const ty = y - 1;
@@ -179,17 +164,17 @@ class ObliqueSampler {
         }
       }
 
-      // right
-      const rx = x + 1;
-      const ry = y;
-      if (this.getMaskValue(rx, ty) === 0) {
-        const isRightInVolume = this._obliqueCoordsInVolume(
+      // bottom
+      const bx = x;
+      const by = y + 1;
+      if (this.getMaskValue(bx, by) === 0) {
+        const isBottomInVolume = this._obliqueCoordsInVolume(
           startingSeed,
-          rx - obliqueImageCenter[0],
-          ry - obliqueImageCenter[1]
+          bx - obliqueImageCenter[0],
+          by - obliqueImageCenter[1]
         );
-        if (isRightInVolume) {
-          pixelStack.push([rx, ry]);
+        if (isBottomInVolume) {
+          pixelStack.push([bx, by]);
         }
       }
 
@@ -203,6 +188,20 @@ class ObliqueSampler {
         );
         if (isLeftInVolume) {
           pixelStack.push([lx, ly]);
+        }
+      }
+
+      // right
+      const rx = x + 1;
+      const ry = y;
+      if (this.getMaskValue(rx, ty) === 0) {
+        const isRightInVolume = this._obliqueCoordsInVolume(
+          startingSeed,
+          rx - obliqueImageCenter[0],
+          ry - obliqueImageCenter[1]
+        );
+        if (isRightInVolume) {
+          pixelStack.push([rx, ry]);
         }
       }
     }
@@ -272,6 +271,10 @@ class ObliqueSampler {
       return null;
     }
 
+    if (isNaN(x) || isNaN(y) || isNaN(z)) {
+      return null;
+    }
+
     return [x, y, z];
   }
 
@@ -303,12 +306,16 @@ class ObliqueSampler {
   }
 
   _initObliqueImage(width, height) {
-    this._obliqueImage = {
-      data: new Uint16Array(width * height).fill(-2000),
-      mask: new Int8Array(width * height),
-      width,
-      height,
-    };
+    if (this?.image?.width !== width || this?.image?.height !== height) {
+      this._obliqueImage = {
+        data: new Uint16Array(width * height).fill(-2000),
+        mask: new Int8Array(width * height),
+        width,
+        height,
+      };
+    }
+    this.image.data.fill(-2000);
+    this.image.mask.fill(0);
   }
 
   _obliqueCoordsToVolumeCoords(startingSeed, dx, dy) {

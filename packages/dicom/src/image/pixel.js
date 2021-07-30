@@ -1,4 +1,4 @@
-import { DataSet } from "dicom-parser";
+import { DataSet, createJPEGBasicOffsetTable, readEncapsulatedImageFrame } from "dicom-parser";
 export /**
  *
  *
@@ -18,9 +18,27 @@ const getPixelData = (dataset, meta) => {
   return getUncompressedImageFrame(meta);
 };
 
+const _framesAreFragmented = (dataSet) => {
+  const numberOfFrames = dataSet.intString("x00280008");
+  const pixelDataElement = dataSet.elements.x7fe00010;
+  return numberOfFrames !== pixelDataElement.fragments.length;
+};
+
 const getEncapsulatedImageFrame = (dataset, meta) => {
-  console.log(1);
-  return 1;
+  const {
+    elements: { x7fe00010: pixelDataElement },
+  } = meta;
+
+  if (pixelDataElement?.basicOffsetTable?.length) {
+    return readEncapsulatedImageFrame(dataset, pixelDataElement, 0);
+  }
+
+  if (_framesAreFragmented(dataset)) {
+    const basicOffsetTable = createJPEGBasicOffsetTable(dataset, pixelDataElement);
+    return readEncapsulatedImageFrame(dataset, pixelDataElement, 0, basicOffsetTable);
+  }
+
+  return readEncapsulatedPixelDataFromFragments(dataset, pixelDataElement, 0);
 };
 
 /**

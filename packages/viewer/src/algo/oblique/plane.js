@@ -134,11 +134,11 @@ class Plane {
   }
 
   buildOrthoU(plane) {
-    this.makeFrom1Point1Vector(plane.getPoint(), plane.getUVector());
+    this.makeFrom1Point1Vector(plane.getPoint().slice(), plane.getUVector().slice());
   }
 
   buildOrthoV(plane) {
-    this.makeFrom1Point1Vector(plane.getPoint(), plane.getVVector());
+    this.makeFrom1Point1Vector(plane.getPoint().slice(), plane.getVVector().slice());
   }
 }
 
