@@ -6177,6 +6177,11 @@ kind-of@^6.0.0, kind-of@^6.0.2, kind-of@^6.0.3:
   resolved "https://registry.npm.taobao.org/kind-of/download/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha1-B8BQNKbDSfoG4k+jWqdttFgM5N0=
 
+konva@^8.1.1:
+  version "8.1.1"
+  resolved "https://registry.nlark.com/konva/download/konva-8.1.1.tgz#c92c3f81b371947eade7a8f76ee2df34c71b333c"
+  integrity sha1-ySw/gbNxlH6t56j3buLfNMcbMzw=
+
 lerna@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npm.taobao.org/lerna/download/lerna-4.0.0.tgz#b139d685d50ea0ca1be87713a7c2f44a5b678e9e"
