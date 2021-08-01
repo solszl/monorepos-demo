@@ -8,19 +8,20 @@ export const applyTransform = (displayState, canvas, renderCanvas) => {
 
   const { width, height } = canvas;
   transform.translate(width / 2, height / 2);
-  if (!!scale) {
-    transform.scale(scale, scale);
-  }
-
-  if (!!rotate) {
-    transform.rotate(rotate);
-  }
 
   if (flip) {
     const { h = false, v = false } = flip;
     const fv = v ? -1 : 1;
     const fh = h ? -1 : 1;
     transform.scale(fh, fv);
+  }
+
+  if (!!scale) {
+    transform.scale(scale, scale);
+  }
+
+  if (!!rotate) {
+    transform.rotate(rotate);
   }
 
   const { width: rw, height: rh } = renderCanvas;

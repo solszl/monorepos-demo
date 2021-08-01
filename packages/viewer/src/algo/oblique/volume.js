@@ -23,6 +23,7 @@ class Volume {
     this.dimensionInfo.spacing = spacing;
     this.dimensionInfo.origin = img0.imagePositionPatient;
     this.dimensionInfo.sizeInPx = [columns, rows, z];
+    this.dimensionInfo.center = [columns / 2, rows / 2, z / 2];
     // this.dimensionInfo.sizeInPh = [
     //   columns * spacing[0],
     //   rows * spacing[1],

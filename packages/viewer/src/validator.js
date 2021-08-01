@@ -15,7 +15,7 @@ export const validate = (displayInfo, newVal) => {
 
   const oldVal = Reflect.get(displayInfo, key);
   const newType = typeof newVal[key];
-  if (newType === "string" || newType === "boolean") {
+  if (newType === "string" || newType === "boolean" || newType === "number") {
     return oldVal !== newVal[key];
   } else if (newType === "object") {
     const allSame = Object.entries(newVal[key]).every(([subKey, subValue]) => {

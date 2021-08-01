@@ -1,6 +1,7 @@
 import { Core } from "@saga/core";
 import { Resource } from "@saga/loader";
 import { Volume, Plane, ObliqueSampler, ViewportManager } from "@saga/viewer";
+import { vec3 } from "gl-matrix";
 const seriesId = "1.2.410.200010.1160924.3152.150159.175159.1169700.175159";
 const fs = "http://192.168.109.92:8000";
 let currentIndex = 100;
@@ -14,6 +15,14 @@ viewportManager.core = core;
 let plane;
 /** @type {ObliqueSampler} */
 let sampler;
+let center, vector;
+
+// let plane1 = new Plane();
+// plane1.makeFrom3Points([100, 0, 100], [100, 0, 0], [100, 100, 100]);
+// console.log("111", plane1);
+// let plane2 = new Plane();
+// plane2.makeFrom1Point1Vector([0, 0, 100], [1, 0, 0]);
+// console.log("222", plane2);
 
 const standard = viewportManager.addViewport({
   plane: "standard",
@@ -32,6 +41,11 @@ fetchData(seriesId).then((json) => {
     return `${fs}/${i.storagePath}`;
   });
 
+  // const imageUrls = Array.from(
+  //   new Array(303),
+  //   (_, i) => `http://localhost:8887/N2D${(i + 1).toString().padStart(4, 0)}.dcm`
+  // );
+
   resource.addItemUrls(seriesId, imageUrls, "standard");
 
   setTimeout(async () => {
@@ -40,6 +54,7 @@ fetchData(seriesId).then((json) => {
   }, 0);
 
   resource.loadSeries(seriesId, "standard");
+
   setTimeout(async () => {
     const data = resource.getImages(seriesId, "standard");
     const volume = new Volume();
@@ -48,8 +63,10 @@ fetchData(seriesId).then((json) => {
     window.__VV__ = volume;
     console.timeEnd("cost");
 
+    center = volume.dimensionInfo.center;
+    vector = [1, 0, 0];
     plane = new Plane();
-    plane.makeFrom1Point1Vector([0, currentIndex, 0], [0, -1, 0]);
+    plane.makeFrom1Point1Vector(center, vector);
 
     sampler = new ObliqueSampler(volume, plane);
     sampler.update();
@@ -69,7 +86,7 @@ document.addEventListener("wheel", async (e) => {
   let offset = Math.sign(e.wheelDelta);
   currentIndex += offset;
 
-  plane.makeFrom1Point1Vector([0, currentIndex, 0], [0, -1, 0]);
+  plane.makeFrom1Point1Vector(vec3[offset > 0 ? "add" : "sub"](center, center, vector), vector);
   sampler.plane = plane;
   sampler.update();
   sampler.startSampling();
@@ -81,5 +98,10 @@ document.addEventListener("wheel", async (e) => {
 
   resource.cacheItem(seriesId, { key: currentIndex, value: tmpImage }, "sagittal");
 
-  console.log("sagittal", currentIndex);
+  console.log("currentIndex", currentIndex);
+
+  // let offset = Math.sign(e.wheelDelta);
+  // currentIndex += offset;
+  // const image = await resource.getImage(seriesId, currentIndex, "standard");
+  // standard.showImage(image);
 });

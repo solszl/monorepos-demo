@@ -6,34 +6,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>标准面MPR</title>
     <style>
+      html,
       body {
         margin: 0;
         padding: 0;
-      }
-
-      .root {
         width: 100%;
         height: 100%;
-        display: flex;
-        flex: 1;
+        background-color: #000;
       }
 
       .container {
-        border: 1px solid #000;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
 
       #axis {
-        width: 778px;
-        height: 778px;
+        width: 100%;
+        height: 100%;
+      }
+
+      .wrapper {
+        width: 512px;
+        height: 512px;
+        display: inline-block;
         border: 1px solid #000;
+        box-sizing: border-box;
       }
     </style>
   </head>
   <body>
-    <div class="root">
-      <div class="container" id="axis"></div>
-      <div class="container" id="coronal"></div>
-      <div class="container" id="sagittal"></div>
+    <div class="container">
+      <div id="axis" class="wrapper"></div>
+      <!-- <div class="container" id="coronal"></div>
+      <div class="container" id="sagittal"></div> -->
     </div>
   </body>
 </html>

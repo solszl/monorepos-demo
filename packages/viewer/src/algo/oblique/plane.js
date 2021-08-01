@@ -77,7 +77,7 @@ class Plane {
       point2 = [x2, y2, z2];
     }
 
-    if (this._c !== 0 && !point2) {
+    if (this._a !== 0 && !point2) {
       let y2 = point[1];
       let z2 = point[2] + 1;
       let x2 = -1 * ((this._b * y2 + this._c * z2 + this._d) / this._a);

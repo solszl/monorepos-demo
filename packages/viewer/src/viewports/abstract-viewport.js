@@ -14,9 +14,6 @@ class AbstractViewport extends Component {
     this.canvas = null;
     this.iframe = null;
 
-    this.width = -1;
-    this.height = -1;
-
     this.displayState = {
       flip: { h: false, v: false },
       scale: 1,
@@ -50,19 +47,21 @@ class AbstractViewport extends Component {
     this.el.style.position = "relative";
     this.el.style.overflow = "hidden";
     this.el.insertBefore(this.iframe, this.el.firstChild);
+    let lastEmitResize = -1;
     this.iframe.contentWindow.onresize = (e) => {
-      const { width, height } = this._getRootSize();
-      this.width = width;
-      this.height = height;
+      if (Date.now() - lastEmitResize <= 100) {
+        return;
+      }
+      lastEmitResize = Date.now();
+      this._sizeChanged = true;
+      console.log("emit change");
+      this.renderSchedule.invalidate(this.render.bind(this), this.image);
     };
   }
 
   showImage(image) {
     this.image = image;
     this._displayChanged = true;
-    if (this.render?.width !== image.columns || this.render?.height !== image.rows) {
-      this._sizeChanged = true;
-    }
     this.renderSchedule.invalidate(this.render.bind(this), image);
   }
 
@@ -76,12 +75,15 @@ class AbstractViewport extends Component {
       needDraw = true;
     }
 
+    const { width, height } = this._getRootSize();
     const { canvas } = this;
-    const ctx = canvas.getContext("2d");
-    const { renderData } = this.renderer;
-    const { width: rw, height: rh } = renderData;
+    if (canvas.width !== width || canvas.height !== height) {
+      this.canvas.width = width;
+      this.canvas.height = height;
+    }
 
     if (needDraw) {
+      const ctx = canvas.getContext("2d");
       const { width, height } = canvas;
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, width, height);
@@ -94,7 +96,9 @@ class AbstractViewport extends Component {
       this._scaleChanged ||
       this._sizeChanged
     ) {
+      const { renderData } = this.renderer;
       const matrix = applyTransform(this.displayState, canvas, renderData);
+      const ctx = canvas.getContext("2d");
       ctx.setTransform(...matrix);
       // 矩阵变换
       this._flipChanged = false;
@@ -107,15 +111,18 @@ class AbstractViewport extends Component {
 
     // 绘制
     if (needDraw) {
+      const { renderData } = this.renderer;
+      const { width, height } = renderData;
+      const ctx = canvas.getContext("2d");
       // 使用renderData 进行绘制
-      ctx.drawImage(renderData, 0, 0, rw, rh, 0, 0, rw, rh);
+      ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
       this.emit("image_rendered");
       needDraw = false;
     }
   }
 
   setWWWC(val) {
-    this._propertySetter({ wwwc: val }, "_displayChanged");
+    this._propertySetter({ wwwc: val }, "_displayChanged", false);
   }
 
   setInvert(val) {
@@ -152,14 +159,33 @@ class AbstractViewport extends Component {
     return { width: clientWidth, height: clientHeight };
   }
 
-  _propertySetter(val, effectProperty) {
+  _propertySetter(val, effectProperty, merge = true) {
     if (!validate(this.displayState, val)) {
       return;
     }
 
-    Object.assign(this.displayState, val);
+    if (merge) {
+      Object.assign(this.displayState, val);
+    }
+
     this[effectProperty] = true;
     this.renderSchedule.invalidate(this.render.bind(this), this.image);
+  }
+
+  _calcSuitableSizeRatio() {
+    // 根据renderCanvas的大小计算缩放尺寸（如果有的话）
+    if (!this?.renderer?.renderData) {
+      return;
+    }
+    const { width, height } = this._getRootSize();
+    const { width: rw, height: rh } = this.renderer.renderData;
+    const screenRatio = width / height;
+    let scaleResult = width / rw;
+    let imageRatio = rw / rh;
+    if (screenRatio > imageRatio) {
+      scaleResult = height / rh;
+    }
+    this.setScale(scaleResult);
   }
 
   static create() {

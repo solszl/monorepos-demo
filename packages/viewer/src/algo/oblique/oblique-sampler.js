@@ -280,7 +280,7 @@ class ObliqueSampler {
 
   _getDiagonal() {
     const [x, y, z] = this.volume.dimensionInfo.sizeInPx;
-    return Math.sqrt(x ** 2 + y ** 2 + z ** 2);
+    return Math.sqrt(x ** 2 + y ** 2 + z ** 2) * 1.05;
   }
 
   _getStartingSeed() {
