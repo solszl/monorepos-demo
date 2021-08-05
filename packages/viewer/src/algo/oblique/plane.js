@@ -30,7 +30,8 @@ class Plane {
 
     // 求法向量
     this._n = vec3.create();
-    vec3.normalize(this._n, vec3.cross(this._n, vPQ, vPR));
+    // vec3.normalize(this._n, vec3.cross(this._n, vPQ, vPR));
+    vec3.cross(this._n, vPQ, vPR);
     this._a = this._n[0];
     this._b = this._n[1];
     this._c = this._n[2];
@@ -47,6 +48,7 @@ class Plane {
   }
 
   /**
+   * 点法式平面计算
    * 根据一个点和一个向量初始化一个平面方程
    *
    * @param { Array } point

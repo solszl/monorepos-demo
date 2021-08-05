@@ -54,6 +54,7 @@ class ObliqueSampler {
     }
 
     this.planePolygon = hitPoints.length > 0 ? hitPoints : null;
+    console.log(hitPoints);
   }
 
   /** 根据查找出的切面点确定二维坐标系 */
@@ -207,7 +208,6 @@ class ObliqueSampler {
     }
 
     console.timeEnd("sample");
-    console.log("resample over.", this._obliqueImage);
   }
 
   setImageValue(x, y, val) {
@@ -268,6 +268,10 @@ class ObliqueSampler {
     const z = affineSystem[2][0] + affineSystem[2][1] * t;
 
     if (x === Infinity || y === Infinity || z === Infinity) {
+      return null;
+    }
+
+    if (x === -Infinity || y === -Infinity || z === -Infinity) {
       return null;
     }
 

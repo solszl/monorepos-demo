@@ -4,7 +4,7 @@ import { Volume, Plane, ObliqueSampler, ViewportManager } from "@saga/viewer";
 import { vec3 } from "gl-matrix";
 const seriesId = "1.2.410.200010.1160924.3152.150159.175159.1169700.175159";
 const fs = "http://192.168.109.92:8000";
-let currentIndex = 100;
+let currentIndex = 0;
 const API = "/ct_chest/api/combine/";
 
 const core = new Core({ fps: 10 });
@@ -18,10 +18,10 @@ let sampler;
 let center, vector;
 
 // let plane1 = new Plane();
-// plane1.makeFrom3Points([100, 0, 100], [100, 0, 0], [100, 100, 100]);
+// plane1.makeFrom3Points([2, -1, 4], [-1, 3, -2], [0, 2, 3]);
 // console.log("111", plane1);
 // let plane2 = new Plane();
-// plane2.makeFrom1Point1Vector([0, 0, 100], [1, 0, 0]);
+// plane2.makeFrom1Point1Vector([2, -3, 0], [1, -2, 3]);
 // console.log("222", plane2);
 
 const standard = viewportManager.addViewport({
@@ -63,16 +63,17 @@ fetchData(seriesId).then((json) => {
     window.__VV__ = volume;
     console.timeEnd("cost");
 
-    center = volume.dimensionInfo.center;
-    vector = [1, 0, 0];
+    // center = volume.dimensionInfo.center;
+    const [x, y, z] = volume.dimensionInfo.sizeInPx;
+    center = [0, 0, 0];
+    vector = [0, 0, 1]; // [1,0,0],[0,1,0],[0,0,1]
     plane = new Plane();
     plane.makeFrom1Point1Vector(center, vector);
+    console.log(plane);
 
     sampler = new ObliqueSampler(volume, plane);
     sampler.update();
-    console.time("resample");
     sampler.startSampling();
-    console.timeEnd("resample");
 
     let tmpImage = await resource.getImage(seriesId, currentIndex, "standard");
     tmpImage.pixelData = sampler.image.data;
