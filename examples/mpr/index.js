@@ -37,14 +37,14 @@ const fetchData = async (seriesId) => {
 };
 
 fetchData(seriesId).then((json) => {
-  const imageUrls = json.series.images.map((i) => {
-    return `${fs}/${i.storagePath}`;
-  });
+  // const imageUrls = json.series.images.map((i) => {
+  //   return `${fs}/${i.storagePath}`;
+  // });
 
-  // const imageUrls = Array.from(
-  //   new Array(303),
-  //   (_, i) => `http://localhost:8887/N2D${(i + 1).toString().padStart(4, 0)}.dcm`
-  // );
+  const imageUrls = Array.from(
+    new Array(303),
+    (_, i) => `http://localhost:8887/IMG${(i + 1).toString().padStart(4, 0)}.dcm`
+  );
 
   resource.addItemUrls(seriesId, imageUrls, "standard");
 
@@ -65,7 +65,7 @@ fetchData(seriesId).then((json) => {
 
     // center = volume.dimensionInfo.center;
     const [x, y, z] = volume.dimensionInfo.sizeInPx;
-    center = [0, 0, 0];
+    center = [192.99999999999997, 151.49999999999997, 235.18781747091268];
     vector = [0, 0, 1]; // [1,0,0],[0,1,0],[0,0,1]
     plane = new Plane();
     plane.makeFrom1Point1Vector(center, vector);
@@ -80,7 +80,7 @@ fetchData(seriesId).then((json) => {
     tmpImage.rows = sampler.image.height;
     tmpImage.columns = sampler.image.width;
     standard.showImage(tmpImage);
-  }, 5000);
+  }, 15000);
 });
 
 document.addEventListener("wheel", async (e) => {
