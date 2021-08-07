@@ -51,7 +51,7 @@ class Volume {
     });
   }
 
-  isInVolume(point) {
+  isInVolume(point, allowEdges = false) {
     // const [x, y, z] = this.dimensionInfo.sizeInPx;
     // const [px, py, pz] = point;
     // return px >= 0 && px < x && py >= 0 && py < y && pz >= 0 && pz < z;
@@ -81,19 +81,35 @@ class Volume {
     // return true;
 
     const { sizeInPx } = this.dimensionInfo;
-    if (point[0] < 0 || point[0] >= sizeInPx[0]) {
-      // console.log(point);
-      return false;
+    if (allowEdges) {
+      if (point[0] < 0 || point[0] > sizeInPx[1]) {
+        // console.log(point);
+        return false;
+      }
+      if (point[1] < 0 || point[1] > sizeInPx[2]) {
+        // console.log(point);
+        return false;
+      }
+      if (point[2] < 0 || point[2] > sizeInPx[0]) {
+        // console.log(point);
+        return false;
+      }
+      return true;
+    } else {
+      if (point[0] < 0 || point[0] >= sizeInPx[1]) {
+        // console.log(point);
+        return false;
+      }
+      if (point[1] < 0 || point[1] >= sizeInPx[2]) {
+        // console.log(point);
+        return false;
+      }
+      if (point[2] < 0 || point[2] >= sizeInPx[0]) {
+        // console.log(point);
+        return false;
+      }
+      return true;
     }
-    if (point[1] < 0 || point[1] >= sizeInPx[1]) {
-      // console.log(point);
-      return false;
-    }
-    if (point[2] < 0 || point[2] >= sizeInPx[2]) {
-      // console.log(point);
-      return false;
-    }
-    return true;
   }
 
   getValue(x, y, z) {
@@ -112,7 +128,7 @@ class Volume {
    */
   _getEdges() {
     let edges = [];
-    const [x, y, z] = this.dimensionInfo.sizeInPx;
+    // const [x, y, z] = this.dimensionInfo.sizeInPx;
     // edges item = [ point, point_vector ];
     // const p0 = [0, 0, 0];
     // const p0v = [x, 0, 0];
@@ -151,41 +167,119 @@ class Volume {
     // const p11v = [0, y, 0];
     // edges.push([p11, p11v]);
 
-    // 四个顶点
-    const p1 = [0, 0, 0];
-    const p2 = [x, y, 0];
-    const p3 = [0, y, z];
-    const p4 = [x, 0, z];
+    // // 四个顶点
+    // const p1 = [0, 0, 0];
+    // const p2 = [x, y, 0];
+    // const p3 = [0, y, z];
+    // const p4 = [x, 0, z];
 
-    // 每个顶点对外仿射三条边
-    const v11 = [0, 0, z];
-    const v12 = [x, 0, 0];
-    const v13 = [0, y, 0];
+    // // 每个顶点对外仿射三条边
+    // const v11 = [0, 0, z];
+    // const v12 = [x, 0, 0];
+    // const v13 = [0, y, 0];
 
-    const v24 = [0, y, 0];
-    const v25 = [x, y, z];
-    const v26 = [x, 0, 0];
+    // const v24 = [0, y, 0];
+    // const v25 = [x, y, z];
+    // const v26 = [x, 0, 0];
 
-    const v37 = [0, y, 0];
-    const v38 = [x, y, z];
-    const v39 = [0, 0, z];
+    // const v37 = [0, y, 0];
+    // const v38 = [x, y, z];
+    // const v39 = [0, 0, z];
 
-    const v410 = [0, 0, z];
-    const v411 = [x, 0, 0];
-    const v412 = [x, y, z];
-    edges.push([p1, v11]);
-    edges.push([p1, v12]);
-    edges.push([p1, v13]);
-    edges.push([p2, v24]);
-    edges.push([p2, v25]);
-    edges.push([p2, v26]);
-    edges.push([p3, v37]);
-    edges.push([p3, v38]);
-    edges.push([p3, v39]);
-    edges.push([p4, v410]);
-    edges.push([p4, v411]);
-    edges.push([p4, v412]);
-    return edges;
+    // const v410 = [0, 0, z];
+    // const v411 = [x, 0, 0];
+    // const v412 = [x, y, z];
+    // edges.push([p1, v11]);
+    // edges.push([p1, v12]);
+    // edges.push([p1, v13]);
+    // edges.push([p2, v24]);
+    // edges.push([p2, v25]);
+    // edges.push([p2, v26]);
+    // edges.push([p3, v37]);
+    // edges.push([p3, v38]);
+    // edges.push([p3, v39]);
+    // edges.push([p4, v410]);
+    // edges.push([p4, v411]);
+    // edges.push([p4, v412]);
+    // return edges;
+
+    const [zLength, xLength, yLength] = this.dimensionInfo.sizeInPx;
+    var edgeData = [];
+
+    // 0
+    //vector:
+    var edge0Vect = [xLength, 0, 0];
+    var edge0Point = [0, 0, 0];
+
+    // 1
+    // vector:
+    var edge1Vect = [0, yLength, 0];
+    var edge1Point = [0, 0, 0];
+
+    // 2
+    // vector:
+    var edge2Vect = [0, 0, zLength];
+    var edge2Point = [0, 0, 0];
+
+    // 3
+    // vector:
+    var edge3Vect = [0, 0, zLength];
+    var edge3Point = [xLength, 0, 0];
+
+    // 4
+    // vector:
+    var edge4Vect = [xLength, 0, 0];
+    var edge4Point = [0, 0, zLength];
+
+    // 5
+    // vector:
+    var edge5Vect = [xLength, 0, 0];
+    var edge5Point = [0, yLength, 0];
+
+    // 6
+    // vector:
+    var edge6Vect = [0, 0, zLength];
+    var edge6Point = [0, yLength, 0];
+
+    // 7
+    // vector:
+    var edge7Vect = [0, 0, zLength];
+    var edge7Point = [xLength, yLength, 0];
+
+    // 8
+    // vector:
+    var edge8Vect = [xLength, 0, 0];
+    var edge8Point = [0, yLength, zLength];
+
+    // 9
+    // vector:
+    var edge9Vect = [0, yLength, 0];
+    var edge9Point = [0, 0, zLength];
+
+    // 10
+    // vector:
+    var edge10Vect = [0, yLength, 0];
+    var edge10Point = [xLength, 0, 0];
+
+    // 11
+    // vector:
+    var edge11Vect = [0, yLength, 0];
+    var edge11Point = [xLength, 0, zLength];
+
+    edgeData.push([edge0Vect, edge0Point]);
+    edgeData.push([edge1Vect, edge1Point]);
+    edgeData.push([edge2Vect, edge2Point]);
+    edgeData.push([edge3Vect, edge3Point]);
+    edgeData.push([edge4Vect, edge4Point]);
+    edgeData.push([edge5Vect, edge5Point]);
+    edgeData.push([edge6Vect, edge6Point]);
+    edgeData.push([edge7Vect, edge7Point]);
+    edgeData.push([edge8Vect, edge8Point]);
+    edgeData.push([edge9Vect, edge9Point]);
+    edgeData.push([edge10Vect, edge10Point]);
+    edgeData.push([edge11Vect, edge11Point]);
+
+    return edgeData;
   }
 }
 

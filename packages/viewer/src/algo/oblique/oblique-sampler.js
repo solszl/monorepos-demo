@@ -33,15 +33,21 @@ class ObliqueSampler {
    *  - 无限多个点， 边线与平面重叠
    */
   computeCubePlaneHitPoints() {
+    const EPS = 0.00001;
     let hitPoints = [];
     for (let i = 0; i < this._cubeEdges.length; i += 1) {
-      const [point, pointVector] = this._cubeEdges[i];
+      const [pointVector, point] = this._cubeEdges[i];
       const tempHitPoint = this._getHitPoint(point, pointVector, this.plane);
-      if (tempHitPoint && this.volume.isInVolume(tempHitPoint)) {
+      if (tempHitPoint && this.volume.isInVolume(tempHitPoint, true)) {
+        console.log(i, tempHitPoint);
         let isIn = false;
         for (let j = 0; j < hitPoints.length; j += 1) {
           const hp = hitPoints[j];
-          if (hp[0] === tempHitPoint[0] && hp[1] === tempHitPoint[1] && hp[2] === tempHitPoint[2]) {
+          if (
+            Math.abs(hp[0] - tempHitPoint[0]) < EPS &&
+            Math.abs(hp[1] - tempHitPoint[1]) < EPS &&
+            Math.abs(hp[2] - tempHitPoint[2]) < EPS
+          ) {
             isIn = true;
             break;
           }
@@ -54,7 +60,6 @@ class ObliqueSampler {
     }
 
     this.planePolygon = hitPoints.length > 0 ? hitPoints : null;
-    console.log(hitPoints);
   }
 
   /** 根据查找出的切面点确定二维坐标系 */
@@ -148,7 +153,11 @@ class ObliqueSampler {
       );
 
       // const value = this.volume.getValue(...cubeCoords);
-      const value = this.volume.getValue(cubeCoords[0], cubeCoords[1], cubeCoords[2]);
+      const value = this.volume.getValue(
+        Math.round(cubeCoords[0]),
+        Math.round(cubeCoords[1]),
+        Math.round(cubeCoords[2])
+      );
       this.setImageValue(x, y, value);
 
       // top

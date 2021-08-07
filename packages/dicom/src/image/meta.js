@@ -46,9 +46,9 @@ export const getMetaData = (dataset) => {
     minPixelValue: dataset.uint16(Tags.SmallestImagePixelValue),
     maxPixelValue: dataset.uint16(Tags.LargestImagePixelValue),
     // 窗位
-    windowCenter: getNumberValues(dataset, Tags.WindowCenter, 1)?.[0] || 1,
+    windowCenter: getNumberValues(dataset, Tags.WindowCenter, 1)?.[0] || 50,
     // 窗宽
-    windowWidth: getNumberValues(dataset, Tags.WindowWidth, 1)?.[0] || 1255,
+    windowWidth: getNumberValues(dataset, Tags.WindowWidth, 1)?.[0] || 255,
     instanceNumber: dataset.intString(Tags.InstanceNumber),
     imageOrientationPatient: getNumberValues(dataset, Tags.PatientOrientation_CT, 6) ||
       getNumberValues(dataset, Tags.PatientOrientation_CR, 6) || [1, 0, 0, 0, 1, 0],
