@@ -82,29 +82,29 @@ class Volume {
 
     const { sizeInPx } = this.dimensionInfo;
     if (allowEdges) {
-      if (point[0] < 0 || point[0] > sizeInPx[1]) {
+      if (point[0] < 0 || point[0] > sizeInPx[0]) {
         // console.log(point);
         return false;
       }
-      if (point[1] < 0 || point[1] > sizeInPx[2]) {
+      if (point[1] < 0 || point[1] > sizeInPx[1]) {
         // console.log(point);
         return false;
       }
-      if (point[2] < 0 || point[2] > sizeInPx[0]) {
+      if (point[2] < 0 || point[2] > sizeInPx[2]) {
         // console.log(point);
         return false;
       }
       return true;
     } else {
-      if (point[0] < 0 || point[0] >= sizeInPx[1]) {
+      if (point[0] < 0 || point[0] >= sizeInPx[0]) {
         // console.log(point);
         return false;
       }
-      if (point[1] < 0 || point[1] >= sizeInPx[2]) {
+      if (point[1] < 0 || point[1] >= sizeInPx[1]) {
         // console.log(point);
         return false;
       }
-      if (point[2] < 0 || point[2] >= sizeInPx[0]) {
+      if (point[2] < 0 || point[2] >= sizeInPx[2]) {
         // console.log(point);
         return false;
       }
@@ -203,7 +203,8 @@ class Volume {
     // edges.push([p4, v412]);
     // return edges;
 
-    const [zLength, xLength, yLength] = this.dimensionInfo.sizeInPx;
+    // const [zLength, xLength, yLength] = this.dimensionInfo.sizeInPx;
+    const [xLength, yLength, zLength] = this.dimensionInfo.sizeInPx;
     var edgeData = [];
 
     // 0

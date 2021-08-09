@@ -30,58 +30,58 @@ const standard = viewportManager.addViewport({
   el: document.querySelector("#axis"),
 });
 
-// const fetchData = async (seriesId) => {
-//   const url = `${API}${seriesId}`;
-//   const json = await (await fetch(url)).json();
-//   return json;
-// };
+const fetchData = async (seriesId) => {
+  const url = `${API}${seriesId}`;
+  const json = await (await fetch(url)).json();
+  return json;
+};
 
-// fetchData(seriesId).then((json) => {
-//   const imageUrls = json.series.images.map((i) => {
-//     return `${fs}/${i.storagePath}`;
-//   });
+fetchData(seriesId).then((json) => {
+  const imageUrls = json.series.images.map((i) => {
+    return `${fs}/${i.storagePath}`;
+  });
 
-const imageUrls = Array.from(
-  new Array(303),
-  (_, i) => `http://localhost:8887/IMG${(i + 1).toString().padStart(4, 0)}.dcm`
-);
+  // const imageUrls = Array.from(
+  //   new Array(303),
+  //   (_, i) => `http://localhost:8887/IMG${(i + 1).toString().padStart(4, 0)}.dcm`
+  // );
 
-resource.addItemUrls(seriesId, imageUrls, "standard");
+  resource.addItemUrls(seriesId, imageUrls, "standard");
 
-setTimeout(async () => {
-  const image = await resource.getImage(seriesId, currentIndex, "standard");
-  standard.showImage(image);
-}, 0);
+  setTimeout(async () => {
+    const image = await resource.getImage(seriesId, currentIndex, "standard");
+    standard.showImage(image);
+  }, 0);
 
-resource.loadSeries(seriesId, "standard");
+  resource.loadSeries(seriesId, "standard");
 
-setTimeout(async () => {
-  const data = resource.getImages(seriesId, "standard");
-  const volume = new Volume();
-  console.time("cost");
-  volume.pretreatmentData(data);
-  window.__VV__ = volume;
-  console.timeEnd("cost");
+  setTimeout(async () => {
+    const data = resource.getImages(seriesId, "standard");
+    const volume = new Volume();
+    console.time("cost");
+    volume.pretreatmentData(data);
+    window.__VV__ = volume;
+    console.timeEnd("cost");
 
-  // center = volume.dimensionInfo.center;
-  const [x, y, z] = volume.dimensionInfo.sizeInPx;
-  center = [192.99999999999997, 151.49999999999997, 152.5113635452896];
-  vector = [1, 0, 0]; // [1,0,0],[0,1,0],[0,0,1]
-  plane = new Plane();
-  plane.makeFrom1Point1Vector(center, vector);
-  console.log(plane);
+    // center = volume.dimensionInfo.center;
+    const [x, y, z] = volume.dimensionInfo.sizeInPx;
+    center = [192.99999999999997, 151.49999999999997, 152.5113635452896];
+    vector = [0, 1, 0]; // [1,0,0],[0,1,0],[0,0,1]
+    plane = new Plane();
+    plane.makeFrom1Point1Vector(center, vector);
+    console.log(plane);
 
-  sampler = new ObliqueSampler(volume, plane);
-  sampler.update();
-  sampler.startSampling();
+    sampler = new ObliqueSampler(volume, plane);
+    sampler.update();
+    sampler.startSampling();
 
-  let tmpImage = await resource.getImage(seriesId, currentIndex, "standard");
-  tmpImage.pixelData = sampler.image.data;
-  tmpImage.rows = sampler.image.height;
-  tmpImage.columns = sampler.image.width;
-  standard.showImage(tmpImage);
-}, 7000);
-// });
+    let tmpImage = await resource.getImage(seriesId, currentIndex, "standard");
+    tmpImage.pixelData = sampler.image.data;
+    tmpImage.rows = sampler.image.height;
+    tmpImage.columns = sampler.image.width;
+    standard.showImage(tmpImage);
+  }, 7000);
+});
 
 document.addEventListener("wheel", async (e) => {
   let offset = Math.sign(e.wheelDelta);
