@@ -1,6 +1,7 @@
 import { Component, RenderSchedule } from "@saga/core";
 import { validate } from "../validator";
 import { applyTransform } from "../transform/apply";
+import { VIEWER_INTERNAL_EVENTS } from "../constants";
 class AbstractViewport extends Component {
   constructor(option = {}) {
     super();
@@ -38,7 +39,8 @@ class AbstractViewport extends Component {
     this.canvas = canvas;
     this.canvas.className = "__tx-dicom";
     this.canvas.id = this.id;
-    this.el.appendChild(canvas);
+    // this.el.appendChild(canvas);
+    this.el.insertBefore(this.canvas, this.el.firstChild);
   }
 
   initResize() {
@@ -54,8 +56,9 @@ class AbstractViewport extends Component {
       }
       lastEmitResize = Date.now();
       this._sizeChanged = true;
-      console.log("emit change");
+      this._calcSuitableSizeRatio();
       this.renderSchedule.invalidate(this.render.bind(this), this.image);
+      this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, this._getRootSize());
     };
   }
 

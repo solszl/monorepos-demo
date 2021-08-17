@@ -1,8 +1,7 @@
 import { Core } from "@saga/core";
-import ViewportManager from "../../packages/viewer/src";
 import { Resource } from "@saga/loader";
-import { Volume, Plane, ObliqueSampler } from "@saga/viewer";
-const seriesId = "1.2.840.113704.7.32.07.5.1.4.76346.30000021060408361231300076202";
+import { Volume, Plane, ObliqueSampler, factory as ViewFactory } from "@saga/viewer";
+const seriesId = "1.2.392.200036.9116.2.1796265406.1623117451.14.1085300005.1";
 const fs = "http://192.168.111.115:8000";
 let currentIndex = 10;
 const API_GRAY = "/api/v1/series/";
@@ -10,13 +9,12 @@ const API_COLOR = "/api/v1/series/ssr/";
 
 const core = new Core({ fps: 10 });
 const resource = new Resource();
-const viewportManager = new ViewportManager();
-viewportManager.core = core;
 
-const standard = viewportManager.addViewport({
+const standard = ViewFactory({
   plane: "standard",
   renderer: "canvas",
   el: document.querySelector("#root"),
+  core,
 });
 
 const fetchData = async (seriesId) => {

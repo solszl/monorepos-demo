@@ -1,6 +1,6 @@
 import { Core } from "@saga/core";
 import { Resource } from "@saga/loader";
-import { Volume, Plane, ObliqueSampler, ViewportManager } from "@saga/viewer";
+import { Volume, Plane, ObliqueSampler, factory as ViewFactory } from "@saga/viewer";
 import { vec3 } from "gl-matrix";
 const seriesId = "1.2.410.200010.1160924.3152.150159.175159.1169700.175159";
 const fs = "http://192.168.109.92:8000";
@@ -9,8 +9,6 @@ const API = "/ct_chest/api/combine/";
 
 const core = new Core({ fps: 10 });
 const resource = new Resource();
-const viewportManager = new ViewportManager();
-viewportManager.core = core;
 
 let plane;
 /** @type {ObliqueSampler} */
@@ -24,10 +22,11 @@ let center, vector;
 // plane2.makeFrom1Point1Vector([2, -3, 0], [1, -2, 3]);
 // console.log("222", plane2);
 
-const standard = viewportManager.addViewport({
+const standard = ViewFactory({
   plane: "standard",
   renderer: "canvas",
   el: document.querySelector("#axis"),
+  core,
 });
 
 const fetchData = async (seriesId) => {

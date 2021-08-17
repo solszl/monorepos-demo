@@ -1,7 +1,7 @@
 import EventEmitter from "event-emitter";
 import { customAlphabet } from "nanoid";
 
-const ALPHABET = "0123456789abcdef";
+const ALPHABET = "12345abcde";
 /**
  * 组件基类
  *
