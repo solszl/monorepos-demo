@@ -21,7 +21,7 @@ class Viewport extends Component {
 
     // 影像位置发生变化（通常发生在拖动的时候）
     imageView.on(VIEWER_INTERNAL_EVENTS.POSITION_CHANGED, (info) => {});
-    // 影响大小进行缩放
+    // 影像大小进行缩放
     imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => {});
     this._toolView = toolView;
     this._imageView = imageView;

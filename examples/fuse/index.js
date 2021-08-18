@@ -1,4 +1,4 @@
-import { ViewportManager } from "@saga/entry";
+import { ViewportManager, TOOL_TYPE } from "@saga/entry";
 import { Resource } from "@saga/loader";
 const seriesId = "1.2.392.200036.9116.2.1796265406.1623117451.14.1085300005.1";
 const fs = "http://192.168.111.115:8000";
@@ -9,6 +9,7 @@ const standard = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
   el: document.querySelector(".root"),
+  tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
 
 const resource = new Resource();
