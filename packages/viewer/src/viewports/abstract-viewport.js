@@ -4,9 +4,8 @@ import { applyTransform } from "../transform/apply";
 import { VIEWER_INTERNAL_EVENTS } from "../constants";
 class AbstractViewport extends Component {
   constructor(option = {}) {
-    super();
+    super(option);
 
-    this.id = "aaa";
     this.core = option.core;
     /** @type { RenderSchedule } */
     this.renderSchedule = this.core.renderSchedule; // from core instance.

@@ -8,9 +8,9 @@ const ALPHABET = "12345abcde";
  * @class Component
  */
 class Component {
-  constructor() {
+  constructor(opt) {
     EventEmitter(this);
-    this.id = customAlphabet(ALPHABET, 8)();
+    this.id = opt?.id || customAlphabet(ALPHABET, 8)();
   }
 
   destroy() {}

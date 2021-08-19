@@ -6,11 +6,13 @@ class Viewport extends Component {
   constructor(option) {
     super();
     this.init(option);
+    window.a = this;
   }
 
   async init(option) {
-    const toolView = new View(option);
-    const imageView = ViewFactory(option);
+    let opt = Object.assign({}, option, { id: this.id });
+    const toolView = new View(opt);
+    const imageView = ViewFactory(opt);
     // 父容器尺寸发生变化
     imageView.on(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, (info) => {
       // viewer 尺寸发生变更，同步给toolView
@@ -33,6 +35,10 @@ class Viewport extends Component {
 
   get imageView() {
     return this._imageView;
+  }
+
+  useTool(toolType, button = 0) {
+    this.toolView.useTool(toolType, button);
   }
 }
 
