@@ -12,7 +12,7 @@ class ToolState {
   }
 
   updateState(toolType, button = 0) {
-    if (!Reflect.ownKeys(this.state).includes(button)) {
+    if (!Reflect.ownKeys(this.state).includes(`${button}`)) {
       console.warn(`unsupported button,${button}. should be [0,1,2].`);
       return;
     }
@@ -20,11 +20,19 @@ class ToolState {
     this.state[button] = toolType;
 
     const _instance = this.toolInstance[button];
-    if (_instance.type === toolType) {
+    if (_instance?.type === toolType) {
       return;
     }
 
     this.toolInstance[button] = new TOOL_CONSTRUCTOR[toolType]();
+  }
+
+  getToolType(button) {
+    return this.state?.[button];
+  }
+
+  getToolInstance(button) {
+    return this.toolInstance?.[button];
   }
 }
 

@@ -23,8 +23,20 @@ class AbstractViewport extends Component {
   }
 
   init() {
+    this.initContainer();
     this.initCanvas();
     this.initResize();
+  }
+
+  initContainer() {
+    const viewerContainer = document.createElement("div");
+    viewerContainer.classList.add("dicom-container");
+    viewerContainer.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2;`;
+    this.viewerContainer = viewerContainer;
+
+    this.el.style.position = "relative";
+    this.el.style.overflow = "hidden";
+    this.el.insertBefore(viewerContainer, this.el.firstChild);
   }
 
   initCanvas() {
@@ -39,7 +51,8 @@ class AbstractViewport extends Component {
     this.canvas.className = "__tx-dicom";
     this.canvas.id = this.id;
     // this.el.appendChild(canvas);
-    this.el.insertBefore(this.canvas, this.el.firstChild);
+    // this.el.insertBefore(this.canvas, this.el.firstChild);
+    this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
   }
 
   initResize() {
@@ -47,7 +60,8 @@ class AbstractViewport extends Component {
     this.iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;`;
     this.el.style.position = "relative";
     this.el.style.overflow = "hidden";
-    this.el.insertBefore(this.iframe, this.el.firstChild);
+    // this.el.insertBefore(this.iframe, this.el.firstChild);
+    this.viewerContainer.insertBefore(this.iframe, this.viewerContainer.firstChild);
     let lastEmitResize = -1;
     this.iframe.contentWindow.onresize = (e) => {
       if (Date.now() - lastEmitResize <= 100) {

@@ -9,22 +9,7 @@ class View extends Component {
     super(option);
 
     this.toolState = new ToolState();
-
-    const stage = new Stage({
-      container: option.el,
-      width: option.el.clientWidth,
-      height: option.el.clientHeight,
-    });
-    this.stage = stage;
-
-    const layer = new Layer();
-    stage.add(layer);
-    const layer1 = new Layer();
-    stage.add(layer1);
-    const layer2 = new Layer();
-    stage.add(layer2);
-    const layer3 = new Layer();
-    stage.add(layer3);
+    this.initContainer(option.el);
   }
 
   resize(width, height) {
@@ -33,7 +18,24 @@ class View extends Component {
 
   useTool(toolType, button = 0) {
     this.toolState.updateState(toolType, button);
-    MouseTrap.enable(this.stage);
+    MouseTrap.enable(this.stage, this.toolState);
+  }
+
+  initContainer(el) {
+    const toolContainer = document.createElement("div");
+    toolContainer.classList.add("tools-container");
+    toolContainer.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2;`;
+    el.appendChild(toolContainer);
+
+    const stage = new Stage({
+      container: toolContainer,
+      width: toolContainer.clientWidth,
+      height: toolContainer.clientHeight,
+    });
+    this.stage = stage;
+
+    const layer = new Layer();
+    stage.add(layer);
   }
 }
 
