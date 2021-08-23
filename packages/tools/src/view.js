@@ -3,7 +3,7 @@ import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
 import ToolState from "./tool-state";
 import MouseTrap from "./trap/mouse-trap";
-import { EVENTS } from "./constants";
+import { INTERNAL_EVENTS } from "./constants";
 import Area from "./area";
 
 class View extends Component {
@@ -43,13 +43,13 @@ class View extends Component {
       })
     );
 
-    stage.on(EVENTS.DATA_CREATED, (e) => {
+    stage.on(INTERNAL_EVENTS.DATA_CREATED, (e) => {
       console.log(e);
     });
 
-    stage.on(EVENTS.DATA_UPDATED, (e) => {});
+    stage.on(INTERNAL_EVENTS.DATA_UPDATED, (e) => {});
 
-    stage.on(EVENTS.DATA_REMOVED, (e) => {});
+    stage.on(INTERNAL_EVENTS.DATA_REMOVED, (e) => {});
   }
 
   updateViewport(config = {}) {
