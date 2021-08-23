@@ -1,74 +1,78 @@
-import { EVENTS } from "../constants";
-const enable = (stage, toolState) => {
-  stage.on("mouseenter", (e) => {
-    console.log(e);
+const ee = {
+  mouseenter: (e, toolState) => {
     const { evt } = e;
     const { button } = evt;
-
-    toolState.getToolInstance(button)?.mouseEnter(evt);
-  });
-
-  stage.on("mouseleave", (e) => {
-    console.log(e);
+    toolState.getToolInstance(button)?.mouseEnter(e);
+  },
+  mouseleave: (e, toolState) => {
     const { evt } = e;
     const { button } = evt;
-
-    toolState.getToolInstance(button)?.mouseLeave(evt);
-  });
-
-  stage.on("mouseout", (e) => {
-    console.log(e);
-    const { evt } = e;
-    const { button } = evt;
-
-    toolState.getToolInstance(button)?.mouseOut(evt);
-  });
-
-  stage.on("mouseover", (e) => {
-    console.log(e);
-    const { evt } = e;
-    const { button } = evt;
-
-    toolState.getToolInstance(button)?.mouseOver(evt);
-  });
-
-  stage.on("mousemove", (e) => {
+    toolState.getToolInstance(button)?.mouseLeave(e);
+  },
+  mouseout: (e, toolState) => {
     // console.log(e);
     const { evt } = e;
     const { button } = evt;
 
-    toolState.getToolInstance(button)?.mouseMove(evt);
-  });
-
-  stage.on("mousedown", (e) => {
-    console.log(e);
+    toolState.getToolInstance(button)?.mouseOut(e);
+  },
+  mouseover: (e, toolState) => {
+    // console.log(e);
     const { evt } = e;
     const { button } = evt;
 
-    toolState.getToolInstance(button)?.mouseDown(evt);
-  });
-
-  stage.on("mouseup", (e) => {
+    toolState.getToolInstance(button)?.mouseOver(e);
+  },
+  mousemove: (e, toolState) => {
+    // console.log(e);
     const { evt } = e;
     const { button } = evt;
 
-    toolState.getToolInstance(button)?.mouseUp(evt);
-  });
-
-  stage.on("click", (e) => {
-    console.log("click");
+    toolState.getToolInstance(button)?.mouseMove(e);
+  },
+  mousedown: (e, toolState) => {
+    // console.log(e);
+    const { evt } = e;
+    const { button } = evt;
+    if (e.target?.nodeType !== "Stage") {
+      return;
+    }
+    toolState.getToolInstance(button, true)?.mouseDown(e);
+  },
+  mouseup: (e, toolState) => {
     const { evt } = e;
     const { button } = evt;
 
+    toolState.getToolInstance(button)?.mouseUp(e);
+  },
+  click: (e, toolState) => {
+    const { evt } = e;
+    const { button } = evt;
     const fn = ["mouseClick", "mouseWheelClick", "mouseRightClick"];
-    toolState.getToolInstance(button)?.[fn[button]](evt);
-  });
-
-  stage.on("dblclick", (e) => {
+    toolState.getToolInstance(button)?.[fn[button]](e);
+  },
+  dblclick: (e, toolState) => {
     const { evt } = e;
     const { button } = evt;
 
-    toolState.getToolInstance(button)?.mouseDoubleClick(evt);
+    toolState.getToolInstance(button)?.mouseDoubleClick(e);
+  },
+};
+
+const clones = {};
+const enable = (stage, toolState) => {
+  toolState.$stage = stage;
+  // remove old event listeners
+  Reflect.ownKeys(ee).forEach((key) => {
+    stage.off(key, clones[key]);
+    delete clones[key];
+  });
+
+  Reflect.ownKeys(ee).forEach((key) => {
+    clones[key] = (evt) => {
+      ee[key](evt, toolState);
+    };
+    stage.on(key, clones[key]);
   });
 };
 

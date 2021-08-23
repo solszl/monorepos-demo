@@ -3,12 +3,15 @@ import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
 import ToolState from "./tool-state";
 import MouseTrap from "./trap/mouse-trap";
+import { EVENTS } from "./constants";
+import Area from "./area";
 
 class View extends Component {
   constructor(option = {}) {
     super(option);
 
     this.toolState = new ToolState();
+    this.area = new Area();
     this.initContainer(option.el);
   }
 
@@ -17,7 +20,7 @@ class View extends Component {
   }
 
   useTool(toolType, button = 0) {
-    this.toolState.updateState(toolType, button);
+    this.toolState.updateState(toolType, button, this.stage);
     MouseTrap.enable(this.stage, this.toolState);
   }
 
@@ -34,8 +37,23 @@ class View extends Component {
     });
     this.stage = stage;
 
-    const layer = new Layer();
-    stage.add(layer);
+    stage.add(
+      new Layer({
+        id: "toolsLayer",
+      })
+    );
+
+    stage.on(EVENTS.DATA_CREATED, (e) => {
+      console.log(e);
+    });
+
+    stage.on(EVENTS.DATA_UPDATED, (e) => {});
+
+    stage.on(EVENTS.DATA_REMOVED, (e) => {});
+  }
+
+  updateViewport(config = {}) {
+    this.area.update(config);
   }
 }
 

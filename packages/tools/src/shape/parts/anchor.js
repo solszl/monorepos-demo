@@ -1,17 +1,17 @@
 import { Circle } from "konva/lib/shapes/Circle";
-import { SELECTOR_ENUM, COLORS } from "../utils";
+import { TOOL_COLORS, TOOL_ITEM_SELECTOR, TOOL_CONSTANTS } from "./../../constants";
 
 class Anchor extends Circle {
   constructor(config = {}) {
     super(config);
 
     this.fill("rgba(0,0,0,0.1)");
-    this.stroke(COLORS.normal[SELECTOR_ENUM.Anchor]);
+    this.stroke(TOOL_COLORS.NORMAL[TOOL_ITEM_SELECTOR.ANCHOR]);
     this.strokeWidth(2);
     this.radius(7);
-    this.hitStrokeWidth(16);
+    this.hitStrokeWidth(TOOL_CONSTANTS.ANCHOR_HIT_STROKE_WIDTH);
     this.draggable(true);
-    this.name(SELECTOR_ENUM.Anchor);
+    this.name(TOOL_ITEM_SELECTOR.ANCHOR);
   }
 }
 

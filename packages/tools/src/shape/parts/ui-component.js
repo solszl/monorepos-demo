@@ -1,5 +1,5 @@
 import { Group } from "konva/lib/Group";
-import { activeUtil, cursor } from "../utils/index";
+import { activeUtil, cursor } from "../../tools/utils/index";
 
 class UIComponent extends Group {
   constructor(config = {}) {

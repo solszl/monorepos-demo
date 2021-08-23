@@ -18,21 +18,23 @@ class ToolState {
     }
 
     this.state[button] = toolType;
-
-    const _instance = this.toolInstance[button];
-    if (_instance?.type === toolType) {
-      return;
-    }
-
-    this.toolInstance[button] = new TOOL_CONSTRUCTOR[toolType]();
   }
 
   getToolType(button) {
     return this.state?.[button];
   }
 
-  getToolInstance(button) {
-    return this.toolInstance?.[button];
+  getToolInstance(button, needInitial = false) {
+    const toolType = this.state?.[button];
+    if (!toolType) {
+      return;
+    }
+
+    if (needInitial) {
+      this.toolInstance[button] = new TOOL_CONSTRUCTOR[toolType]();
+      this.toolInstance[button].$stage = this.$stage;
+    }
+    return this.toolInstance[button];
   }
 }
 
