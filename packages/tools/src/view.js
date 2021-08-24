@@ -19,7 +19,7 @@ class View extends Component {
     this.stage.setSize({ width, height });
   }
 
-  useTool(toolType, button = 0) {
+  useTool(toolType, button = 1) {
     this.toolState.updateState(toolType, button, this.stage);
     MouseTrap.enable(this.stage, this.toolState);
   }

@@ -4,16 +4,16 @@ class ToolState {
   constructor() {
     // 左中右键绑定的工具集, 绑定的是枚举值
     this.state = {
-      0: null,
       1: null,
       2: null,
+      3: null,
     };
     this.toolInstance = {};
   }
 
-  updateState(toolType, button = 0) {
+  updateState(toolType, button = 1) {
     if (!Reflect.ownKeys(this.state).includes(`${button}`)) {
-      console.warn(`unsupported button,${button}. should be [0,1,2].`);
+      console.warn(`unsupported button,${button}. should be [1,2,3].`);
       return;
     }
 

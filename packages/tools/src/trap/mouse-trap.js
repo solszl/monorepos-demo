@@ -1,61 +1,65 @@
 const ee = {
   mouseenter: (e, toolState) => {
     const { evt } = e;
-    const { button } = evt;
-    toolState.getToolInstance(button)?.mouseEnter(e);
+    const { which } = evt;
+    toolState.getToolInstance(which)?.mouseEnter(e);
   },
   mouseleave: (e, toolState) => {
     const { evt } = e;
-    const { button } = evt;
-    toolState.getToolInstance(button)?.mouseLeave(e);
+    const { which } = evt;
+    toolState.getToolInstance(which)?.mouseLeave(e);
   },
   mouseout: (e, toolState) => {
     // console.log(e);
     const { evt } = e;
-    const { button } = evt;
+    const { which } = evt;
 
-    toolState.getToolInstance(button)?.mouseOut(e);
+    toolState.getToolInstance(which)?.mouseOut(e);
   },
   mouseover: (e, toolState) => {
     // console.log(e);
     const { evt } = e;
-    const { button } = evt;
+    const { which } = evt;
 
-    toolState.getToolInstance(button)?.mouseOver(e);
+    toolState.getToolInstance(which)?.mouseOver(e);
   },
   mousemove: (e, toolState) => {
     // console.log(e);
     const { evt } = e;
-    const { button } = evt;
+    const { which } = evt;
 
-    toolState.getToolInstance(button)?.mouseMove(e);
+    toolState.getToolInstance(which)?.mouseMove(e);
   },
   mousedown: (e, toolState) => {
     // console.log(e);
     const { evt } = e;
-    const { button } = evt;
+    const { which } = evt;
     if (e.target?.nodeType !== "Stage") {
       return;
     }
-    toolState.getToolInstance(button, true)?.mouseDown(e);
+    toolState.getToolInstance(which, true)?.mouseDown(e);
   },
   mouseup: (e, toolState) => {
     const { evt } = e;
-    const { button } = evt;
+    const { which } = evt;
 
-    toolState.getToolInstance(button)?.mouseUp(e);
+    toolState.getToolInstance(which)?.mouseUp(e);
   },
   click: (e, toolState) => {
     const { evt } = e;
-    const { button } = evt;
+    const { which } = evt;
     const fn = ["mouseClick", "mouseWheelClick", "mouseRightClick"];
-    toolState.getToolInstance(button)?.[fn[button]](e);
+    toolState.getToolInstance(which)?.[fn[which]](e);
+
+    if (which === 2) {
+      e.evt.stopPropagation();
+    }
   },
   dblclick: (e, toolState) => {
     const { evt } = e;
-    const { button } = evt;
+    const { which } = evt;
 
-    toolState.getToolInstance(button)?.mouseDoubleClick(e);
+    toolState.getToolInstance(which)?.mouseDoubleClick(e);
   },
 };
 
