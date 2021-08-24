@@ -77,6 +77,13 @@ class AbstractViewport extends Component {
 
   showImage(image) {
     this.image = image;
+    const { width: rw, height: rh } = this.renderer.renderData;
+    const { columns, rows } = image;
+    if (rw !== rows || rh !== columns) {
+      this.renderer.renderData.width = rows;
+      this.renderer.renderData.height = columns;
+      this._calcSuitableSizeRatio();
+    }
     this._displayChanged = true;
     this.renderSchedule.invalidate(this.render.bind(this), image);
   }
@@ -88,7 +95,6 @@ class AbstractViewport extends Component {
       const { displayState } = this;
       await this.renderer.render(image, displayState);
       this._displayChanged = false;
-      needDraw = true;
     }
 
     const { width, height } = this._getRootSize();
@@ -96,13 +102,6 @@ class AbstractViewport extends Component {
     if (canvas.width !== width || canvas.height !== height) {
       this.canvas.width = width;
       this.canvas.height = height;
-    }
-
-    if (needDraw) {
-      const ctx = canvas.getContext("2d");
-      const { width, height } = canvas;
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, width, height);
     }
 
     if (
@@ -116,6 +115,13 @@ class AbstractViewport extends Component {
       const matrix = applyTransform(this.displayState, canvas, renderData);
       const ctx = canvas.getContext("2d");
       ctx.setTransform(...matrix);
+      ctx.save();
+
+      const { width, height } = canvas;
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.restore();
       // 矩阵变换
       this._flipChanged = false;
       this._positionChanged = false;

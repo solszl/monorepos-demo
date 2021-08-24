@@ -48,7 +48,7 @@ class Viewport extends Component {
     return this._imageView;
   }
 
-  useTool(toolType, button = 0) {
+  useTool(toolType, button = 1) {
     // 默认绑定左键
     this.toolView.useTool(toolType, button);
   }

@@ -12,14 +12,6 @@ class CanvasRenderer {
     const lut = getLut(image, displayState);
     const { color } = image;
     let renderFn = color ? renderColorImage : renderGrayImage;
-
-    const { columns, rows } = image;
-    const { width, height } = this.renderCanvas;
-    if (columns !== width || rows !== height) {
-      this.renderCanvas.width = columns;
-      this.renderCanvas.height = rows;
-    }
-
     renderFn(image, lut, renderCanvas);
   }
 
