@@ -29,6 +29,12 @@ class Viewport extends Component {
 
     });
 
+
+    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, info => {
+      console.log(info);
+      toolView.updateViewport(info)
+    })
+
     // 影像大小进行缩放
     imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => { });
 

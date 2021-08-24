@@ -11,7 +11,10 @@ export const VIEWER_INTERNAL_EVENTS = {
   /** 视图旋转*/
   ROTATION_CHANGED: `${PREFIX}rotation_changed`,
   /** 视图缩放*/
-  SCALE_CHANGED: `${PREFIX}scale_changed`
+  SCALE_CHANGED: `${PREFIX}scale_changed`,
+  /** 视图渲染完成*/
+  IMAGE_RENDERED: `${PREFIX}image_rendered`
+
 };
 
 

@@ -64,7 +64,10 @@ export const activeUtil = {
  * @param { string } cursor
  */
 export const cursor = (ctx, cursor = "auto") => {
-  ctx.getStage().container().style.cursor = cursor || "auto";
+  const stage = ctx.getStage();
+  if(stage) {
+    stage.container().style.cursor = cursor || "auto";
+  }
 };
 
 /**

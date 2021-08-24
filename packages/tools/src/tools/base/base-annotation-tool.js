@@ -11,6 +11,10 @@ class BaseAnnotationTool extends BaseTool {
     this.careStageEvent = false;
   }
 
+  dragAnchorEnd(evt) {
+    // implements by subclass.
+  }
+
   dragText(evt) {
     // implements by subclass.
     this.careStageEvent = false;

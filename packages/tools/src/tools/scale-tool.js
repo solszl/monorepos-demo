@@ -1,16 +1,14 @@
 import BaseTool from "./base/base-tool";
 import { INTERNAL_EVENTS } from "../constants";
-import { viewState } from "../area";
+import { viewState, verify } from "../area";
 class ScaleTool extends BaseTool {
     constructor(config = {}) {
         super(config);
         this.isDown = false;
         this.mousemoveY = 0;
         this.offsetY = null;
-        this.scale = 1.703125;
-        console.log();
+        this.scale = viewState.scale;
     }
-
 
     mouseDown(e) {
         super.mouseDown(e);
@@ -18,13 +16,16 @@ class ScaleTool extends BaseTool {
         this.offsetY = e.evt.offsetY;
 
 
-        // window.addEventListener("mousemove", this.docMouseMove.bind(this));
-        // window.addEventListener("mouseup", this.docMouseUp.bind(this));
+        const point = this.$stage.getPointerPosition();
 
+        verify(point.x, point.y)
+
+
+        document.addEventListener("mousemove", this.docMouseMove.bind(this));
+        document.addEventListener("mouseup", this.docMouseUp.bind(this));
     }
 
     docMouseMove(e) {
-        console.log(e);
         if (!this.isDown) return;
         const stepY = e.offsetY - this.offsetY;
         this.offsetY = e.offsetY;
@@ -45,6 +46,7 @@ class ScaleTool extends BaseTool {
 
     docMouseUp(e) {
         this.isDown = false;
+        console.log(this.isDown);
         document.removeEventListener("mousemove", this.docMouseMove);
         document.removeEventListener("mouseup", this.docMouseUp);
     }
@@ -69,10 +71,10 @@ class ScaleTool extends BaseTool {
     //     this.isDown && this.$stage.fire(INTERNAL_EVENTS.TOOL_SCALE, { scale: this.scale });
     // }
 
-    // mouseUp(e) {
-    //     super.mouseUp(e);
-    //     this.isDown = false;
-    // }
+    mouseUp(e) {
+        super.mouseUp(e);
+        this.isDown = false;
+    }
 }
 
 export default ScaleTool;

@@ -1,5 +1,10 @@
+import { mat3 } from "gl-matrix"
 class Transform {
   constructor() {
+    this.m = [1, 0, 0, 1, 0, 0];
+  }
+
+  reset() {
     this.m = [1, 0, 0, 1, 0, 0];
   }
 
@@ -57,9 +62,11 @@ class Transform {
   }
 
   invertPoint(cx, cy) {
-    let invertMat = new Mat3([...this.m, 0, 0, 1]).invert();
-    const ox = cx * invertMat[0] + cy * invertMat[1] + invertMat[2];
-    const oy = cx * invertMat[3] + cy * invertMat[4] + invertMat[5];
+    const { m } = this;
+    const source = mat3.fromValues(m[0], m[2], m[4], m[1], m[3], m[5], 0, 0, 1);
+    const result = mat3.invert(mat3.create(), source);
+    const ox = cx * result[0] + cy * result[1] + result[2];
+    const oy = cx * result[3] + cy * result[4] + result[5];
     return [ox, oy];
   }
 }

@@ -138,7 +138,15 @@ class AbstractViewport extends Component {
       const ctx = canvas.getContext("2d");
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
-      this.emit("image_rendered");
+
+      this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
+        width,
+        height,
+        scale: this.displayState.scale || 1,
+        rootSize: this._getRootSize(),
+        rotate: this.displayState.rotate || 0,
+        offset: this.displayState.offset || [0, 0],
+      });
       needDraw = false;
     }
   }

@@ -29,6 +29,7 @@ class LengthTool extends BaseAnnotationTool {
     this.data.position = this.$stage.getPointerPosition();
   }
 
+
   mouseMove(evt) {
     super.mouseMove(evt);
     if (!this.careStageEvent) {
@@ -45,19 +46,18 @@ class LengthTool extends BaseAnnotationTool {
     super.mouseUp(evt);
     this.careStageEvent = false;
     // 验证数据合法。派发事件，添加数据。 否则丢弃
-    if (this.verifyDataLegal()) {
-    } else {
-      this.remove();
-      this.getStage().fire(EVENTS.DATA_REMOVED, { id: this.data.id });
-    }
+    this._tryDrapData();
+
+    // TODO: emit add data
   }
 
   verifyDataLegal() {
     // TODO: 数据合法性验证
-    const { start, end } = this.data;
+    const { start, end, position } = this.data;
+
     const points = [
-      [start.x, start.y],
-      [end.x, end.y],
+      [start.x + position.x, start.y + position.y],
+      [end.x + position.x, end.y + position.y],
     ];
 
     return points.every(([x, y]) => verify(x, y));
@@ -101,6 +101,7 @@ class LengthTool extends BaseAnnotationTool {
     });
     [anchor1, anchor2].forEach((anchor) => {
       anchor.on("dragmove", this.dragAnchor.bind(this));
+      anchor.on('dragend', this.dragAnchorEnd.bind(this));
     });
 
     const line = new Line({
@@ -135,10 +136,16 @@ class LengthTool extends BaseAnnotationTool {
     this.renderData();
   }
 
+  dragAnchorEnd(evt) {
+    super.dragAnchorEnd(evt);
+    this._tryDrapData()
+  }
+
   dragEnd(evt) {
     super.dragEnd(evt);
     this.data.position = this.getPosition();
     this.renderData();
+    this._tryDrapData()
   }
 
   dragText(evt) {
@@ -159,6 +166,13 @@ class LengthTool extends BaseAnnotationTool {
     const { start, end } = this.data;
     const distance = Math.sqrt((start.x - end.x) ** 2, (start.y - end.y) ** 2);
     this.data.textBox.text = distance;
+  }
+
+  _tryDrapData() {
+    if (!this.verifyDataLegal() && this.getStage()) {
+      this.getStage().fire(EVENTS.DATA_REMOVED, { id: this.data.id });
+      this.remove();
+    }
   }
 }
 
