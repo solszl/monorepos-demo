@@ -5,6 +5,7 @@ import { Line } from "konva/lib/shapes/Line";
 import TextField from "../../shape/parts/textfield";
 import DashLine from "../../shape/parts/dashline";
 import { connectTextNode, randomId } from "../utils";
+import { verify } from "../../area";
 
 class LengthTool extends BaseAnnotationTool {
   constructor(config = {}) {
@@ -53,7 +54,13 @@ class LengthTool extends BaseAnnotationTool {
 
   verifyDataLegal() {
     // TODO: 数据合法性验证
-    return true;
+    const { start, end } = this.data;
+    const points = [
+      [start.x, start.y],
+      [end.x, end.y],
+    ];
+
+    return points.every(([x, y]) => verify(x, y));
   }
 
   renderData() {
