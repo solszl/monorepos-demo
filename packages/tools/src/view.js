@@ -10,6 +10,8 @@ class View extends Component {
   constructor(option = {}) {
     super(option);
 
+
+
     this.toolState = new ToolState();
     this.area = new Area();
     this.initContainer(option.el);
@@ -47,9 +49,19 @@ class View extends Component {
       console.log(e);
     });
 
-    stage.on(INTERNAL_EVENTS.DATA_UPDATED, (e) => {});
+    stage.on(INTERNAL_EVENTS.DATA_UPDATED, (e) => { });
 
-    stage.on(INTERNAL_EVENTS.DATA_REMOVED, (e) => {});
+    stage.on(INTERNAL_EVENTS.DATA_REMOVED, (e) => { });
+
+
+    stage.on(INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
+      this.emit(INTERNAL_EVENTS.TOOL_ROTATION, info)
+    });
+
+    stage.on(INTERNAL_EVENTS.TOOL_SCALE, info => {
+      this.emit(INTERNAL_EVENTS.TOOL_SCALE, info);
+    });
+
   }
 
   updateViewport(config = {}) {

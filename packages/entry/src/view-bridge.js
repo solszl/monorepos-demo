@@ -25,16 +25,40 @@ class Viewport extends Component {
     });
 
     // 影像位置发生变化（通常发生在拖动的时候）
-    imageView.on(VIEWER_INTERNAL_EVENTS.POSITION_CHANGED, (info) => {});
+    imageView.on(VIEWER_INTERNAL_EVENTS.POSITION_CHANGED, (info) => {
+
+    });
 
     // 影像大小进行缩放
-    imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => {});
+    imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => { });
 
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {});
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_UPDATED, (data) => {});
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (id) => {});
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ZOOM, (info) => {});
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => {});
+
+
+    imageView.on(VIEWER_INTERNAL_EVENTS.ROTATION_CHANGED, (info) => {
+      console.log(info);
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, (info) => {
+      toolView.updateViewport(info)
+    });
+
+
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => { });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_UPDATED, (data) => { });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (id) => { });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ZOOM, (info) => {
+
+      // console.log(info);
+    });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => { });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
+      imageView.setRotation(info.rotate);
+    });
+
+
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, info => {
+      imageView.setScale(info.scale)
+    });
 
     this._toolView = toolView;
     this._imageView = imageView;
@@ -52,6 +76,7 @@ class Viewport extends Component {
     // 默认绑定左键
     this.toolView.useTool(toolType, button);
   }
+
 }
 
 export default Viewport;

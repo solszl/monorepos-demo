@@ -8,4 +8,10 @@ export const VIEWER_INTERNAL_EVENTS = {
   SIZE_CHANGED: `${PREFIX}size_changed`,
   /** 页码切换*/
   SLICE_CHANGED: `${PREFIX}slice_changed`,
+  /** 视图旋转*/
+  ROTATION_CHANGED: `${PREFIX}rotation_changed`,
+  /** 视图缩放*/
+  SCALE_CHANGED: `${PREFIX}scale_changed`
 };
+
+
