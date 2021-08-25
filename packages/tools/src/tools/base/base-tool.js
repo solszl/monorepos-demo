@@ -4,6 +4,7 @@ class BaseTool extends UIComponent {
   constructor(config = {}) {
     super(config);
     this._data = null;
+    this.UIInitialed = false;
   }
 
   initialUI() {}
@@ -25,6 +26,11 @@ class BaseTool extends UIComponent {
 
   set data(val) {
     this._data = val;
+    this.careStageEvent = false;
+    if (!this.UIInitialed) {
+      this.initialUI();
+      this.UIInitialed = true;
+    }
     this.renderData();
   }
 

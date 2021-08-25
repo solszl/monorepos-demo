@@ -86,6 +86,10 @@ class AbstractViewport extends Component {
     }
     this._displayChanged = true;
     this.renderSchedule.invalidate(this.render.bind(this), image);
+    this.emit(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, {
+      seriesId: image.seriesNum,
+      sliceId: image.instanceNumber,
+    });
   }
 
   async render(image) {

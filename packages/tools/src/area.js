@@ -18,13 +18,11 @@ class Area {
     Object.assign(viewState, { height } ?? {});
     Object.assign(viewState, { centerX: width / 2, centerY: height / 2 } ?? {});
 
-    // TODO: update transform
-    applyTransform()
+    applyTransform();
   }
 }
 
 export const transform = new Transform();
-
 
 const applyTransform = () => {
   const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } = viewState;
@@ -55,8 +53,7 @@ const applyTransform = () => {
   transform.translate(-width / 2, -height / 2);
 
   return transform.m;
-
-}
+};
 
 export const viewState = {
   x: 0,
@@ -73,23 +70,8 @@ export const viewState = {
 
 export const verify = (x, y) => {
   const [ox, oy] = transform.invertPoint(x, y);
-  const { width, height, scale, rootWidth, rootHeight } = viewState;
-  // TODO: 根据viewState 判断是否在内部
-  const newWidth = width * scale;
-  const newHeight = height * scale;
-
-
-  const startX = (rootWidth - newWidth) / 2;
-  const endX = startX + newWidth;
-  const startY = (rootHeight - newHeight) / 2;
-  const endY = startY + newHeight;
-
-  console.log("1",startX, endX, startY, endY);
-  console.log("2",x,y,ox, oy);
-
-  // return (ox >= startX && ox <= endX) && (oy >= startY && oy <= endY);
-  return ox >=0 && ox<=width && oy>=0 && oy<=height
-
+  const { width, height } = viewState;
+  return ox >= 0 && ox <= width && oy >= 0 && oy <= height;
 };
 
 export default Area;

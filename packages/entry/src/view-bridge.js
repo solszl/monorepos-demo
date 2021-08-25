@@ -25,45 +25,60 @@ class Viewport extends Component {
     });
 
     // 影像位置发生变化（通常发生在拖动的时候）
-    imageView.on(VIEWER_INTERNAL_EVENTS.POSITION_CHANGED, (info) => {
+    imageView.on(VIEWER_INTERNAL_EVENTS.POSITION_CHANGED, (info) => {});
 
+    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
+      // console.log(info);
+      toolView.updateViewport(info);
     });
 
-
-    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, info => {
-      console.log(info);
-      toolView.updateViewport(info)
-    })
-
     // 影像大小进行缩放
-    imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => { });
-
-
+    imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => {});
 
     imageView.on(VIEWER_INTERNAL_EVENTS.ROTATION_CHANGED, (info) => {
       console.log(info);
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, (info) => {
-      toolView.updateViewport(info)
+      toolView.updateViewport(info);
+    });
+    imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {
+      // 更新视图， 根据传来的seriesId, sliceId。
+      const sliceKey = `${info.seriesId}-${info.sliceId}`;
+      this.sliceKey = sliceKey;
+      const sliceData = this.data?.[sliceKey] ?? [];
+      toolView.renderData(sliceData);
     });
 
-
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => { });
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_UPDATED, (data) => { });
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (id) => { });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {
+      const { sliceKey } = this;
+      const sliceData = this.data?.[sliceKey] ?? [];
+      sliceData.push(data.data);
+      this.data[sliceKey] = sliceData;
+    });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_UPDATED, (data) => {
+      const { sliceKey } = this;
+      const sliceData = this.data?.[sliceKey] ?? [];
+      const index = sliceData.findIndex((item) => item.id === data.id);
+      this.data[sliceKey] = sliceData.splice(index, 1, data.data);
+    });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (info) => {
+      const { sliceKey } = this;
+      const sliceData = this.data?.[sliceKey] ?? [];
+      const index = sliceData.findIndex((item) => item.id === info.id);
+      sliceData.splice(index, 1);
+      this.data[sliceKey] = sliceData;
+    });
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ZOOM, (info) => {
-
       // console.log(info);
     });
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => { });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => {});
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
       imageView.setRotation(info.rotate);
     });
 
-
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, info => {
-      imageView.setScale(info.scale)
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => {
+      imageView.setScale(info.scale);
     });
 
     this._toolView = toolView;
@@ -82,7 +97,6 @@ class Viewport extends Component {
     // 默认绑定左键
     this.toolView.useTool(toolType, button);
   }
-
 }
 
 export default Viewport;

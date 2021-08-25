@@ -3,14 +3,12 @@ import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
 import ToolState from "./tool-state";
 import MouseTrap from "./trap/mouse-trap";
-import { INTERNAL_EVENTS } from "./constants";
+import { INTERNAL_EVENTS, TOOL_CONSTRUCTOR } from "./constants";
 import Area from "./area";
 
 class View extends Component {
   constructor(option = {}) {
     super(option);
-
-
 
     this.toolState = new ToolState();
     this.area = new Area();
@@ -45,27 +43,37 @@ class View extends Component {
       })
     );
 
-    stage.on(INTERNAL_EVENTS.DATA_CREATED, (e) => {
-      console.log(e);
+    // 整理事件监听
+    Object.values(INTERNAL_EVENTS).forEach((eventName) => {
+      stage.on(eventName, (info) => {
+        this.emit(eventName, info);
+      });
     });
-
-    stage.on(INTERNAL_EVENTS.DATA_UPDATED, (e) => { });
-
-    stage.on(INTERNAL_EVENTS.DATA_REMOVED, (e) => { });
-
-
-    stage.on(INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
-      this.emit(INTERNAL_EVENTS.TOOL_ROTATION, info)
-    });
-
-    stage.on(INTERNAL_EVENTS.TOOL_SCALE, info => {
-      this.emit(INTERNAL_EVENTS.TOOL_SCALE, info);
-    });
-
   }
 
   updateViewport(config = {}) {
     this.area.update(config);
+  }
+
+  /**
+   * 设置工具层数据
+   *
+   * @param { array } data
+   * @memberof View
+   */
+  renderData(data = []) {
+    const layer = this.stage.findOne("#toolsLayer");
+    if (!layer) {
+      console.error(`can't find tools layer.`);
+    }
+
+    layer.removeChildren();
+    data.map((obj) => {
+      const { type } = obj;
+      const item = new TOOL_CONSTRUCTOR[type]();
+      item.data = data;
+      layer.add(item);
+    });
   }
 }
 

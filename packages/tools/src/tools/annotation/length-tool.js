@@ -1,5 +1,5 @@
 import BaseAnnotationTool from "../base/base-annotation-tool";
-import { EVENTS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
+import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE, INTERNAL_EVENTS } from "../../constants";
 import Anchor from "../../shape/parts/anchor";
 import { Line } from "konva/lib/shapes/Line";
 import TextField from "../../shape/parts/textfield";
@@ -13,6 +13,7 @@ class LengthTool extends BaseAnnotationTool {
     this.type = TOOL_TYPE.LENGTH;
     this._data = {
       id: randomId(),
+      type: this.type,
       position: { x: 0, y: 0 },
       start: { x: 0, y: 0 },
       end: { x: 0, y: 0 },
@@ -28,7 +29,6 @@ class LengthTool extends BaseAnnotationTool {
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
   }
-
 
   mouseMove(evt) {
     super.mouseMove(evt);
@@ -46,15 +46,11 @@ class LengthTool extends BaseAnnotationTool {
     super.mouseUp(evt);
     this.careStageEvent = false;
     // 验证数据合法。派发事件，添加数据。 否则丢弃
-    this._tryDrapData();
-
-    // TODO: emit add data
+    this._tryUpdateData(false);
   }
 
   verifyDataLegal() {
-    // TODO: 数据合法性验证
     const { start, end, position } = this.data;
-
     const points = [
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
@@ -92,6 +88,9 @@ class LengthTool extends BaseAnnotationTool {
 
   initialUI() {
     super.initialUI();
+    if (this.UIInitialed) {
+      return;
+    }
     // 需要2个锚点，一个线，一个文案，可能还需要一个虚线
     const anchor1 = new Anchor({
       id: "startAnchor",
@@ -101,7 +100,7 @@ class LengthTool extends BaseAnnotationTool {
     });
     [anchor1, anchor2].forEach((anchor) => {
       anchor.on("dragmove", this.dragAnchor.bind(this));
-      anchor.on('dragend', this.dragAnchorEnd.bind(this));
+      anchor.on("dragend", this.dragAnchorEnd.bind(this));
     });
 
     const line = new Line({
@@ -138,14 +137,14 @@ class LengthTool extends BaseAnnotationTool {
 
   dragAnchorEnd(evt) {
     super.dragAnchorEnd(evt);
-    this._tryDrapData()
+    this._tryUpdateData();
   }
 
   dragEnd(evt) {
     super.dragEnd(evt);
     this.data.position = this.getPosition();
     this.renderData();
-    this._tryDrapData()
+    this._tryUpdateData();
   }
 
   dragText(evt) {
@@ -168,10 +167,22 @@ class LengthTool extends BaseAnnotationTool {
     this.data.textBox.text = distance;
   }
 
-  _tryDrapData() {
+  _tryUpdateData(update = true) {
     if (!this.verifyDataLegal() && this.getStage()) {
-      this.getStage().fire(EVENTS.DATA_REMOVED, { id: this.data.id });
+      this.getStage().fire(INTERNAL_EVENTS.DATA_REMOVED, { id: this.data.id });
       this.remove();
+      return;
+    }
+
+    const stage = this.getStage();
+    if (!stage) {
+      return;
+    }
+
+    if (update) {
+      stage.fire(INTERNAL_EVENTS.DATA_UPDATED, { id: this.data.id, data: this.data });
+    } else {
+      stage.fire(INTERNAL_EVENTS.DATA_CREATED, { id: this.data.id, data: this.data });
     }
   }
 }
