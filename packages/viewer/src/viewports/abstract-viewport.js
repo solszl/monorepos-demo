@@ -168,7 +168,8 @@ class AbstractViewport extends Component {
   }
 
   setRotation(val) {
-    this._propertySetter({ rotate: val }, "_rotateChanged");
+    const isValidate = this._propertySetter({ rotate: val }, "_rotateChanged");
+
   }
 
   setFlipV(val) {
@@ -180,7 +181,8 @@ class AbstractViewport extends Component {
   }
 
   setScale(val) {
-    this._propertySetter({ scale: val }, "_scaleChanged");
+    const isValidate = this._propertySetter({ scale: val }, "_scaleChanged");
+    isValidate && this.emit(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, { scale: val })
   }
 
   setTranslation(val) {
@@ -195,7 +197,7 @@ class AbstractViewport extends Component {
 
   _propertySetter(val, effectProperty, merge = true) {
     if (!validate(this.displayState, val)) {
-      return;
+      return false;
     }
 
     if (merge) {
@@ -204,6 +206,7 @@ class AbstractViewport extends Component {
 
     this[effectProperty] = true;
     this.renderSchedule.invalidate(this.render.bind(this), this.image);
+    return true;
   }
 
   _calcSuitableSizeRatio() {

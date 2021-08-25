@@ -25,17 +25,40 @@ class ToolState {
   }
 
   getToolInstance(button, needInitial = false) {
+    // console.log(button);
+    if (!completeState.isComplete && button === completeState.button) {
+      return this.toolInstance[button];
+    }
+
+    if (!completeState.isComplete && button !== 0) {
+      completeState.isComplete = true;
+      this.toolInstance[completeState.button].mouseUp();
+    }
+
     const toolType = this.state?.[button];
-    if (!toolType) {
+    if (!toolType && completeState.isComplete) {
       return;
     }
 
-    if (needInitial) {
+    if (needInitial && completeState.isComplete) {
       this.toolInstance[button] = new TOOL_CONSTRUCTOR[toolType]();
       this.toolInstance[button].$stage = this.$stage;
+      completeState.button = button;
     }
+
+    if (!completeState.isComplete) {
+      button = completeState.button;
+    }
+
     return this.toolInstance[button];
   }
 }
 
+const completeState = {
+  isComplete: true,
+  button: 1,
+};
 export default ToolState;
+export const setActionComplete = (val) => {
+  completeState.isComplete = val;
+};

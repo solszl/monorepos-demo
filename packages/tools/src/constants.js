@@ -43,7 +43,7 @@ export const TOOL_TYPE = {
 
 
   ROTATION: "rotation",
-  SCALE: "scale"
+  SCALE: "scale",
 };
 
 export const EVENTS = {

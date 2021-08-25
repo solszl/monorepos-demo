@@ -8,9 +8,9 @@ class Area {
   }
 
   update(config) {
-    const { rootSize, offset, scale, rotate, width, height } = config;
+    const { rootSize = {}, offset = [], scale, rotate, width, height } = config;
     // 设置视窗
-    Object.assign(viewState, { rootWidth: rootSize.width, rootHeight: rootSize.height } ?? {});
+    Object.assign(viewState, { rootWidth: rootSize?.width, rootHeight: rootSize?.height } ?? {});
     Object.assign(viewState, { x: offset[0], y: offset[1] } ?? {});
     Object.assign(viewState, { scale } ?? {});
     Object.assign(viewState, { rotate } ?? {});
@@ -71,7 +71,7 @@ export const viewState = {
 export const verify = (x, y) => {
   const [ox, oy] = transform.invertPoint(x, y);
   const { width, height } = viewState;
-  return ox >= 0 && ox <= width && oy >= 0 && oy <= height;
+  return ox >= 0 && ox <= width && oy >= 0 && oy <= height
 };
 
 export default Area;

@@ -71,9 +71,10 @@ class View extends Component {
     data.map((obj) => {
       const { type } = obj;
       const item = new TOOL_CONSTRUCTOR[type]();
-      item.data = data;
+      item.data = item.convertLocalCoords(obj);
       layer.add(item);
     });
+
   }
 }
 

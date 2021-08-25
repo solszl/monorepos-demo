@@ -15,12 +15,6 @@ class ScaleTool extends BaseTool {
         this.isDown = true;
         this.offsetY = e.evt.offsetY;
 
-
-        const point = this.$stage.getPointerPosition();
-
-        verify(point.x, point.y)
-
-
         document.addEventListener("mousemove", this.docMouseMove.bind(this));
         document.addEventListener("mouseup", this.docMouseUp.bind(this));
     }

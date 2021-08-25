@@ -1,11 +1,16 @@
 import BaseAnnotationTool from "../base/base-annotation-tool";
-import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE, INTERNAL_EVENTS } from "../../constants";
+import {
+  TOOL_CONSTANTS,
+  TOOL_ITEM_SELECTOR,
+  TOOL_TYPE,
+  INTERNAL_EVENTS,
+} from "../../constants";
 import Anchor from "../../shape/parts/anchor";
 import { Line } from "konva/lib/shapes/Line";
 import TextField from "../../shape/parts/textfield";
 import DashLine from "../../shape/parts/dashline";
 import { connectTextNode, randomId } from "../utils";
-import { verify } from "../../area";
+import { transform, verify } from "../../area";
 
 class LengthTool extends BaseAnnotationTool {
   constructor(config = {}) {
@@ -25,7 +30,6 @@ class LengthTool extends BaseAnnotationTool {
 
   mouseDown(evt) {
     super.mouseDown(evt);
-
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
   }
@@ -38,6 +42,7 @@ class LengthTool extends BaseAnnotationTool {
 
     const pointer = this.getRelativePointerPosition();
     this._data.end = pointer;
+
     this._calcText();
     this.renderData();
   }
@@ -47,6 +52,13 @@ class LengthTool extends BaseAnnotationTool {
     this.careStageEvent = false;
     // 验证数据合法。派发事件，添加数据。 否则丢弃
     this._tryUpdateData(false);
+    // TODO: emit add data
+  }
+
+  convertLocalCoords(data) {
+    this.data.start = transform(data.start);
+    this.data.end = transform(data.end);
+    return this.data;
   }
 
   verifyDataLegal() {
@@ -60,6 +72,7 @@ class LengthTool extends BaseAnnotationTool {
   }
 
   renderData() {
+    console.log(this.data);
     super.renderData();
     const { position, start, end, textBox } = this.data;
     this.setPosition(position);
@@ -180,9 +193,15 @@ class LengthTool extends BaseAnnotationTool {
     }
 
     if (update) {
-      stage.fire(INTERNAL_EVENTS.DATA_UPDATED, { id: this.data.id, data: this.data });
+      stage.fire(INTERNAL_EVENTS.DATA_UPDATED, {
+        id: this.data.id,
+        data: this.data,
+      });
     } else {
-      stage.fire(INTERNAL_EVENTS.DATA_CREATED, { id: this.data.id, data: this.data });
+      stage.fire(INTERNAL_EVENTS.DATA_CREATED, {
+        id: this.data.id,
+        data: this.data,
+      });
     }
   }
 }

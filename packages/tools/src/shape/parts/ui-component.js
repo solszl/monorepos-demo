@@ -18,8 +18,8 @@ class UIComponent extends Group {
       cursor(this, "grab");
       activeUtil.on(this);
     });
-    this.on("mousedown", (evt) => {
-      cursor(this, "grabbing");
+    this.on("mousedown", (evt) =>{
+      cursor(this,'grabbing');
     });
     this.on("mouseout mouseleave", (evt) => {
       cursor(this);

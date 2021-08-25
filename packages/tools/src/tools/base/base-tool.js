@@ -9,6 +9,7 @@ class BaseTool extends UIComponent {
 
   initialUI() {}
   verifyDataLegal() {}
+  convertLocalCoords(data) {}
   renderData() {}
 
   mouseEnter(e) {}
