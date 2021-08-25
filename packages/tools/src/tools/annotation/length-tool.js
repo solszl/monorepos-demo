@@ -51,8 +51,7 @@ class LengthTool extends BaseAnnotationTool {
     super.mouseUp(evt);
     this.careStageEvent = false;
     // 验证数据合法。派发事件，添加数据。 否则丢弃
-    this._tryUpdateData(false);
-    // TODO: emit add data
+    this._tryUpdateData();
   }
 
   convertLocalCoords(data) {
@@ -72,13 +71,17 @@ class LengthTool extends BaseAnnotationTool {
   }
 
   renderData() {
-    console.log(this.data);
     super.renderData();
     const { position, start, end, textBox } = this.data;
     this.setPosition(position);
     this.findOne("#startAnchor")?.setPosition(start);
     this.findOne("#endAnchor")?.setPosition(end);
-    this.findOne(".node-item")?.points([start.x, start.y, end.x, end.y]);
+    this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`)?.points([
+      start.x,
+      start.y,
+      end.x,
+      end.y,
+    ]);
 
     const textfield = this.findOne(`.${TOOL_ITEM_SELECTOR.LABEL}`);
     if (!textBox.dragged) {
@@ -118,7 +121,7 @@ class LengthTool extends BaseAnnotationTool {
 
     const line = new Line({
       hitStrokeWidth: TOOL_CONSTANTS.HIT_STROKE_WIDTH,
-      name: "node-item",
+      name: TOOL_ITEM_SELECTOR.ITEM,
     });
 
     const textfield = new TextField();
@@ -180,7 +183,7 @@ class LengthTool extends BaseAnnotationTool {
     this.data.textBox.text = distance;
   }
 
-  _tryUpdateData(update = true) {
+  _tryUpdateData() {
     if (!this.verifyDataLegal() && this.getStage()) {
       this.getStage().fire(INTERNAL_EVENTS.DATA_REMOVED, { id: this.data.id });
       this.remove();
@@ -192,17 +195,10 @@ class LengthTool extends BaseAnnotationTool {
       return;
     }
 
-    if (update) {
-      stage.fire(INTERNAL_EVENTS.DATA_UPDATED, {
-        id: this.data.id,
-        data: this.data,
-      });
-    } else {
-      stage.fire(INTERNAL_EVENTS.DATA_CREATED, {
-        id: this.data.id,
-        data: this.data,
-      });
-    }
+    stage.fire(INTERNAL_EVENTS.DATA_UPDATED, {
+      id: this.data.id,
+      data: this.data,
+    });
   }
 }
 

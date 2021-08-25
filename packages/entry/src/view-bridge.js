@@ -32,10 +32,9 @@ class Viewport extends Component {
       toolView.updateViewport(info);
     });
 
-
-    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, info => {
-      toolView.updateViewport(info)
-    })
+    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
+      toolView.updateViewport(info);
+    });
 
     // 影像大小进行缩放
     imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => {});
@@ -52,36 +51,34 @@ class Viewport extends Component {
       // 更新视图， 根据传来的seriesId, sliceId。
       const sliceKey = `${info.seriesId}-${info.sliceId}`;
       this.sliceKey = sliceKey;
-      const sliceData = this.data?.[sliceKey] ?? [];
+      const sliceData = this.data?.[sliceKey] ?? new Map();
       toolView.renderData(sliceData);
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {
       const { sliceKey } = this;
-      const sliceData = this.data?.[sliceKey] ?? [];
-      sliceData.push(data.data);
+      const sliceData = this.data?.[sliceKey] ?? new Map();
+      sliceData.set(data.id, data.data);
       this.data[sliceKey] = sliceData;
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_UPDATED, (data) => {
       const { sliceKey } = this;
-      const sliceData = this.data?.[sliceKey] ?? [];
-      const index = sliceData.findIndex((item) => item.id === data.id);
-      this.data[sliceKey] = sliceData.splice(index, 1, data.data);
-    });
-
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (info) => {
-      const { sliceKey } = this;
-      const sliceData = this.data?.[sliceKey] ?? [];
-      const index = sliceData.findIndex((item) => item.id === info.id);
-      sliceData.splice(index, 1);
+      const sliceData = this.data?.[sliceKey] ?? new Map();
+      sliceData.set(data.id, data.data);
       this.data[sliceKey] = sliceData;
     });
-    
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ZOOM, (info) => {
+
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (data) => {
+      const { sliceKey } = this;
+      const sliceData = this.data?.[sliceKey] ?? new Map();
+      sliceData.delete(data.id);
+      this.data[sliceKey] = sliceData;
     });
 
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => { });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ZOOM, (info) => {});
+
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => {});
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
       imageView.setRotation(info.rotate);
     });

@@ -61,20 +61,19 @@ class View extends Component {
    * @param { array } data
    * @memberof View
    */
-  renderData(data = []) {
+  renderData(data = new Map()) {
     const layer = this.stage.findOne("#toolsLayer");
     if (!layer) {
       console.error(`can't find tools layer.`);
     }
 
     layer.removeChildren();
-    data.map((obj) => {
+    data.forEach((obj) => {
       const { type } = obj;
       const item = new TOOL_CONSTRUCTOR[type]();
       item.data = item.convertLocalCoords(obj);
       layer.add(item);
     });
-
   }
 }
 

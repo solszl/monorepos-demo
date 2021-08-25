@@ -25,7 +25,7 @@ class ToolState {
   }
 
   getToolInstance(button, needInitial = false) {
-    // console.log(button);
+    // TODO：  改！代码整理
     if (!completeState.isComplete && button === completeState.button) {
       return this.toolInstance[button];
     }
