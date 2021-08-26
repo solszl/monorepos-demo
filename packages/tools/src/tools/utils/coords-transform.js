@@ -26,7 +26,6 @@ const length = (data) => {
   obj.start.y = start[1] - position[1];
   obj.textBox.x = textPoint[0] - position[0];
   obj.textBox.y = textPoint[1] - position[1];
-  //   console.log(obj);
   return obj;
 };
 

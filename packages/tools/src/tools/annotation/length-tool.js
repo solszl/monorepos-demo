@@ -1,5 +1,10 @@
 import BaseAnnotationTool from "../base/base-annotation-tool";
-import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE, INTERNAL_EVENTS } from "../../constants";
+import {
+  TOOL_CONSTANTS,
+  TOOL_ITEM_SELECTOR,
+  TOOL_TYPE,
+  INTERNAL_EVENTS,
+} from "../../constants";
 import Anchor from "../../shape/parts/anchor";
 import { Line } from "konva/lib/shapes/Line";
 import TextField from "../../shape/parts/textfield";
@@ -67,7 +72,12 @@ class LengthTool extends BaseAnnotationTool {
     this.setPosition(position);
     this.findOne("#startAnchor")?.setPosition(start);
     this.findOne("#endAnchor")?.setPosition(end);
-    this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`)?.points([start.x, start.y, end.x, end.y]);
+    this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`)?.points([
+      start.x,
+      start.y,
+      end.x,
+      end.y,
+    ]);
 
     const textfield = this.findOne(`.${TOOL_ITEM_SELECTOR.LABEL}`);
     if (!textBox.dragged) {
@@ -79,6 +89,11 @@ class LengthTool extends BaseAnnotationTool {
         [end.x, end.y],
         [(start.x + end.x) / 2, (start.y + end.y) / 2],
       ];
+
+      textfield.setPosition({
+        x: textBox.x,
+        y: textBox.y,
+      });
 
       const dashLine = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);
       dashLine.visible(true);
@@ -155,8 +170,6 @@ class LengthTool extends BaseAnnotationTool {
     super.dragText(evt);
     const textfield = evt.target;
     const { x, y } = textfield.getPosition();
-
-    console.log(x, y);
     this.data.textBox = Object.assign({}, this.data.textBox, {
       dragged: true,
       x,
@@ -168,7 +181,9 @@ class LengthTool extends BaseAnnotationTool {
 
   _calcText() {
     const { start, end } = this.data;
-    const distance = Math.sqrt((start.x - end.x) ** 2 + (start.y - end.y) ** 2).toFixed(2);
+    const distance = Math.sqrt(
+      (start.x - end.x) ** 2 + (start.y - end.y) ** 2
+    ).toFixed(2);
     this.data.textBox.text = distance;
   }
 
@@ -197,7 +212,10 @@ class LengthTool extends BaseAnnotationTool {
     const localPosition = worldToLocal(position.x, position.y);
     const localStart = worldToLocal(position.x + start.x, position.y + start.y);
     const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
-    const localText = worldToLocal(position.x + textBox.x, position.x + textBox.y);
+    const localText = worldToLocal(
+      position.x + textBox.x,
+      position.y + textBox.y
+    );
     const data = JSON.parse(JSON.stringify(this.data));
     data.position = { x: localPosition[0], y: localPosition[1] };
     data.start = {
