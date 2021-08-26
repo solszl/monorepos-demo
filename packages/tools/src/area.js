@@ -8,20 +8,31 @@ class Area {
   }
 
   update(config) {
-    const { rootSize = {}, offset = [], scale, rotate, width, height } = config;
+    const {
+      rootSize,
+      scale,
+      rotate,
+      width,
+      height,
+      position = [0, 0],
+      offset,
+    } = config;
+
     // 设置视窗
     Object.assign(
       viewState,
       { rootWidth: rootSize?.width, rootHeight: rootSize?.height } ?? {}
     );
-    Object.assign(viewState, { x: offset[0], y: offset[1] } ?? {});
+    Object.assign(viewState, { x: position[0], y: position[1] } ?? {});
     Object.assign(viewState, { scale } ?? {});
     Object.assign(viewState, { rotate } ?? {});
     Object.assign(viewState, { width } ?? {});
     Object.assign(viewState, { height } ?? {});
     Object.assign(viewState, { centerX: width / 2, centerY: height / 2 } ?? {});
+    Object.assign(viewState, { offset } ?? {});
 
-    applyTransform();
+    // 初始化时缩放和reander同时触发，判断是否有transform所需数据
+    rootSize && applyTransform();
   }
 }
 

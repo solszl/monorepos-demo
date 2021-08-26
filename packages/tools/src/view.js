@@ -5,6 +5,7 @@ import ToolState from "./tool-state";
 import MouseTrap from "./trap/mouse-trap";
 import { INTERNAL_EVENTS, TOOL_CONSTRUCTOR } from "./constants";
 import Area from "./area";
+import { transform as transformCoords } from "./tools/utils/coords-transform";
 
 class View extends Component {
   constructor(option = {}) {
@@ -74,6 +75,20 @@ class View extends Component {
       item.data = item.convertLocalCoords(obj);
       layer.add(item);
     });
+  }
+
+  resetData(data = new Map()) {
+    const layer = this.stage.findOne("#toolsLayer");
+    if (!layer) {
+      console.error(`can't find tools layer.`);
+    }
+    data.forEach((obj) => {
+      const item = layer.findOne(`.${obj.id}`);
+      const data = transformCoords(obj);
+      item.setData(data);
+      item.renderData();
+    });
+    layer.batchDraw();
   }
 }
 

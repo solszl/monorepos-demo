@@ -30,13 +30,16 @@ class BaseTool extends UIComponent {
     this.careStageEvent = false;
     if (!this.UIInitialed) {
       this.initialUI();
-      this.UIInitialed = true;
     }
     this.renderData();
   }
 
   get data() {
     return this._data;
+  }
+
+  setData(val) {
+    this._data = val;
   }
 }
 

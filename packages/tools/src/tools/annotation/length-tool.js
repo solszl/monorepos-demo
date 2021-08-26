@@ -10,21 +10,23 @@ import { Line } from "konva/lib/shapes/Line";
 import TextField from "../../shape/parts/textfield";
 import DashLine from "../../shape/parts/dashline";
 import { connectTextNode, randomId } from "../utils";
-import { transform, verify } from "../../area";
+import { verify, viewState } from "../../area";
+import { worldToLocal } from "../utils/coords-transform";
 
 class LengthTool extends BaseAnnotationTool {
   constructor(config = {}) {
     super(config);
     this.type = TOOL_TYPE.LENGTH;
+    const name = randomId();
+    this.name(name);
     this._data = {
-      id: randomId(),
+      id: name,
       type: this.type,
       position: { x: 0, y: 0 },
       start: { x: 0, y: 0 },
       end: { x: 0, y: 0 },
       textBox: { dragged: false, x: 0, y: 0, text: "" },
     };
-
     this.careStageEvent = true;
   }
 
@@ -41,7 +43,7 @@ class LengthTool extends BaseAnnotationTool {
     }
 
     const pointer = this.getRelativePointerPosition();
-    this._data.end = pointer;
+    this.data.end = pointer;
 
     this._calcText();
     this.renderData();
@@ -52,12 +54,6 @@ class LengthTool extends BaseAnnotationTool {
     this.careStageEvent = false;
     // 验证数据合法。派发事件，添加数据。 否则丢弃
     this._tryUpdateData();
-  }
-
-  convertLocalCoords(data) {
-    this.data.start = transform(data.start);
-    this.data.end = transform(data.end);
-    return this.data;
   }
 
   verifyDataLegal() {
@@ -135,6 +131,8 @@ class LengthTool extends BaseAnnotationTool {
     const toolLayer = this.$stage.findOne("#toolsLayer");
     toolLayer.add(this);
     this.draw();
+
+    this.UIInitialed = true;
   }
 
   dragAnchor(evt) {
@@ -166,12 +164,11 @@ class LengthTool extends BaseAnnotationTool {
   dragText(evt) {
     super.dragText(evt);
     const textfield = evt.target;
-    const position = textfield.getPosition();
-
+    const { x, y } = textfield.getPosition();
     this.data.textBox = Object.assign({}, this.data.textBox, {
       dragged: true,
-      x: position.x,
-      y: position.y,
+      x,
+      y,
     });
 
     this.renderData();
@@ -179,7 +176,9 @@ class LengthTool extends BaseAnnotationTool {
 
   _calcText() {
     const { start, end } = this.data;
-    const distance = Math.sqrt((start.x - end.x) ** 2, (start.y - end.y) ** 2);
+    const distance = Math.sqrt(
+      (start.x - end.x) ** 2 + (start.y - end.y) ** 2
+    ).toFixed(2);
     this.data.textBox.text = distance;
   }
 
@@ -195,10 +194,36 @@ class LengthTool extends BaseAnnotationTool {
       return;
     }
 
+    const data = this._convertData();
     stage.fire(INTERNAL_EVENTS.DATA_UPDATED, {
       id: this.data.id,
-      data: this.data,
+      data,
     });
+  }
+
+  _convertData() {
+    // 转换成local
+    const { position, end, textBox, start } = this.data;
+    const localPosition = worldToLocal(position.x, position.y);
+    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
+    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const localText = worldToLocal(
+      position.x + textBox.x,
+      position.x + textBox.y
+    );
+    const data = JSON.parse(JSON.stringify(this.data));
+    data.position = { x: localPosition[0], y: localPosition[1] };
+    data.start = {
+      x: localStart[0] - localPosition[0],
+      y: localStart[1] - localPosition[1],
+    };
+    data.end = {
+      x: localEnd[0] - localPosition[0],
+      y: localEnd[1] - localPosition[1],
+    };
+    data.textBox.x = localText[0] - localPosition[0];
+    data.textBox.y = localText[1] - localPosition[1];
+    return data;
   }
 }
 

@@ -27,12 +27,13 @@ class Viewport extends Component {
     // 影像位置发生变化（通常发生在拖动的时候）
     imageView.on(VIEWER_INTERNAL_EVENTS.POSITION_CHANGED, (info) => {});
 
-    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
-      // console.log(info);
-      toolView.updateViewport(info);
-    });
+    // imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
+    //   // console.log(info);
+    //   toolView.updateViewport(info);
+    // });
 
     imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
+      // console.log(info);
       toolView.updateViewport(info);
     });
 
@@ -44,7 +45,12 @@ class Viewport extends Component {
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, (info) => {
+      // console.log(info);
       toolView.updateViewport(info);
+      // 更新视图， 根据传来的seriesId, sliceId。
+      const sliceKey = `${info.seriesId}-${info.sliceId}`;
+      const sliceData = this.data?.[sliceKey] ?? new Map();
+      toolView.resetData(sliceData);
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {

@@ -1,4 +1,4 @@
-import { mat3 } from "gl-matrix"
+import { mat3 } from "gl-matrix";
 class Transform {
   constructor() {
     this.m = [1, 0, 0, 1, 0, 0];

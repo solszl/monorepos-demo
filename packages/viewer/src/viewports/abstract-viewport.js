@@ -52,7 +52,10 @@ class AbstractViewport extends Component {
     this.canvas.id = this.id;
     // this.el.appendChild(canvas);
     // this.el.insertBefore(this.canvas, this.el.firstChild);
-    this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
+    this.viewerContainer.insertBefore(
+      this.canvas,
+      this.viewerContainer.firstChild
+    );
   }
 
   initResize() {
@@ -61,7 +64,10 @@ class AbstractViewport extends Component {
     this.el.style.position = "relative";
     this.el.style.overflow = "hidden";
     // this.el.insertBefore(this.iframe, this.el.firstChild);
-    this.viewerContainer.insertBefore(this.iframe, this.viewerContainer.firstChild);
+    this.viewerContainer.insertBefore(
+      this.iframe,
+      this.viewerContainer.firstChild
+    );
     let lastEmitResize = -1;
     this.iframe.contentWindow.onresize = (e) => {
       if (Date.now() - lastEmitResize <= 100) {
@@ -143,13 +149,20 @@ class AbstractViewport extends Component {
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
 
+      const { width: rootWidth, height: rootHeight } = this._getRootSize();
+      const { scale, rotate } = this.displayState;
+      const offset = [
+        (rootWidth - width * scale) / 2,
+        (rootHeight - height * scale) / 2,
+      ];
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
         width,
         height,
-        scale: this.displayState.scale || 1,
+        scale: scale || 1,
         rootSize: this._getRootSize(),
-        rotate: this.displayState.rotate || 0,
-        offset: this.displayState.offset || [0, 0],
+        rotate: rotate || 0,
+        position: this.displayState.position || [0, 0],
+        offset,
       });
       needDraw = false;
     }
@@ -168,8 +181,7 @@ class AbstractViewport extends Component {
   }
 
   setRotation(val) {
-    const isValidate = this._propertySetter({ rotate: val }, "_rotateChanged");
-
+    this._propertySetter({ rotate: val }, "_rotateChanged");
   }
 
   setFlipV(val) {
@@ -182,7 +194,13 @@ class AbstractViewport extends Component {
 
   setScale(val) {
     const isValidate = this._propertySetter({ scale: val }, "_scaleChanged");
-    isValidate && this.emit(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, { scale: val })
+    if (this.image && isValidate) {
+      this.emit(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, {
+        seriesId: this.image.seriesNum,
+        sliceId: this.image.instanceNumber,
+        scale: val,
+      });
+    }
   }
 
   setTranslation(val) {
