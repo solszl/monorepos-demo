@@ -129,6 +129,21 @@ class AbstractViewport extends Component {
       this._rotateChanged = false;
       this._scaleChanged = false;
       this._sizeChanged = false;
+
+      const { width: rootWidth, height: rootHeight } = this._getRootSize();
+      const { scale, rotate } = this.displayState;
+      const offset = [(rootWidth - width * scale) / 2, (rootHeight - height * scale) / 2];
+      this.emit(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, {
+        width,
+        height,
+        scale: scale || 1,
+        rootSize: this._getRootSize(),
+        rotate: rotate || 0,
+        position: this.displayState.position || [0, 0],
+        seriesId: this.image.seriesNum,
+        sliceId: this.image.instanceNumber,
+        offset,
+      });
       needDraw = true;
     }
 
@@ -140,17 +155,9 @@ class AbstractViewport extends Component {
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
 
-      const { width: rootWidth, height: rootHeight } = this._getRootSize();
-      const { scale, rotate } = this.displayState;
-      const offset = [(rootWidth - width * scale) / 2, (rootHeight - height * scale) / 2];
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
-        width,
-        height,
-        scale: scale || 1,
-        rootSize: this._getRootSize(),
-        rotate: rotate || 0,
-        position: this.displayState.position || [0, 0],
-        offset,
+        seriesId: this.image.seriesNum,
+        sliceId: this.image.instanceNumber,
       });
       needDraw = false;
     }
@@ -181,14 +188,7 @@ class AbstractViewport extends Component {
   }
 
   setScale(val) {
-    const isValidate = this._propertySetter({ scale: val }, "_scaleChanged");
-    if (this.image && isValidate) {
-      this.emit(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, {
-        seriesId: this.image.seriesNum,
-        sliceId: this.image.instanceNumber,
-        scale: val,
-      });
-    }
+    this._propertySetter({ scale: val }, "_scaleChanged");
   }
 
   setTranslation(val) {

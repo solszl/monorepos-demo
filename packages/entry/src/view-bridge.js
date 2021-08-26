@@ -24,34 +24,15 @@ class Viewport extends Component {
       console.log("尺寸发生变化了", width, height);
     });
 
-    // 影像位置发生变化（通常发生在拖动的时候）
-    imageView.on(VIEWER_INTERNAL_EVENTS.POSITION_CHANGED, (info) => {});
-
-    // imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
-    //   // console.log(info);
-    //   toolView.updateViewport(info);
-    // });
-
-    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
-      // console.log(info);
-      toolView.updateViewport(info);
-    });
-
-    // 影像大小进行缩放
-    imageView.on(VIEWER_INTERNAL_EVENTS.SIZE_CHANGED, (info) => {});
-
-    imageView.on(VIEWER_INTERNAL_EVENTS.ROTATION_CHANGED, (info) => {
-      console.log(info);
-    });
-
-    imageView.on(VIEWER_INTERNAL_EVENTS.SCALE_CHANGED, (info) => {
-      // console.log(info);
+    imageView.on(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, (info) => {
       toolView.updateViewport(info);
       // 更新视图， 根据传来的seriesId, sliceId。
       const sliceKey = `${info.seriesId}-${info.sliceId}`;
       const sliceData = this.data?.[sliceKey] ?? new Map();
       toolView.resetData(sliceData);
     });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {});
 
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {
       // 更新视图， 根据传来的seriesId, sliceId。

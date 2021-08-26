@@ -13,8 +13,7 @@ export const VIEWER_INTERNAL_EVENTS = {
   /** 视图缩放*/
   SCALE_CHANGED: `${PREFIX}scale_changed`,
   /** 视图渲染完成*/
-  IMAGE_RENDERED: `${PREFIX}image_rendered`
-
+  IMAGE_RENDERED: `${PREFIX}image_rendered`,
+  /** 图像矩阵发生变化 */
+  MATRIX_CHANGED: `${PREFIX}matrix_rendered`,
 };
-
-
