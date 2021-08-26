@@ -52,10 +52,7 @@ class AbstractViewport extends Component {
     this.canvas.id = this.id;
     // this.el.appendChild(canvas);
     // this.el.insertBefore(this.canvas, this.el.firstChild);
-    this.viewerContainer.insertBefore(
-      this.canvas,
-      this.viewerContainer.firstChild
-    );
+    this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
   }
 
   initResize() {
@@ -64,10 +61,7 @@ class AbstractViewport extends Component {
     this.el.style.position = "relative";
     this.el.style.overflow = "hidden";
     // this.el.insertBefore(this.iframe, this.el.firstChild);
-    this.viewerContainer.insertBefore(
-      this.iframe,
-      this.viewerContainer.firstChild
-    );
+    this.viewerContainer.insertBefore(this.iframe, this.viewerContainer.firstChild);
     let lastEmitResize = -1;
     this.iframe.contentWindow.onresize = (e) => {
       if (Date.now() - lastEmitResize <= 100) {
@@ -121,17 +115,14 @@ class AbstractViewport extends Component {
       this._scaleChanged ||
       this._sizeChanged
     ) {
-      const { renderData } = this.renderer;
-      const matrix = applyTransform(this.displayState, canvas, renderData);
-      const ctx = canvas.getContext("2d");
-      ctx.setTransform(...matrix);
-      ctx.save();
-
       const { width, height } = canvas;
+      const ctx = canvas.getContext("2d");
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, width, height);
 
-      ctx.restore();
+      const { renderData } = this.renderer;
+      const matrix = applyTransform(this.displayState, canvas, renderData);
+      ctx.setTransform(...matrix);
       // 矩阵变换
       this._flipChanged = false;
       this._positionChanged = false;
@@ -151,10 +142,7 @@ class AbstractViewport extends Component {
 
       const { width: rootWidth, height: rootHeight } = this._getRootSize();
       const { scale, rotate } = this.displayState;
-      const offset = [
-        (rootWidth - width * scale) / 2,
-        (rootHeight - height * scale) / 2,
-      ];
+      const offset = [(rootWidth - width * scale) / 2, (rootHeight - height * scale) / 2];
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
         width,
         height,
