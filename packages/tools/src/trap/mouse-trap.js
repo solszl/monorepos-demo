@@ -48,12 +48,14 @@ const ee = {
   click: (e, toolState) => {
     const { evt } = e;
     const { which } = evt;
-    const fn = ["mouseClick", "mouseWheelClick", "mouseRightClick"];
-    toolState.getToolInstance(which)?.[fn[which]](e);
-
-    if (which === 2) {
-      e.evt.stopPropagation();
-    }
+    const fn = ["mouseClick", "mouseWheelClick"];
+    toolState.getToolInstance(which)?.[fn[which]]?.(e);
+  },
+  contextmenu: (e, toolState) => {
+    e.evt.preventDefault();
+    const { evt } = e;
+    const { which } = evt;
+    toolState.getToolInstance(which)?.mouseRightClick(e);
   },
   dblclick: (e, toolState) => {
     const { evt } = e;

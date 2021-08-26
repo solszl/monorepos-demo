@@ -5,21 +5,19 @@ class UIComponent extends Group {
   constructor(config = {}) {
     super(config);
 
-    // 绑定鼠标交互样式与外观样式。
-    this._bindMouseEffect();
+    if (config.useDefaultMouseEffect ?? true) {
+      // 绑定鼠标交互样式与外观样式。
+      this._bindMouseEffect();
+    }
   }
-
-  fromData(val) {}
-
-  toData() {}
 
   _bindMouseEffect() {
     this.on("mouseover", (evt) => {
       cursor(this, "grab");
       activeUtil.on(this);
     });
-    this.on("mousedown", (evt) =>{
-      cursor(this,'grabbing');
+    this.on("mousedown", (evt) => {
+      cursor(this, "grabbing");
     });
     this.on("mouseout mouseleave", (evt) => {
       cursor(this);

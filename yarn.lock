@@ -6177,10 +6177,10 @@ kind-of@^6.0.0, kind-of@^6.0.2, kind-of@^6.0.3:
   resolved "https://registry.npm.taobao.org/kind-of/download/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha1-B8BQNKbDSfoG4k+jWqdttFgM5N0=
 
-konva@^8.1.1:
-  version "8.1.1"
-  resolved "https://registry.nlark.com/konva/download/konva-8.1.1.tgz#c92c3f81b371947eade7a8f76ee2df34c71b333c"
-  integrity sha1-ySw/gbNxlH6t56j3buLfNMcbMzw=
+konva@^8.1.3:
+  version "8.1.3"
+  resolved "https://registry.nlark.com/konva/download/konva-8.1.3.tgz#d13627446894f954c4b78280b26757af6821b822"
+  integrity sha1-0TYnRGiU+VTEt4KAsmdXr2ghuCI=
 
 lerna@^4.0.0:
   version "4.0.0"
@@ -8776,6 +8776,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2, signal-exit@^3.0.3:
   version "3.0.3"
   resolved "https://registry.npm.taobao.org/signal-exit/download/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha1-oUEMLt2PB3sItOJTyOrPyvBXRhw=
+
+simplify-js@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.npm.taobao.org/simplify-js/download/simplify-js-1.2.4.tgz#7aab22d6df547ffd40ef0761ccd82b75287d45c7"
+  integrity sha1-eqsi1t9Uf/1A7wdhzNgrdSh9Rcc=
 
 slash@^3.0.0:
   version "3.0.0"

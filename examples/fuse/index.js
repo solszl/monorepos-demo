@@ -31,4 +31,7 @@ fetchData(seriesId).then((json) => {
     standard.imageView.showImage(image);
   }, 0);
 });
+
+standard.useTool("length");
+standard.useTool("scale", 3);
 console.log("fuse start.", vm);

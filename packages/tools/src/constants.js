@@ -1,5 +1,6 @@
 import AngleTool from "./tools/annotation/angle-tool";
 import LengthTool from "./tools/annotation/length-tool";
+import PolygonTool from "./tools/polygon-tool";
 import RotationTool from "./tools/rotation-tool";
 import ScaleTool from "./tools/scale-tool";
 
@@ -40,8 +41,7 @@ export const TOOL_TYPE = {
   ANGLE: "angle",
   PROBE: "probe",
   ELLIPSE_ROI: "ellipse_roi",
-
-
+  POLYGON: "polygon",
   ROTATION: "rotation",
   SCALE: "scale",
 };
@@ -61,12 +61,13 @@ export const INTERNAL_EVENTS = {
   TOOL_ZOOM: "tx_tool_zoom",
   TOOL_TRANSLATE: "tx_tool_translate",
   TOOL_ROTATION: "tx_tool_rotation",
-  TOOL_SCALE: "tx_tool_scale"
+  TOOL_SCALE: "tx_tool_scale",
 };
 
 export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE.LENGTH]: LengthTool,
   [TOOL_TYPE.ANGLE]: AngleTool,
   [TOOL_TYPE.ROTATION]: RotationTool,
-  [TOOL_TYPE.SCALE]: ScaleTool
+  [TOOL_TYPE.SCALE]: ScaleTool,
+  [TOOL_TYPE.POLYGON]: PolygonTool,
 };
