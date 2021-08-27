@@ -95,12 +95,13 @@ class TaskManager {
  */
 class Task {
   constructor(obj) {
-    const { url = "", seriesId = "", plane = "", index } = obj;
+    const { url = "", seriesId = "", plane = "", index, format = "dicom" } = obj;
     this.priority = 0;
     this.imageUrl = url;
     this.seriesId = seriesId;
     this.plane = plane;
     this.index = index;
+    this.format = format;
   }
 }
 

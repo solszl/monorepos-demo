@@ -13,7 +13,7 @@ const devServer = {
   historyApiFallback: true,
   proxy: {
     "/api": {
-      target: "http://192.168.111.115:13000",
+      target: "http://192.168.110.55:13000",
       changeOrigin: true,
       pathRewrite: {
         "^/api": "",

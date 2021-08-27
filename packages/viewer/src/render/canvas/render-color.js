@@ -19,7 +19,7 @@ export const renderColorImage = (image, lut, renderCanvas) => {
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Red
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Green
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Blue
-    renderCanvasData.data[imageDataIndex++] = 255;
+    renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue];
   }
 
   ctx.putImageData(renderCanvasData, 0, 0);

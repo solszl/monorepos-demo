@@ -1,5 +1,6 @@
 import LoaderWorker from "./workers/loader.worker";
 import PromiseWorker from "promise-worker";
+import { postprocessor } from "./utils";
 
 /** @type { Boolean } 简单的通过判断是否是Chrome49版本来确定是否是xp系统 */
 const isXP = /Windows NT 5\.1.+Chrome\/49/.test(navigator.userAgent);
@@ -59,9 +60,10 @@ class LoaderManager {
     this.workers.push(worker);
 
     const { seriesId, plane, index, image } = data;
-    this.cacheManager.cacheItem(seriesId, { key: index, value: image }, plane);
+    let img = await postprocessor(image, task);
+    this.cacheManager.cacheItem(seriesId, { key: index, value: img }, plane);
 
-    resolve?.(image);
+    resolve?.(img);
     await this.delay(0); // 减压、涓流
     this._startCheck(); // 可能有更好的办法？？？
   }

@@ -87,8 +87,8 @@ class AbstractViewport extends Component {
     const { width: rw, height: rh } = this.renderer.renderData;
     const { columns, rows } = image;
     if (rw !== rows || rh !== columns) {
-      this.renderer.renderData.width = rows;
-      this.renderer.renderData.height = columns;
+      this.renderer.renderData.width = columns;
+      this.renderer.renderData.height = rows;
       this._calcSuitableSizeRatio();
     }
     this._displayChanged = true;

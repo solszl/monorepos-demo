@@ -73,3 +73,11 @@ export const createImage = async (arrayBuffer) => {
   meta = await updateMetaForPixelData(meta, pixelDataSource);
   return postprocess(meta);
 };
+
+export const createWebImage = async (arrayBuffer) => {
+  const img = {
+    data: arrayBuffer,
+  };
+
+  return img;
+};

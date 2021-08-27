@@ -27,9 +27,9 @@ class Resource {
    * @param { string } [plane="axis"]
    * @memberof Resource
    */
-  addItemUrls(seriesId, imageUrls, plane = "axis") {
+  addItemUrls(seriesId, imageUrls, plane = "axis", format = "dicom") {
     imageUrls.forEach((url, index) => {
-      this.taskManager.addTask({ seriesId, url, plane, index });
+      this.taskManager.addTask({ seriesId, url, plane, index, format });
     });
   }
 
