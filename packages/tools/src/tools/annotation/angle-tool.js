@@ -11,14 +11,17 @@ import TextField from "../../shape/parts/textfield";
 import { randomId, connectTextNode } from "../utils";
 import DashLine from "../../shape/parts/dashline";
 import { verify } from "../../area";
-import { setActionComplete } from "../../tool-state";
+import { setActionComplete } from "../../state/tool-state";
+import { worldToLocal } from "../utils/coords-transform";
 
 class AngleTool extends BaseAnnotationTool {
   constructor(config = {}) {
     super(config);
     this.type = TOOL_TYPE.ANGLE;
+    const name = randomId();
+    this.name(name);
     this._data = {
-      id: randomId(),
+      id: name,
       type: this.type,
       start: { x: 0, y: 0 },
       middle: { x: 0, y: 0 },
@@ -101,7 +104,10 @@ class AngleTool extends BaseAnnotationTool {
         [middle.x, middle.y],
         [end.x, end.y],
       ];
-
+      textfield.setPosition({
+        x: textBox.x,
+        y: textBox.y,
+      });
       const dashLine = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);
       dashLine.visible(true);
       connectTextNode(textfield, from, dashLine);
@@ -151,24 +157,6 @@ class AngleTool extends BaseAnnotationTool {
     const toolLayer = this.$stage.findOne("#toolsLayer");
     toolLayer.add(this);
     this.draw();
-  }
-
-  _tryUpdateData() {
-    if (!this.verifyDataLegal() && this.getStage()) {
-      this.getStage().fire(INTERNAL_EVENTS.DATA_REMOVED, { id: this.data.id });
-      this.remove();
-      return;
-    }
-
-    const stage = this.getStage();
-    if (!stage) {
-      return;
-    }
-
-    stage.fire(INTERNAL_EVENTS.DATA_UPDATED, {
-      id: this.data.id,
-      data: this.data,
-    });
   }
 
   verifyDataLegal() {
@@ -248,6 +236,60 @@ class AngleTool extends BaseAnnotationTool {
     const det = x1 * y2 - y1 * x2;
     const angle = (Math.atan2(det, dot) / Math.PI) * 180;
     return +((angle + 360) % 360).toFixed(1);
+  }
+
+  _tryUpdateData() {
+    if (!this.verifyDataLegal() && this.getStage()) {
+      this.getStage().fire(INTERNAL_EVENTS.DATA_REMOVED, { id: this.data.id });
+      this.remove();
+      return;
+    }
+
+    const stage = this.getStage();
+    if (!stage) {
+      return;
+    }
+
+    const data = this._convertData();
+    stage.fire(INTERNAL_EVENTS.DATA_UPDATED, {
+      id: this.data.id,
+      data,
+    });
+  }
+
+  _convertData() {
+    // 转换成local
+    const { start, middle, end, position, textBox } = this.data;
+    const localPosition = worldToLocal(position.x, position.y);
+    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
+    const localMiddle = worldToLocal(
+      position.x + middle.x,
+      position.y + middle.y
+    );
+    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const localText = worldToLocal(
+      position.x + textBox.x,
+      position.y + textBox.y
+    );
+
+    const data = JSON.parse(JSON.stringify(this.data));
+    data.position = { x: localPosition[0], y: localPosition[1] };
+    data.start = {
+      x: localStart[0] - localPosition[0],
+      y: localStart[1] - localPosition[1],
+    };
+    data.middle = {
+      x: localMiddle[0] - localPosition[0],
+      y: localMiddle[1] - localPosition[1],
+    };
+    data.end = {
+      x: localEnd[0] - localPosition[0],
+      y: localEnd[1] - localPosition[1],
+    };
+    data.textBox.x = localText[0] - localPosition[0];
+    data.textBox.y = localText[1] - localPosition[1];
+
+    return data;
   }
 }
 

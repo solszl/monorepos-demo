@@ -1,11 +1,12 @@
 import { Component } from "@saga/core";
 import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
-import ToolState from "./tool-state";
+import ToolState from "./state/tool-state";
 import MouseTrap from "./trap/mouse-trap";
 import { INTERNAL_EVENTS, TOOL_CONSTRUCTOR } from "./constants";
 import Area from "./area";
 import { transform as transformCoords } from "./tools/utils/coords-transform";
+import { imageState } from "./state/image-state";
 
 class View extends Component {
   constructor(option = {}) {
@@ -54,6 +55,12 @@ class View extends Component {
 
   updateViewport(config = {}) {
     this.area.update(config);
+  }
+
+  updateImageState(config = {}) {
+    Object.keys(config).map((key) => {
+      imageState[key] = config[key];
+    });
   }
 
   /**

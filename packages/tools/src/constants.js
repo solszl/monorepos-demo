@@ -3,6 +3,8 @@ import LengthTool from "./tools/annotation/length-tool";
 import PolygonTool from "./tools/polygon-tool";
 import RotationTool from "./tools/rotation-tool";
 import ScaleTool from "./tools/scale-tool";
+import TranslateTool from "./tools/translate-tool";
+import WWWCTool from "./tools/wwwc-tool";
 
 export const TOOL_CONSTANTS = {
   HIT_STROKE_WIDTH: 20,
@@ -35,7 +37,6 @@ export const TOOL_TYPE = {
   STACK_SCROLL: "stack_scroll",
   MOVE: "move",
   MAGNIFYING: "magnifying",
-  ZOOM: "zoom",
   WWWC: "wwwc",
   LENGTH: "length",
   ANGLE: "angle",
@@ -44,6 +45,7 @@ export const TOOL_TYPE = {
   POLYGON: "polygon",
   ROTATION: "rotation",
   SCALE: "scale",
+  TRANSLATE: "translate",
 };
 
 export const EVENTS = {
@@ -58,10 +60,10 @@ export const INTERNAL_EVENTS = {
   DATA_CREATED: "tx_data_created",
   DATA_UPDATED: "tx_data_updated",
   DATA_REMOVED: "tx_data_removed",
-  TOOL_ZOOM: "tx_tool_zoom",
   TOOL_TRANSLATE: "tx_tool_translate",
   TOOL_ROTATION: "tx_tool_rotation",
   TOOL_SCALE: "tx_tool_scale",
+  TOOL_WWWC: "tx_tool_wwwc",
 };
 
 export const TOOL_CONSTRUCTOR = {
@@ -70,4 +72,6 @@ export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE.ROTATION]: RotationTool,
   [TOOL_TYPE.SCALE]: ScaleTool,
   [TOOL_TYPE.POLYGON]: PolygonTool,
+  [TOOL_TYPE.TRANSLATE]: TranslateTool,
+  [TOOL_TYPE.WWWC]: WWWCTool,
 };

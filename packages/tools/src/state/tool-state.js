@@ -1,4 +1,4 @@
-import { TOOL_CONSTRUCTOR } from "./constants";
+import { TOOL_CONSTRUCTOR } from "../constants";
 
 class ToolState {
   constructor() {

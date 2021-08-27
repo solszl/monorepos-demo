@@ -32,7 +32,9 @@ class Viewport extends Component {
       toolView.resetData(sliceData);
     });
 
-    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {});
+    imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
+      toolView.updateImageState(info);
+    });
 
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {
       // 更新视图， 根据传来的seriesId, sliceId。
@@ -63,15 +65,17 @@ class Viewport extends Component {
       this.data[sliceKey] = sliceData;
     });
 
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ZOOM, (info) => {});
-
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => {});
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => {
+      imageView.setOffset(info.offset);
+    });
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
       imageView.setRotation(info.rotate);
     });
-
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => {
       imageView.setScale(info.scale);
+    });
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => {
+      imageView.setWWWC(info.wwwc);
     });
 
     this._toolView = toolView;

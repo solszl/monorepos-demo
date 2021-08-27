@@ -16,9 +16,9 @@ export const renderGrayImage = (image, lut, renderCanvas) => {
   let imageDataIndex = 3;
   let numPixels = width * height;
   let i = 0;
-
   while (i < numPixels) {
-    renderCanvasData.data[imageDataIndex] = lut[pixelData[i++] + -minPixelValue];
+    renderCanvasData.data[imageDataIndex] =
+      lut[pixelData[i++] + -minPixelValue];
     imageDataIndex += 4;
   }
 

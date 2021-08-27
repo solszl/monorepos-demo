@@ -1,46 +1,10 @@
 import Transform from "./transform";
-
-class Area {
-  constructor(config = {}) {
-    if (Reflect.ownKeys(config).length) {
-      this.update(config);
-    }
-  }
-
-  update(config) {
-    const {
-      rootSize,
-      scale,
-      rotate,
-      width,
-      height,
-      position = [0, 0],
-      offset,
-    } = config;
-
-    // 设置视窗
-    Object.assign(
-      viewState,
-      { rootWidth: rootSize?.width, rootHeight: rootSize?.height } ?? {}
-    );
-    Object.assign(viewState, { x: position[0], y: position[1] } ?? {});
-    Object.assign(viewState, { scale } ?? {});
-    Object.assign(viewState, { rotate } ?? {});
-    Object.assign(viewState, { width } ?? {});
-    Object.assign(viewState, { height } ?? {});
-    Object.assign(viewState, { centerX: width / 2, centerY: height / 2 } ?? {});
-    Object.assign(viewState, { offset } ?? {});
-
-    // 初始化时缩放和reander同时触发，判断是否有transform所需数据
-    rootSize && applyTransform();
-  }
-}
-
+import { viewportState } from "./state/viewport-state";
 export const transform = new Transform();
 
 const applyTransform = () => {
   const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } =
-    viewState;
+    viewportState;
 
   transform.reset();
 
@@ -70,23 +34,49 @@ const applyTransform = () => {
   return transform.m;
 };
 
-export const viewState = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  rotate: 0,
-  scale: 1,
-  rootWidth: 0,
-  rootHeight: 0,
-  centerX: 0,
-  centerY: 0,
-};
-
 export const verify = (x, y) => {
   const [ox, oy] = transform.invertPoint(x, y);
-  const { width, height } = viewState;
+  const { width, height } = viewportState;
   return ox >= 0 && ox <= width && oy >= 0 && oy <= height;
 };
+
+class Area {
+  constructor(config = {}) {
+    if (Reflect.ownKeys(config).length) {
+      this.update(config);
+    }
+  }
+
+  update(config) {
+    const {
+      rootSize,
+      scale,
+      rotate,
+      width,
+      height,
+      position = [0, 0],
+      offset,
+    } = config;
+
+    // 设置视窗
+    Object.assign(
+      viewportState,
+      { rootWidth: rootSize?.width, rootHeight: rootSize?.height } ?? {}
+    );
+    Object.assign(viewportState, { x: offset.x, y: offset.y } ?? {});
+    Object.assign(viewportState, { scale } ?? {});
+    Object.assign(viewportState, { rotate } ?? {});
+    Object.assign(viewportState, { width } ?? {});
+    Object.assign(viewportState, { height } ?? {});
+    Object.assign(
+      viewportState,
+      { centerX: width / 2, centerY: height / 2 } ?? {}
+    );
+    Object.assign(viewportState, { position } ?? {});
+
+    // 初始化时缩放和reander同时触发，判断是否有transform所需数据
+    rootSize && applyTransform();
+  }
+}
 
 export default Area;

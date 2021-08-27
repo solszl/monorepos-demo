@@ -65,9 +65,21 @@ const ee = {
   },
 };
 
+const documentEE = {
+  mousemove: (e, toolState) => {
+    const { which } = e;
+    toolState.getToolInstance(which)?.documentMouseMove(e);
+  },
+  mouseup: (e, toolState) => {
+    const { which } = e;
+    toolState.getToolInstance(which)?.documentMouseUp(e);
+  },
+};
+
 const clones = {};
 const enable = (stage, toolState) => {
   toolState.$stage = stage;
+
   // remove old event listeners
   Reflect.ownKeys(ee).forEach((key) => {
     stage.off(key, clones[key]);
@@ -79,6 +91,21 @@ const enable = (stage, toolState) => {
       ee[key](evt, toolState);
     };
     stage.on(key, clones[key]);
+  });
+
+  // document
+  Reflect.ownKeys(documentEE).forEach((key) => {
+    const documentKey = `document-${key}`;
+    document.removeEventListener(key, clones[documentKey]);
+    delete clones[documentKey];
+  });
+
+  Reflect.ownKeys(documentEE).forEach((key) => {
+    const documentKey = `document-${key}`;
+    clones[documentKey] = (evt) => {
+      documentEE[key](evt, toolState);
+    };
+    document.addEventListener(key, clones[documentKey]);
   });
 };
 

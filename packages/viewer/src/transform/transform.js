@@ -47,9 +47,9 @@ class Transform {
     this.m[5] = m5;
   }
 
-  rotate(rad) {
-    const c = Math.cos(rad);
-    const s = Math.sin(rad);
+  rotate(deg) {
+    const c = Math.cos((deg * Math.PI) / 180);
+    const s = Math.sin((deg * Math.PI) / 180);
     const m11 = this.m[0] * c + this.m[2] * s;
     const m12 = this.m[1] * c + this.m[3] * s;
     const m21 = this.m[0] * -s + this.m[2] * c;

@@ -18,6 +18,7 @@ class AbstractViewport extends Component {
       flip: { h: false, v: false },
       scale: 1,
     };
+    window.view = this;
 
     this.init();
   }
@@ -52,7 +53,10 @@ class AbstractViewport extends Component {
     this.canvas.id = this.id;
     // this.el.appendChild(canvas);
     // this.el.insertBefore(this.canvas, this.el.firstChild);
-    this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
+    this.viewerContainer.insertBefore(
+      this.canvas,
+      this.viewerContainer.firstChild
+    );
   }
 
   initResize() {
@@ -61,7 +65,10 @@ class AbstractViewport extends Component {
     this.el.style.position = "relative";
     this.el.style.overflow = "hidden";
     // this.el.insertBefore(this.iframe, this.el.firstChild);
-    this.viewerContainer.insertBefore(this.iframe, this.viewerContainer.firstChild);
+    this.viewerContainer.insertBefore(
+      this.iframe,
+      this.viewerContainer.firstChild
+    );
     let lastEmitResize = -1;
     this.iframe.contentWindow.onresize = (e) => {
       if (Date.now() - lastEmitResize <= 100) {
@@ -93,6 +100,10 @@ class AbstractViewport extends Component {
   }
 
   async render(image) {
+    if (!image) {
+      return;
+    }
+
     let needDraw = false;
 
     if (this._displayChanged) {
@@ -131,18 +142,22 @@ class AbstractViewport extends Component {
       this._sizeChanged = false;
 
       const { width: rootWidth, height: rootHeight } = this._getRootSize();
-      const { scale, rotate } = this.displayState;
-      const offset = [(rootWidth - width * scale) / 2, (rootHeight - height * scale) / 2];
+      const { scale, rotate, offset = { x: 0, y: 0 } } = this.displayState;
+      const position = [
+        (rootWidth - renderData.width * scale) / 2,
+        (rootHeight - renderData.height * scale) / 2,
+      ];
+
       this.emit(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, {
-        width,
-        height,
+        width: renderData.width,
+        height: renderData.height,
         scale: scale || 1,
         rootSize: this._getRootSize(),
         rotate: rotate || 0,
-        position: this.displayState.position || [0, 0],
-        seriesId: this.image.seriesNum,
-        sliceId: this.image.instanceNumber,
-        offset,
+        offset: offset || [0, 0],
+        seriesId: this.image?.seriesNum,
+        sliceId: this.image?.instanceNumber,
+        position,
       });
       needDraw = true;
     }
@@ -154,8 +169,14 @@ class AbstractViewport extends Component {
       const ctx = canvas.getContext("2d");
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
-
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
+        wwwc: {
+          ww: this.displayState?.wwwc?.ww ?? this.image?.windowWidth,
+          wc: this.displayState?.wwwc?.wc ?? this.image?.windowCenter,
+        },
+        columns: this.image.columns,
+        rows: this.image.rows,
+        // piexlData: this.image.piexlData,
         seriesId: this.image.seriesNum,
         sliceId: this.image.instanceNumber,
       });
@@ -164,7 +185,7 @@ class AbstractViewport extends Component {
   }
 
   setWWWC(val) {
-    this._propertySetter({ wwwc: val }, "_displayChanged", false);
+    this._propertySetter({ wwwc: val }, "_displayChanged");
   }
 
   setInvert(val) {

@@ -24,6 +24,8 @@ class BaseTool extends UIComponent {
   mouseDoubleClick(e) {}
   mouseWheel(e) {}
   mouseWheelClick(e) {}
+  documentMouseMove(e) {}
+  documentMouseUp(e) {}
 
   set data(val) {
     this._data = val;
