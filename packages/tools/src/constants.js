@@ -1,5 +1,6 @@
 import AngleTool from "./tools/annotation/angle-tool";
 import LengthTool from "./tools/annotation/length-tool";
+import MagnifyTool from "./tools/magnify-tool";
 import PolygonTool from "./tools/polygon-tool";
 import RotationTool from "./tools/rotation-tool";
 import ScaleTool from "./tools/scale-tool";
@@ -74,4 +75,5 @@ export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE.POLYGON]: PolygonTool,
   [TOOL_TYPE.TRANSLATE]: TranslateTool,
   [TOOL_TYPE.WWWC]: WWWCTool,
+  [TOOL_TYPE.MAGNIFYING]: MagnifyTool,
 };

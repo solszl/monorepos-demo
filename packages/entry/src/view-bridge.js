@@ -2,7 +2,6 @@ import { Component } from "@saga/core";
 import { View } from "@saga/tools";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@saga/viewer";
 import { TOOLVIEW_INTERNAL_EVENTS } from "@saga/tools";
-
 class Viewport extends Component {
   constructor(option) {
     super();
@@ -42,6 +41,12 @@ class Viewport extends Component {
       this.sliceKey = sliceKey;
       const sliceData = this.data?.[sliceKey] ?? new Map();
       toolView.renderData(sliceData);
+
+      const { renderer, canvas } = imageView;
+      toolView.updateImageState({
+        imgCanvas: renderer.renderData,
+        canvas,
+      });
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {

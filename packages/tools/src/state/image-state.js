@@ -8,4 +8,6 @@ export const imageState = {
   seriesId: null,
   sliceId: null,
   piexlData: null,
+  imgCanvas: null,
+  canvas: null,
 };
