@@ -3,12 +3,13 @@ import { Circle } from "konva/lib/shapes/Circle";
 import { imageState } from "../state/image-state";
 import { viewportState } from "../state/viewport-state";
 import BaseTool from "./base/base-tool";
-import { randomId } from "./utils";
+import { cursor, randomId } from "./utils";
 import { worldToLocal } from "./utils/coords-transform";
 
+const tmpCanvas = document.createElement("canvas");
 class MagnifyTool extends BaseTool {
   constructor(config = {}) {
-    super(config);
+    super(Object.assign({}, config, { useDefaultMouseEffect: false }));
     this.type = TOOL_TYPE.MAGNIFYING;
     this.dom = null;
     const name = randomId();
@@ -19,6 +20,7 @@ class MagnifyTool extends BaseTool {
       originalRadius: 50, // 原始图像放大半径
       scale: 3, // 放大倍数
       centerPoint: { x: 0, y: 0 }, // 放大镜中心点
+      size: 250,
     };
   }
 
@@ -28,6 +30,7 @@ class MagnifyTool extends BaseTool {
     this.findOne("#circle").visible(true);
     this.findOne("#circleBG").visible(true);
     this.data.centerPoint = this.$stage.getRelativePointerPosition();
+    cursor(this, "none");
     this.renderData();
   }
 
@@ -39,6 +42,7 @@ class MagnifyTool extends BaseTool {
 
   mouseUp(e) {
     super.mouseUp(e);
+    cursor(this, "auto");
     this.remove();
   }
 
@@ -49,17 +53,18 @@ class MagnifyTool extends BaseTool {
     const circle = this.findOne("#circle");
 
     circle.setPosition(centerPoint);
-    circle.width(originalRadius * scale * viewportState.scale);
-    circle.height(originalRadius * scale * viewportState.scale);
+    circle.width(this.data.size);
+    circle.height(this.data.size);
+
     circle.fillPatternImage(this._getImage());
     circle.fillPatternOffset({
-      x: originalRadius * scale * viewportState.scale,
-      y: originalRadius * scale * viewportState.scale,
+      x: tmpCanvas.width / 2,
+      y: tmpCanvas.height / 2,
     });
 
     circleBG.setPosition(centerPoint);
-    circleBG.width(originalRadius * scale * viewportState.scale);
-    circleBG.height(originalRadius * scale * viewportState.scale);
+    circleBG.width(this.data.size);
+    circleBG.height(this.data.size);
   }
 
   initialUI() {
@@ -70,6 +75,7 @@ class MagnifyTool extends BaseTool {
       strokeWidth: 2,
       radius: 70,
       visible: false,
+      fillPatternRepeat: "no-repeat",
     });
 
     const circle2 = new Circle({
@@ -86,26 +92,25 @@ class MagnifyTool extends BaseTool {
   }
 
   _getImage() {
-    const canvas = document.createElement("canvas");
+    const canvas = tmpCanvas;
+    tmpCanvas.width = this.data.size * 2;
+    tmpCanvas.height = this.data.size * 2;
     const ctx = canvas.getContext("2d");
-    const { width, height } = imageState.canvas;
     const point = worldToLocal(
       this.data.centerPoint.x,
       this.data.centerPoint.y
     );
-    canvas.width = width;
-    canvas.height = height;
 
     ctx.drawImage(
       imageState.imgCanvas,
-      point[0] - this.data.originalRadius,
-      point[1] - this.data.originalRadius,
-      imageState.canvas.width,
-      imageState.canvas.height,
+      point[0] - this.data.originalRadius / viewportState.scale,
+      point[1] - this.data.originalRadius / viewportState.scale,
+      (this.data.originalRadius * 2) / viewportState.scale,
+      (this.data.originalRadius * 2) / viewportState.scale,
       0,
       0,
-      imageState.canvas.width * viewportState.scale * this.data.scale,
-      imageState.canvas.height * viewportState.scale * this.data.scale
+      tmpCanvas.width,
+      tmpCanvas.height
     );
     return canvas;
   }
