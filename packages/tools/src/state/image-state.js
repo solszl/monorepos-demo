@@ -7,7 +7,7 @@ export const imageState = {
   rows: 0,
   seriesId: null,
   sliceId: null,
-  piexlData: null,
+  pixelData: null,
   imgCanvas: null,
   canvas: null,
 };

@@ -87,6 +87,11 @@ class Resource {
   getImages(seriesId, plane) {
     return this.cacheManager.getItems(seriesId, plane);
   }
+
+  getIllegalIndex(index, seriesId, plane) {
+    const { length } = this.taskManager.getTasks(seriesId, plane);
+    return Math.max(0, Math.min(index, length - 1));
+  }
 }
 
 export default Resource;

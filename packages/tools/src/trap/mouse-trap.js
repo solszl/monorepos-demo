@@ -10,28 +10,24 @@ const ee = {
     toolState.getToolInstance(which)?.mouseLeave(e);
   },
   mouseout: (e, toolState) => {
-    // console.log(e);
     const { evt } = e;
     const { which } = evt;
 
     toolState.getToolInstance(which)?.mouseOut(e);
   },
   mouseover: (e, toolState) => {
-    // console.log(e);
     const { evt } = e;
     const { which } = evt;
 
     toolState.getToolInstance(which)?.mouseOver(e);
   },
   mousemove: (e, toolState) => {
-    // console.log(e);
     const { evt } = e;
     const { which } = evt;
 
     toolState.getToolInstance(which)?.mouseMove(e);
   },
   mousedown: (e, toolState) => {
-    // console.log(e);
     const { evt } = e;
     const { which } = evt;
     if (e.target?.nodeType !== "Stage") {
@@ -62,6 +58,9 @@ const ee = {
     const { which } = evt;
 
     toolState.getToolInstance(which)?.mouseDoubleClick(e);
+  },
+  wheel: (e, toolState) => {
+    toolState.getToolInstance(2)?.mouseWheel(e);
   },
 };
 

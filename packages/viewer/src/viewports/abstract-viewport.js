@@ -94,7 +94,7 @@ class AbstractViewport extends Component {
     this._displayChanged = true;
     this.renderSchedule.invalidate(this.render.bind(this), image);
     this.emit(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, {
-      seriesId: image.seriesNum,
+      seriesId: image.seriesId,
       sliceId: image.instanceNumber,
     });
   }
@@ -176,7 +176,7 @@ class AbstractViewport extends Component {
         },
         columns: this.image.columns,
         rows: this.image.rows,
-        // piexlData: this.image.piexlData,
+        pixelData: this.image.pixelData,
         seriesId: this.image.seriesNum,
         sliceId: this.image.instanceNumber,
       });
@@ -241,6 +241,7 @@ class AbstractViewport extends Component {
     if (!this?.renderer?.renderData) {
       return;
     }
+
     const { width, height } = this._getRootSize();
     const { width: rw, height: rh } = this.renderer.renderData;
     const screenRatio = width / height;
@@ -249,6 +250,7 @@ class AbstractViewport extends Component {
     if (screenRatio > imageRatio) {
       scaleResult = height / rh;
     }
+
     this.setScale(scaleResult);
   }
 

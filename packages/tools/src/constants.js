@@ -1,9 +1,12 @@
 import AngleTool from "./tools/annotation/angle-tool";
 import LengthTool from "./tools/annotation/length-tool";
+import ProbeTool from "./tools/annotation/probe-tool";
 import MagnifyTool from "./tools/magnify-tool";
 import PolygonTool from "./tools/polygon-tool";
 import RotationTool from "./tools/rotation-tool";
 import ScaleTool from "./tools/scale-tool";
+import StackTool from "./tools/stack-tool";
+import StackWheelTool from "./tools/stack-wheel-tool";
 import TranslateTool from "./tools/translate-tool";
 import WWWCTool from "./tools/wwwc-tool";
 
@@ -36,6 +39,7 @@ export const TOOL_ITEM_SELECTOR = {
 
 export const TOOL_TYPE = {
   STACK_SCROLL: "stack_scroll",
+  WHEEL_STACK_SCROLL: "wheel_stack_scroll",
   MOVE: "move",
   MAGNIFYING: "magnifying",
   WWWC: "wwwc",
@@ -65,6 +69,7 @@ export const INTERNAL_EVENTS = {
   TOOL_ROTATION: "tx_tool_rotation",
   TOOL_SCALE: "tx_tool_scale",
   TOOL_WWWC: "tx_tool_wwwc",
+  TOOL_STACK_CHANGE: "tx_stack_change",
 };
 
 export const TOOL_CONSTRUCTOR = {
@@ -76,4 +81,7 @@ export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE.TRANSLATE]: TranslateTool,
   [TOOL_TYPE.WWWC]: WWWCTool,
   [TOOL_TYPE.MAGNIFYING]: MagnifyTool,
+  [TOOL_TYPE.PROBE]: ProbeTool,
+  [TOOL_TYPE.STACK_SCROLL]: StackTool,
+  [TOOL_TYPE.WHEEL_STACK_SCROLL]: StackWheelTool,
 };

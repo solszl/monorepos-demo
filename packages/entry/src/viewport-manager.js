@@ -10,7 +10,7 @@ class ViewportManager {
 
   addViewport(option) {
     // 将核心选调度器传入
-    Object.assign(option, { core: this.core });
+    Object.assign(option, { core: this.core, resource: this.resource });
     let viewport = new Viewport(option);
     this.viewports[viewport.id] = viewport;
     return viewport;

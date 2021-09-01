@@ -8,10 +8,12 @@ class Viewport extends Component {
     this.init(option);
     window.a = this;
     this.data = {};
+    this.currentIndex = 0;
   }
 
   async init(option) {
     let opt = Object.assign({}, option, { id: this.id });
+    this.option = opt;
     const toolView = new View(opt);
     const imageView = ViewFactory(opt);
 
@@ -37,6 +39,7 @@ class Viewport extends Component {
 
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {
       // 更新视图， 根据传来的seriesId, sliceId。
+      this.option.seriesId = info.seriesId;
       const sliceKey = `${info.seriesId}-${info.sliceId}`;
       this.sliceKey = sliceKey;
       const sliceData = this.data?.[sliceKey] ?? new Map();
@@ -81,6 +84,21 @@ class Viewport extends Component {
     });
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => {
       imageView.setWWWC(info.wwwc);
+    });
+
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
+      // console.log(info);
+      const { delta } = info;
+      const { plane, seriesId, resource } = this.option;
+      this.currentIndex += delta;
+      this.currentIndex = resource.getIllegalIndex(
+        this.currentIndex,
+        seriesId,
+        plane
+      );
+      const image = await resource.getImage(seriesId, this.currentIndex, plane);
+
+      imageView.showImage(image);
     });
 
     this._toolView = toolView;

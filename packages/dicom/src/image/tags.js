@@ -1,5 +1,7 @@
 const makeTag = (group, element) => {
-  return `x${group.toString(16).padStart(4, "0")}${element.toString(16).padStart(4, "0")}`;
+  return `x${group.toString(16).padStart(4, "0")}${element
+    .toString(16)
+    .padStart(4, "0")}`;
 };
 
 export const Tags = {
@@ -255,4 +257,18 @@ export const Tags = {
    * @memberof Tags
    */
   Modality: makeTag(0x0008, 0x0060),
+
+  /**
+   * 检查ID
+   *
+   * @memberof Tags
+   */
+  StudyInstanceUID: makeTag(0x0020, 0x000d),
+
+  /**
+   * 序列号
+   *
+   * @memberof Tags
+   */
+  SeriesInstanceUID: makeTag(0x0020, 0x000e),
 };

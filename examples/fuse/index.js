@@ -6,6 +6,9 @@ const fs = "http://192.168.111.115:8000";
 let currentIndex = 10;
 
 const vm = new ViewportManager();
+const resource = new Resource();
+
+vm.resource = resource;
 const standard = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
@@ -13,7 +16,6 @@ const standard = vm.addViewport({
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
 
-const resource = new Resource();
 const fetchData = async (seriesId) => {
   const url = `/api/v1/series/${seriesId}`;
   const json = await (await fetch(url)).json();
@@ -33,6 +35,6 @@ fetchData(seriesId).then((json) => {
   }, 0);
 });
 
-standard.useTool("magnifying");
+standard.useTool("stack_scroll", 1);
 standard.useTool("scale", 3);
 console.log("fuse start.", vm);
