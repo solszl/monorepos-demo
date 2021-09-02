@@ -39,7 +39,7 @@ export const TOOL_ITEM_SELECTOR = {
 
 export const TOOL_TYPE = {
   STACK_SCROLL: "stack_scroll",
-  WHEEL_STACK_SCROLL: "wheel_stack_scroll",
+  STACK_WHEEL_SCROLL: "stack_wheel_scroll",
   MOVE: "move",
   MAGNIFYING: "magnifying",
   WWWC: "wwwc",
@@ -83,5 +83,5 @@ export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE.MAGNIFYING]: MagnifyTool,
   [TOOL_TYPE.PROBE]: ProbeTool,
   [TOOL_TYPE.STACK_SCROLL]: StackTool,
-  [TOOL_TYPE.WHEEL_STACK_SCROLL]: StackWheelTool,
+  [TOOL_TYPE.STACK_WHEEL_SCROLL]: StackWheelTool,
 };

@@ -12,10 +12,9 @@ class MagnifyTool extends BaseTool {
     super(Object.assign({}, config, { useDefaultMouseEffect: false }));
     this.type = TOOL_TYPE.MAGNIFYING;
     this.dom = null;
-    const name = randomId();
-    this.name(name);
+    this.name = randomId();
     this._data = {
-      id: name,
+      id: this.name,
       type: this.type,
       originalRadius: 50, // 原始图像放大半径
       scale: 3, // 放大倍数

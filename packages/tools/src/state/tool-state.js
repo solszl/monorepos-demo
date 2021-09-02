@@ -60,6 +60,17 @@ class ToolState {
       return this.toolInstance[completeState.button];
     }
   }
+
+  getWheelTool() {
+    const button = 2;
+    const toolType = this.state?.[button];
+    if (!toolType) {
+      return;
+    }
+    this.toolInstance[button] = new TOOL_CONSTRUCTOR[toolType]();
+    this.toolInstance[button].$stage = this.$stage;
+    return this.toolInstance[button];
+  }
 }
 
 export default ToolState;

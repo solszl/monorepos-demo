@@ -1,6 +1,8 @@
 import BaseTool from "./base/base-tool";
 import { INTERNAL_EVENTS } from "../constants";
 import { viewportState } from "../state/viewport-state";
+import { TOOL_TYPE } from "..";
+import { randomId } from "./utils";
 
 class TranslateTool extends BaseTool {
   constructor(config = {}) {
@@ -8,6 +10,13 @@ class TranslateTool extends BaseTool {
     this.isDown = false;
     this.oldOffset = null;
     this.step = null;
+    this.type = TOOL_TYPE.TRANSLATE;
+    this.name = randomId();
+    this._data = {
+      id: this.name,
+      type: this.type,
+      offset: { x: 0, y: 0 },
+    };
   }
 
   mouseDown(e) {
@@ -27,6 +36,7 @@ class TranslateTool extends BaseTool {
       x: e.offsetX - this.oldOffset[0] + this.step.x,
       y: e.offsetY - this.oldOffset[1] + this.step.y,
     };
+    this.data.offset = offset;
     this.$stage.fire(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset });
   }
 

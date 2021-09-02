@@ -3,35 +3,22 @@ import BaseTool from "./base/base-tool";
 class StackWheelTool extends BaseTool {
   constructor(config = {}) {
     super(config);
-    this.isDown = false;
+    this.delta = 0;
   }
-  //   mouseDown(e) {
-  //     super.mouseDown(e);
-  //     this.isDown = true;
-  //   }
-
   mouseWheel(e) {
     super.mouseWheel(e);
-    console.log(e.evt);
-    //   const {} = e.evt
+    console.log(this.delta);
+    const { wheelDelta } = e.evt;
+    if (wheelDelta < 0) {
+      this.delta += 5;
+    } else {
+      this.delta -= 5;
+    }
+    // console.log(wheelDelta, this.delta);
+    this.$stage.fire(INTERNAL_EVENTS.TOOL_STACK_CHANGE, {
+      delta: this.delta,
+    });
   }
-  //   mouseMove(e) {
-  //     super.mouseMove(e);
-  //     if (!this.isDown) {
-  //       return;
-  //     }
-  //     const { movementY } = e.evt;
-  //     if (movementY === 0) {
-  //       return;
-  //     }
-  //     this.$stage.fire(INTERNAL_EVENTS.TOOL_STACK_CHANGE, {
-  //       delta: movementY,
-  //     });
-  //   }
-  //   mouseUp(e) {
-  //     super.mouseUp(e);
-  //     this.isDown = false;
-  //   }
 }
 
 export default StackWheelTool;

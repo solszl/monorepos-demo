@@ -36,5 +36,6 @@ fetchData(seriesId).then((json) => {
 });
 
 standard.useTool("stack_scroll", 1);
+standard.useTool("stack_wheel_scroll", 2);
 standard.useTool("scale", 3);
 console.log("fuse start.", vm);

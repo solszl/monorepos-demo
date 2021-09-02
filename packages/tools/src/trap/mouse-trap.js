@@ -60,7 +60,7 @@ const ee = {
     toolState.getToolInstance(which)?.mouseDoubleClick(e);
   },
   wheel: (e, toolState) => {
-    toolState.getToolInstance(2)?.mouseWheel(e);
+    toolState.getWheelTool()?.mouseWheel(e);
   },
 };
 
