@@ -1,4 +1,5 @@
 import AngleTool from "./tools/annotation/angle-tool";
+import EllipseTool from "./tools/annotation/ellipse-tool";
 import LengthTool from "./tools/annotation/length-tool";
 import ProbeTool from "./tools/annotation/probe-tool";
 import MagnifyTool from "./tools/magnify-tool";
@@ -84,4 +85,5 @@ export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE.PROBE]: ProbeTool,
   [TOOL_TYPE.STACK_SCROLL]: StackTool,
   [TOOL_TYPE.STACK_WHEEL_SCROLL]: StackWheelTool,
+  [TOOL_TYPE.ELLIPSE_ROI]: EllipseTool,
 };
