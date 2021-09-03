@@ -93,7 +93,7 @@ class EllipseTool extends BaseAnnotationTool {
 
   renderData() {
     super.renderData();
-    const { position, start, end } = this.data;
+    const { position, start, end, textBox } = this.data;
     this.setPosition(position);
     this.findOne("#startAnchor").setPosition(start);
     this.findOne("#endAnchor").setPosition(end);
@@ -128,7 +128,7 @@ class EllipseTool extends BaseAnnotationTool {
         [(start.x + end.x) / 2, end.y],
         [start.x, (start.y + end.y) / 2],
       ];
-
+      group.setPosition({ x: textBox.x, y: textBox.y });
       connectTextNode(group, from, dashline);
     } else {
       const x = Math.max(start.x, end.x);
@@ -208,10 +208,12 @@ class EllipseTool extends BaseAnnotationTool {
 
   _convertData() {
     // 转换成local
-    const { position, end, start } = this.data;
+    const { position, end, start, textBox } = this.data;
     const localPosition = worldToLocal(position.x, position.y);
     const localStart = worldToLocal(position.x + start.x, position.y + start.y);
     const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const localText = worldToLocal(position.x + textBox.x, position.y + textBox.y);
+
     const data = JSON.parse(JSON.stringify(this.data));
     data.position = { x: localPosition[0], y: localPosition[1] };
     data.start = {
@@ -222,6 +224,8 @@ class EllipseTool extends BaseAnnotationTool {
       x: localEnd[0] - localPosition[0],
       y: localEnd[1] - localPosition[1],
     };
+    data.textBox.x = localText[0] - localPosition[0];
+    data.textBox.y = localText[1] - localPosition[1];
     return data;
   }
   _getArea() {

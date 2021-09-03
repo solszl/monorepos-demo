@@ -2,19 +2,10 @@ import { transform as coord } from "../../area";
 const length = (data) => {
   const obj = JSON.parse(JSON.stringify(data));
   const position = coord.transformPoint(data.position.x, data.position.y);
-  const start = coord.transformPoint(
-    data.position.x + data.start.x,
-    data.position.y + data.start.y
-  );
-  const end = coord.transformPoint(
-    data.position.x + data.end.x,
-    data.position.y + data.end.y
-  );
+  const start = coord.transformPoint(data.position.x + data.start.x, data.position.y + data.start.y);
+  const end = coord.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
 
-  const textPoint = coord.transformPoint(
-    data.position.x + data.textBox.x,
-    data.position.y + data.textBox.y
-  );
+  const textPoint = coord.transformPoint(data.position.x + data.textBox.x, data.position.y + data.textBox.y);
 
   obj.position.x = position[0];
   obj.position.y = position[1];
@@ -30,22 +21,10 @@ const length = (data) => {
 const angle = (data) => {
   const obj = JSON.parse(JSON.stringify(data));
   const position = coord.transformPoint(data.position.x, data.position.y);
-  const start = coord.transformPoint(
-    data.position.x + data.start.x,
-    data.position.y + data.start.y
-  );
-  const middle = coord.transformPoint(
-    data.position.x + data.middle.x,
-    data.position.y + data.middle.y
-  );
-  const end = coord.transformPoint(
-    data.position.x + data.end.x,
-    data.position.y + data.end.y
-  );
-  const text = coord.transformPoint(
-    data.position.x + data.textBox.x,
-    data.position.y + data.textBox.y
-  );
+  const start = coord.transformPoint(data.position.x + data.start.x, data.position.y + data.start.y);
+  const middle = coord.transformPoint(data.position.x + data.middle.x, data.position.y + data.middle.y);
+  const end = coord.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
+  const text = coord.transformPoint(data.position.x + data.textBox.x, data.position.y + data.textBox.y);
 
   obj.position.x = position[0];
   obj.position.y = position[1];
@@ -63,14 +42,9 @@ const angle = (data) => {
 const ellipse_roi = (data) => {
   const obj = JSON.parse(JSON.stringify(data));
   const position = coord.transformPoint(data.position.x, data.position.y);
-  const start = coord.transformPoint(
-    data.position.x + data.start.x,
-    data.position.y + data.start.y
-  );
-  const end = coord.transformPoint(
-    data.position.x + data.end.x,
-    data.position.y + data.end.y
-  );
+  const start = coord.transformPoint(data.position.x + data.start.x, data.position.y + data.start.y);
+  const end = coord.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
+  const text = coord.transformPoint(data.position.x + data.textBox.x, data.position.y + data.textBox.y);
 
   obj.position.x = position[0];
   obj.position.y = position[1];
@@ -78,6 +52,8 @@ const ellipse_roi = (data) => {
   obj.end.y = end[1] - position[1];
   obj.start.x = start[0] - position[0];
   obj.start.y = start[1] - position[1];
+  obj.textBox.x = text[0] - position[0];
+  obj.textBox.y = text[1] - position[1];
   return obj;
 };
 
