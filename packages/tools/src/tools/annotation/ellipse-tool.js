@@ -115,8 +115,8 @@ class EllipseTool extends BaseAnnotationTool {
     const data = this._getInfo(pixelData);
     const group = this.findOne("#textGroup");
     group.findOne("#area")?.setText("面积：", `${+data.area.toFixed(2)}mm²`);
-    group.findOne("#variance")?.setText("方差：", data.variance);
-    group.findOne("#avg")?.setText("平均值：", data.avg);
+    group.findOne("#variance")?.setText("方差：", +data.variance.toFixed(2));
+    group.findOne("#avg")?.setText("平均值：", +data.avg.toFixed(2));
     group.findOne("#max")?.setText("最大值：", data.max);
     group.findOne("#min")?.setText("最小值：", data.min);
 
@@ -290,7 +290,7 @@ class EllipseTool extends BaseAnnotationTool {
       const item = pixelData[i];
       s += Math.pow(item - avg, 2);
     }
-    const variance = s / pixelData.length; // 方差
+    const variance = Math.sqrt(s / pixelData.length); // 方差
 
     return { variance, max, min, area: this._getArea(), avg };
   }
