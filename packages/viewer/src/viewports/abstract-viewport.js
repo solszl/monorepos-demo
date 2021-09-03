@@ -119,13 +119,6 @@ class AbstractViewport extends Component {
       this.canvas.height = height;
     }
 
-    if (needDraw) {
-      const ctx = this.canvas.getContext("2d");
-      ctx.fillStyle = "black";
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-
     if (
       this._flipChanged ||
       this._positionChanged ||
@@ -173,6 +166,9 @@ class AbstractViewport extends Component {
       const { renderData } = this.renderer;
       const { width, height } = renderData;
       const ctx = this.canvas.getContext("2d");
+      ctx.fillStyle = "black";
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
       ctx.setTransform(...this.displayState.currentTransform);
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
@@ -219,7 +215,6 @@ class AbstractViewport extends Component {
   }
 
   setScale(val) {
-    console.log(val);
     this._propertySetter({ scale: val }, "_scaleChanged");
   }
 

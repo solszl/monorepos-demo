@@ -16,6 +16,8 @@ class ToolState {
       1: null,
       2: null,
       3: null,
+      // 鼠标中键滚轮行为
+      4: null,
     };
     this.toolInstance = {};
   }
@@ -59,17 +61,6 @@ class ToolState {
       }
       return this.toolInstance[completeState.button];
     }
-  }
-
-  getWheelTool() {
-    const button = 2;
-    const toolType = this.state?.[button];
-    if (!toolType) {
-      return;
-    }
-    this.toolInstance[button] = new TOOL_CONSTRUCTOR[toolType]();
-    this.toolInstance[button].$stage = this.$stage;
-    return this.toolInstance[button];
   }
 }
 

@@ -36,19 +36,27 @@ class Viewport extends Component {
       toolView.updateImageState(info);
     });
 
+    // 记录上次刷新toolview数据时间，如果时间间隔过短，就不再刷新。从而提升性能
+    let lastRenderDataElapsed = Date.now();
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {
       // 更新视图， 根据传来的seriesId, sliceId。
       this.option.seriesId = info.seriesId;
       const sliceKey = `${info.seriesId}-${info.sliceId}`;
       this.sliceKey = sliceKey;
       const sliceData = this.data?.[sliceKey] ?? new Map();
-      toolView.renderData(sliceData);
+      const now = Date.now();
+      if (now - lastRenderDataElapsed < 100) {
+        // 层切换时间间隔太短，不进行数据刷新，避免浪费
+        return;
+      }
 
       const { renderer, canvas } = imageView;
       toolView.updateImageState({
         imgCanvas: renderer.renderData,
         canvas,
       });
+      toolView.renderData(sliceData);
+      lastRenderDataElapsed = now;
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {

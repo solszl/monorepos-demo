@@ -18,8 +18,9 @@ class StackTool extends BaseTool {
     if (movementY === 0) {
       return;
     }
+
     this.$stage.fire(INTERNAL_EVENTS.TOOL_STACK_CHANGE, {
-      delta: movementY,
+      delta: Math.sign(movementY),
     });
   }
   mouseUp(e) {
