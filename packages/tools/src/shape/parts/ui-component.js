@@ -12,19 +12,25 @@ class UIComponent extends Group {
   }
 
   _bindMouseEffect() {
+    let dragging = false;
     this.on("mouseover", (evt) => {
       cursor(this, "grab");
       activeUtil.on(this);
     });
     this.on("mousedown", (evt) => {
       cursor(this, "grabbing");
+      dragging = true;
     });
     this.on("mouseout mouseleave", (evt) => {
+      if (dragging) {
+        return;
+      }
       cursor(this);
       activeUtil.off(this);
     });
     this.on("dragend", (evt) => {
       cursor(this, "grab");
+      dragging = false;
     });
   }
 }
