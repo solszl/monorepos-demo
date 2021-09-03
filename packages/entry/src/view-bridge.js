@@ -2,6 +2,7 @@ import { Component } from "@saga/core";
 import { View } from "@saga/tools";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@saga/viewer";
 import { TOOLVIEW_INTERNAL_EVENTS } from "@saga/tools";
+import { appendIFrame } from "./utils";
 class Viewport extends Component {
   constructor(option) {
     super();
@@ -15,15 +16,13 @@ class Viewport extends Component {
     let opt = Object.assign({}, option, { id: this.id });
     this.option = opt;
     const toolView = new View(opt);
-    const imageView = ViewFactory(opt);
-
-    // 父容器尺寸发生变化
-    imageView.on(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, (info) => {
-      // viewer 尺寸发生变更，同步给toolView
-      const { width, height } = info;
+    appendIFrame(opt.el, (parent) => {
+      // 父容器尺寸发生变化
+      const { clientWidth: width, clientHeight: height } = parent;
+      imageView?.resize(width, height);
       toolView?.resize(width, height);
-      console.log("尺寸发生变化了", width, height);
     });
+    const imageView = ViewFactory(opt);
 
     imageView.on(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, (info) => {
       toolView.updateViewport(info);
@@ -91,11 +90,7 @@ class Viewport extends Component {
       const { delta } = info;
       const { plane, seriesId, resource } = this.option;
       this.currentIndex += delta;
-      this.currentIndex = resource.getIllegalIndex(
-        this.currentIndex,
-        seriesId,
-        plane
-      );
+      this.currentIndex = resource.getIllegalIndex(this.currentIndex, seriesId, plane);
       const image = await resource.getImage(seriesId, this.currentIndex, plane);
 
       imageView.showImage(image);

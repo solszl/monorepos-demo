@@ -10,15 +10,14 @@ export const renderGrayImage = (image, lut, renderCanvas) => {
   const ctx = renderCanvas.getContext("2d");
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, width, height);
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = true;
   const renderCanvasData = ctx.getImageData(0, 0, width, height);
 
   let imageDataIndex = 3;
   let numPixels = width * height;
   let i = 0;
   while (i < numPixels) {
-    renderCanvasData.data[imageDataIndex] =
-      lut[pixelData[i++] + -minPixelValue];
+    renderCanvasData.data[imageDataIndex] = lut[pixelData[i++] + -minPixelValue];
     imageDataIndex += 4;
   }
 

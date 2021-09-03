@@ -32,11 +32,16 @@ class View extends Component {
     toolContainer.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2;`;
     el.appendChild(toolContainer);
 
-    const stage = new Stage({
-      container: toolContainer,
-      width: toolContainer.clientWidth,
-      height: toolContainer.clientHeight,
-    });
+    const stage = new Stage(
+      Object.assign(
+        {},
+        {
+          container: toolContainer,
+          id: this.id,
+        },
+        this._getRootSize(el)
+      )
+    );
     this.stage = stage;
 
     stage.add(
@@ -96,6 +101,11 @@ class View extends Component {
       item.renderData();
     });
     layer.batchDraw();
+  }
+
+  _getRootSize(el) {
+    let { clientWidth, clientHeight } = el;
+    return { width: clientWidth, height: clientHeight };
   }
 }
 

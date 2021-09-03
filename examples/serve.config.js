@@ -20,7 +20,7 @@ const devServer = {
       },
     },
     "/ct_chest/api": {
-      target: "http://192.168.109.92:3000",
+      target: "http://192.168.109.92:13000",
       changeOrigin: true,
       pathRewrite: {
         "^/api": "",

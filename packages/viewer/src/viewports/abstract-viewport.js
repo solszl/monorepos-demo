@@ -17,6 +17,7 @@ class AbstractViewport extends Component {
     this.displayState = {
       flip: { h: false, v: false },
       scale: 1,
+      currentTransform: null,
     };
     window.view = this;
 
@@ -26,7 +27,7 @@ class AbstractViewport extends Component {
   init() {
     this.initContainer();
     this.initCanvas();
-    this.initResize();
+    // this.initResize();
   }
 
   initContainer() {
@@ -51,26 +52,18 @@ class AbstractViewport extends Component {
     this.canvas = canvas;
     this.canvas.className = "__tx-dicom";
     this.canvas.id = this.id;
-    // this.el.appendChild(canvas);
-    // this.el.insertBefore(this.canvas, this.el.firstChild);
-    this.viewerContainer.insertBefore(
-      this.canvas,
-      this.viewerContainer.firstChild
-    );
+    this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
   }
 
   initResize() {
-    this.iframe = document.createElement("iframe");
-    this.iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0;`;
-    this.el.style.position = "relative";
-    this.el.style.overflow = "hidden";
-    // this.el.insertBefore(this.iframe, this.el.firstChild);
-    this.viewerContainer.insertBefore(
-      this.iframe,
-      this.viewerContainer.firstChild
-    );
+    const className = "tx-resizer";
+    const tempIframe = this.el.querySelector(`.${className}`);
+    if (tempIframe) {
+      return;
+    }
+
     let lastEmitResize = -1;
-    this.iframe.contentWindow.onresize = (e) => {
+    const resizeHandler = (e) => {
       if (Date.now() - lastEmitResize <= 100) {
         return;
       }
@@ -80,6 +73,13 @@ class AbstractViewport extends Component {
       this.renderSchedule.invalidate(this.render.bind(this), this.image);
       this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, this._getRootSize());
     };
+    this.iframe = document.createElement("iframe");
+    this.iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; pointer-events:none;`;
+    this.iframe.classList = [className];
+    this.el.style.position = "relative";
+    this.el.style.overflow = "hidden";
+    this.viewerContainer.insertBefore(this.iframe, this.viewerContainer.firstChild);
+    this.iframe.contentWindow.onresize = resizeHandler;
   }
 
   showImage(image) {
@@ -110,13 +110,20 @@ class AbstractViewport extends Component {
       const { displayState } = this;
       await this.renderer.render(image, displayState);
       this._displayChanged = false;
+      needDraw = true;
     }
 
     const { width, height } = this._getRootSize();
-    const { canvas } = this;
-    if (canvas.width !== width || canvas.height !== height) {
+    if (this.canvas.width !== width || this.canvas.height !== height) {
       this.canvas.width = width;
       this.canvas.height = height;
+    }
+
+    if (needDraw) {
+      const ctx = this.canvas.getContext("2d");
+      ctx.fillStyle = "black";
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     if (
@@ -126,14 +133,13 @@ class AbstractViewport extends Component {
       this._scaleChanged ||
       this._sizeChanged
     ) {
-      const { width, height } = canvas;
-      const ctx = canvas.getContext("2d");
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, width, height);
-
       const { renderData } = this.renderer;
-      const matrix = applyTransform(this.displayState, canvas, renderData);
-      ctx.setTransform(...matrix);
+      this.displayState.currentTransform = applyTransform(
+        this.displayState,
+        this.canvas,
+        this.renderer.renderData
+      );
+
       // 矩阵变换
       this._flipChanged = false;
       this._positionChanged = false;
@@ -166,9 +172,11 @@ class AbstractViewport extends Component {
     if (needDraw) {
       const { renderData } = this.renderer;
       const { width, height } = renderData;
-      const ctx = canvas.getContext("2d");
+      const ctx = this.canvas.getContext("2d");
+      ctx.setTransform(...this.displayState.currentTransform);
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
+
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
         wwwc: {
           ww: this.displayState?.wwwc?.ww ?? this.image?.windowWidth,
@@ -211,6 +219,7 @@ class AbstractViewport extends Component {
   }
 
   setScale(val) {
+    console.log(val);
     this._propertySetter({ scale: val }, "_scaleChanged");
   }
 
@@ -220,7 +229,6 @@ class AbstractViewport extends Component {
 
   _getRootSize() {
     let { clientWidth, clientHeight } = this.el;
-    this._positionChanged = clientWidth !== clientHeight;
     return { width: clientWidth, height: clientHeight };
   }
 
@@ -246,6 +254,7 @@ class AbstractViewport extends Component {
 
     const { width, height } = this._getRootSize();
     const { width: rw, height: rh } = this.renderer.renderData;
+
     const screenRatio = width / height;
     let scaleResult = width / rw;
     let imageRatio = rw / rh;
@@ -254,6 +263,13 @@ class AbstractViewport extends Component {
     }
 
     this.setScale(scaleResult);
+  }
+
+  resize(width, height) {
+    this._sizeChanged = true;
+    this._calcSuitableSizeRatio();
+    this.renderSchedule.invalidate(this.render.bind(this), this.image);
+    this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, { width, height });
   }
 
   static create() {

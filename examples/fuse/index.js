@@ -1,9 +1,8 @@
 import { ViewportManager, TOOL_TYPE } from "@saga/entry";
 import { Resource } from "@saga/loader";
-const seriesId =
-  "1.3.46.670589.33.1.63758828404033474900002.5256280429442842630";
+const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
 const fs = "http://192.168.111.115:8000";
-let currentIndex = 10;
+let currentIndex = 0;
 
 const vm = new ViewportManager();
 const resource = new Resource();
