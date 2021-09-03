@@ -60,18 +60,37 @@ const angle = (data) => {
   return obj;
 };
 
-const fnList = { length, angle };
+const ellipse_roi = (data) => {
+  const obj = JSON.parse(JSON.stringify(data));
+  const position = coord.transformPoint(data.position.x, data.position.y);
+  const start = coord.transformPoint(
+    data.position.x + data.start.x,
+    data.position.y + data.start.y
+  );
+  const end = coord.transformPoint(
+    data.position.x + data.end.x,
+    data.position.y + data.end.y
+  );
+
+  obj.position.x = position[0];
+  obj.position.y = position[1];
+  obj.end.x = end[0] - position[0];
+  obj.end.y = end[1] - position[1];
+  obj.start.x = start[0] - position[0];
+  obj.start.y = start[1] - position[1];
+  return obj;
+};
+
+const fnList = { length, angle, ellipse_roi };
 export const transform = (data) => {
   const { type } = data;
   return fnList?.[type](data);
 };
 
 export const localToWorld = (x, y) => {
-  //   coord.transformPoint
   return coord.transformPoint(x, y);
 };
 
 export const worldToLocal = (x, y) => {
-  //   coord.invertPoint
   return coord.invertPoint(x, y);
 };

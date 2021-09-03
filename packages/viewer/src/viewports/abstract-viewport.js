@@ -155,7 +155,7 @@ class AbstractViewport extends Component {
         rootSize: this._getRootSize(),
         rotate: rotate || 0,
         offset: offset || [0, 0],
-        seriesId: this.image?.seriesNum,
+        seriesId: this.image?.seriesId,
         sliceId: this.image?.instanceNumber,
         position,
       });
@@ -179,6 +179,8 @@ class AbstractViewport extends Component {
         pixelData: this.image.pixelData,
         seriesId: this.image.seriesNum,
         sliceId: this.image.instanceNumber,
+        columnPixelSpacing: this.image.columnPixelSpacing,
+        rowPixelSpacing: this.image.rowPixelSpacing,
       });
       needDraw = false;
     }

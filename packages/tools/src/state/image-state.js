@@ -10,4 +10,6 @@ export const imageState = {
   pixelData: null,
   imgCanvas: null,
   canvas: null,
+  columnPixelSpacing: null,
+  rowPixelSpacing: null,
 };

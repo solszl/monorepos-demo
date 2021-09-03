@@ -35,7 +35,7 @@ fetchData(seriesId).then((json) => {
   }, 0);
 });
 
-standard.useTool("stack_scroll", 1);
+standard.useTool("ellipse_roi", 1);
 standard.useTool("stack_wheel_scroll", 2);
 standard.useTool("scale", 3);
 console.log("fuse start.", vm);

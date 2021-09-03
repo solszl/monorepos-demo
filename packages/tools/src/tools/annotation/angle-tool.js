@@ -1,10 +1,5 @@
 import BaseAnnotationTool from "../base/base-annotation-tool";
-import {
-  TOOL_CONSTANTS,
-  TOOL_ITEM_SELECTOR,
-  TOOL_TYPE,
-  INTERNAL_EVENTS,
-} from "../../constants";
+import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE, INTERNAL_EVENTS } from "../../constants";
 import { Line } from "konva/lib/shapes/Line";
 import Anchor from "../../shape/parts/anchor";
 import TextField from "../../shape/parts/textfield";
@@ -48,11 +43,7 @@ class AngleTool extends BaseAnnotationTool {
 
   mouseMove(evt) {
     super.mouseMove(evt);
-    if (
-      !this.careStageEvent ||
-      this.pointCount === 3 ||
-      this.pointCount === 0
-    ) {
+    if (!this.careStageEvent || this.pointCount === 3 || this.pointCount === 0) {
       return;
     }
 
@@ -109,7 +100,6 @@ class AngleTool extends BaseAnnotationTool {
         y: textBox.y,
       });
       const dashLine = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);
-      dashLine.visible(true);
       connectTextNode(textfield, from, dashLine);
     }
     textfield.text(this.showAngle(textBox.text));
@@ -145,15 +135,7 @@ class AngleTool extends BaseAnnotationTool {
     const dashLine = new DashLine({ visible: false });
     this.draggable(true);
     this.on("dragend", this.dragEnd.bind(this));
-    this.add(
-      anchorStart,
-      anchorMiddle,
-      anchorEnd,
-      line1,
-      line2,
-      textfield,
-      dashLine
-    );
+    this.add(anchorStart, anchorMiddle, anchorEnd, line1, line2, textfield, dashLine);
     const toolLayer = this.$stage.findOne("#toolsLayer");
     toolLayer.add(this);
     this.draw();
@@ -262,15 +244,9 @@ class AngleTool extends BaseAnnotationTool {
     const { start, middle, end, position, textBox } = this.data;
     const localPosition = worldToLocal(position.x, position.y);
     const localStart = worldToLocal(position.x + start.x, position.y + start.y);
-    const localMiddle = worldToLocal(
-      position.x + middle.x,
-      position.y + middle.y
-    );
+    const localMiddle = worldToLocal(position.x + middle.x, position.y + middle.y);
     const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
-    const localText = worldToLocal(
-      position.x + textBox.x,
-      position.y + textBox.y
-    );
+    const localText = worldToLocal(position.x + textBox.x, position.y + textBox.y);
 
     const data = JSON.parse(JSON.stringify(this.data));
     data.position = { x: localPosition[0], y: localPosition[1] };

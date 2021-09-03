@@ -65,7 +65,7 @@ export const activeUtil = {
  */
 export const cursor = (ctx, cursor = "auto") => {
   const stage = ctx.getStage();
-  if(stage) {
+  if (stage) {
     stage.container().style.cursor = cursor || "auto";
   }
 };
@@ -127,6 +127,7 @@ export const connectTextNode = (node, from, dashLine) => {
 
   // 定义虚线的点
   dashLine.points([formPoint[0], formPoint[1], toPoint[0], toPoint[1]]);
+  dashLine.show();
 };
 
 export const randomId = () => {
