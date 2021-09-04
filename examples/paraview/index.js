@@ -109,8 +109,8 @@ const getMinMaxValues = (pixelData) => {
   let pixel;
   while (i < len) {
     pixel = pixelData[i];
-    min = min < pixel ? min : pixel;
-    max = max > pixel ? max : pixel;
+    min = Math.min(min, pixel);
+    max = Math.max(max, pixel);
     i += 1;
   }
 

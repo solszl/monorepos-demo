@@ -2,10 +2,10 @@ import { Core } from "@saga/core";
 import { Resource } from "@saga/loader";
 import { Volume, Plane, ObliqueSampler, factory as ViewFactory } from "@saga/viewer";
 import { vec3 } from "gl-matrix";
-const seriesId = "1.2.410.200010.1160924.3152.150159.175159.1169700.175159";
-const fs = "http://192.168.109.92:8000";
+const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
+const fs = "http://192.168.111.115:8000";
 let currentIndex = 0;
-const API = "/ct_chest/api/combine/";
+const API = "/api/v1/series/";
 
 const core = new Core({ fps: 10 });
 const resource = new Resource();
@@ -36,7 +36,7 @@ const fetchData = async (seriesId) => {
 };
 
 fetchData(seriesId).then((json) => {
-  const imageUrls = json.series.images.map((i) => {
+  const imageUrls = json.data.images.map((i) => {
     return `${fs}/${i.storagePath}`;
   });
 
@@ -64,7 +64,7 @@ fetchData(seriesId).then((json) => {
 
     // center = volume.dimensionInfo.center;
     const [x, y, z] = volume.dimensionInfo.sizeInPx;
-    center = [192.99999999999997, 151.49999999999997, 152.5113635452896];
+    center = [190, 150, 152];
     vector = [0, 1, 0]; // [1,0,0],[0,1,0],[0,0,1]
     plane = new Plane();
     plane.makeFrom1Point1Vector(center, vector);
