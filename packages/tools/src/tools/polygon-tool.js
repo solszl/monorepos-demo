@@ -1,8 +1,8 @@
 import { Line } from "konva/lib/shapes/Line";
-import { TOOL_ITEM_SELECTOR, TOOL_TYPE, TOOL_CONSTANTS } from "../constants";
+import simplify from "simplify-js";
+import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../constants";
 import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
-import simplify from "simplify-js";
 
 class PolygonTool extends BaseTool {
   constructor(config = {}) {

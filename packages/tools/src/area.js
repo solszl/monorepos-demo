@@ -1,10 +1,9 @@
-import Transform from "./transform";
 import { viewportState } from "./state/viewport-state";
+import Transform from "./transform";
 export const transform = new Transform();
 
 const applyTransform = () => {
-  const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } =
-    viewportState;
+  const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } = viewportState;
 
   transform.reset();
 
@@ -48,15 +47,7 @@ class Area {
   }
 
   update(config) {
-    const {
-      rootSize,
-      scale,
-      rotate,
-      width,
-      height,
-      position = [0, 0],
-      offset,
-    } = config;
+    const { rootSize, scale, rotate, width, height, position = [0, 0], offset } = config;
 
     // 设置视窗
     Object.assign(
@@ -68,10 +59,7 @@ class Area {
     Object.assign(viewportState, { rotate } ?? {});
     Object.assign(viewportState, { width } ?? {});
     Object.assign(viewportState, { height } ?? {});
-    Object.assign(
-      viewportState,
-      { centerX: width / 2, centerY: height / 2 } ?? {}
-    );
+    Object.assign(viewportState, { centerX: width / 2, centerY: height / 2 } ?? {});
     Object.assign(viewportState, { position } ?? {});
 
     // 初始化时缩放和reander同时触发，判断是否有transform所需数据

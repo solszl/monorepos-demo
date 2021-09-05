@@ -1,7 +1,7 @@
-import BaseTool from "./base/base-tool";
+import { TOOL_TYPE } from "..";
 import { INTERNAL_EVENTS } from "../constants";
 import { viewportState } from "../state/viewport-state";
-import { TOOL_TYPE } from "..";
+import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
 
 class TranslateTool extends BaseTool {

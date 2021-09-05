@@ -1,6 +1,6 @@
-import LoaderWorker from "./workers/loader.worker";
 import PromiseWorker from "promise-worker";
 import { postprocessor } from "./utils";
+import LoaderWorker from "./workers/loader.worker";
 
 /** @type { Boolean } 简单的通过判断是否是Chrome49版本来确定是否是xp系统 */
 const isXP = /Windows NT 5\.1.+Chrome\/49/.test(navigator.userAgent);

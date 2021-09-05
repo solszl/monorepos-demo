@@ -41,7 +41,6 @@ export const TOOL_ITEM_SELECTOR = {
 export const TOOL_TYPE = {
   STACK_SCROLL: "stack_scroll",
   STACK_WHEEL_SCROLL: "stack_wheel_scroll",
-  MOVE: "move",
   MAGNIFYING: "magnifying",
   WWWC: "wwwc",
   LENGTH: "length",
@@ -52,14 +51,6 @@ export const TOOL_TYPE = {
   ROTATION: "rotation",
   SCALE: "scale",
   TRANSLATE: "translate",
-};
-
-export const EVENTS = {
-  MOUSE_DOWN: "tx_mouse_down",
-  MOUSE_UP: "tx_mouse_up",
-  MOUSE_CLICK: "tx_mouse_click",
-  MOUSE_DOUBLE_CLICK: "tx_mouse_double_click",
-  MOUSE_WHEEL: "tx_mouse_wheel",
 };
 
 export const INTERNAL_EVENTS = {

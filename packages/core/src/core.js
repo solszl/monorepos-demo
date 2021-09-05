@@ -1,4 +1,3 @@
-import Component from "./component";
 import RenderSchedule from "./render-schedule";
 import Stage from "./stage";
 

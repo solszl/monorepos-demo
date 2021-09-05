@@ -1,5 +1,5 @@
-import LoaderManager from "./loader-manager";
 import CacheManager from "./cache-manager";
+import LoaderManager from "./loader-manager";
 import PreloadManager from "./preload";
 import TaskManager from "./task-manager";
 

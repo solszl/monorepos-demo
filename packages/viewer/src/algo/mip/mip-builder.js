@@ -1,4 +1,4 @@
-import { getMin, getMax, getHalf } from "./mip-fns";
+import { getHalf, getMax, getMin } from "./mip-fns";
 import Node from "./node";
 class MipBuilder {
   constructor(config = { fn: "max" }) {

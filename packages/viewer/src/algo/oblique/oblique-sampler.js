@@ -1,6 +1,6 @@
-import Volume from "./volume";
-import Plane from "./plane";
 import { vectorUtil } from "../math";
+import Plane from "./plane";
+import Volume from "./volume";
 
 class ObliqueSampler {
   /**

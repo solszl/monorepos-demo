@@ -1,12 +1,12 @@
 import { Component } from "@saga/core";
 import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
-import ToolState from "./state/tool-state";
-import MouseTrap from "./trap/mouse-trap";
-import { INTERNAL_EVENTS, TOOL_CONSTRUCTOR } from "./constants";
 import Area from "./area";
-import { transform as transformCoords } from "./tools/utils/coords-transform";
+import { INTERNAL_EVENTS, TOOL_CONSTRUCTOR } from "./constants";
 import { imageState } from "./state/image-state";
+import ToolState from "./state/tool-state";
+import { transform as transformCoords } from "./tools/utils/coords-transform";
+import MouseTrap from "./trap/mouse-trap";
 
 class View extends Component {
   constructor(option = {}) {

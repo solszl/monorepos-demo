@@ -1,7 +1,6 @@
 import { Component } from "@saga/core";
-import { View } from "@saga/tools";
+import { TOOLVIEW_INTERNAL_EVENTS, View } from "@saga/tools";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@saga/viewer";
-import { TOOLVIEW_INTERNAL_EVENTS } from "@saga/tools";
 import { appendIFrame } from "./utils";
 class Viewport extends Component {
   constructor(option) {

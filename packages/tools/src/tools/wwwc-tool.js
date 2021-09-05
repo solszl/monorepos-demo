@@ -1,6 +1,6 @@
-import BaseTool from "./base/base-tool";
 import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
 import { imageState } from "../state/image-state";
+import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
 class WWWCTool extends BaseTool {
   constructor(config = {}) {

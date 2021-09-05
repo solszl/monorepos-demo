@@ -1,7 +1,7 @@
-import decodeLittleEndian from "../decoders/decodeLittleEndian";
 import decodeBigEndian from "../decoders/decodeBigEndian";
-import decodeRLE from "../decoders/decodeRLE";
 import decodeJPEGLS from "../decoders/decodeJPEGLS";
+import decodeLittleEndian from "../decoders/decodeLittleEndian";
+import decodeRLE from "../decoders/decodeRLE";
 
 export const decode = async (meta, pixelDataSource) => {
   const { transferSyntax } = meta;

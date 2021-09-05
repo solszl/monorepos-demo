@@ -1,7 +1,7 @@
 import { Component, RenderSchedule } from "@saga/core";
-import { validate } from "../validator";
-import { applyTransform } from "../transform/apply";
 import { VIEWER_INTERNAL_EVENTS } from "../constants";
+import { applyTransform } from "../transform/apply";
+import { validate } from "../validator";
 class AbstractViewport extends Component {
   constructor(option = {}) {
     super(option);

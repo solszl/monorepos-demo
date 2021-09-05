@@ -1,11 +1,11 @@
-import BaseAnnotationTool from "../base/base-annotation-tool";
-import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE, INTERNAL_EVENTS } from "../../constants";
-import Anchor from "../../shape/parts/anchor";
 import { Line } from "konva/lib/shapes/Line";
-import TextField from "../../shape/parts/textfield";
-import DashLine from "../../shape/parts/dashline";
-import { connectTextNode, randomId } from "../utils";
 import { verify } from "../../area";
+import { INTERNAL_EVENTS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
+import Anchor from "../../shape/parts/anchor";
+import DashLine from "../../shape/parts/dashline";
+import TextField from "../../shape/parts/textfield";
+import BaseAnnotationTool from "../base/base-annotation-tool";
+import { connectTextNode, randomId } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
 
 class LengthTool extends BaseAnnotationTool {

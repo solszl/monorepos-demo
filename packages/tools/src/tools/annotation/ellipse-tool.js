@@ -9,7 +9,7 @@ import DashLine from "../../shape/parts/dashline";
 import TextItem from "../../shape/parts/text-item";
 import { imageState } from "../../state/image-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
-import { connectTextNode, randomId, SELECTOR_ENUM } from "../utils";
+import { connectTextNode, randomId } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
 class EllipseTool extends BaseAnnotationTool {
   constructor(config = {}) {
@@ -296,7 +296,9 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _inEllipse(a, b, x, y, center) {
-    return Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1;
+    return (
+      Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1
+    );
   }
 }
 

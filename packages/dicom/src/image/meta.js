@@ -50,28 +50,16 @@ export const getMetaData = (dataset) => {
     // 窗宽
     windowWidth: getNumberValues(dataset, Tags.WindowWidth, 1)?.[0] || 255,
     instanceNumber: dataset.intString(Tags.InstanceNumber),
-    imageOrientationPatient: getNumberValues(
-      dataset,
-      Tags.PatientOrientation_CT,
-      6
-    ) ||
-      getNumberValues(dataset, Tags.PatientOrientation_CR, 6) || [
-        1, 0, 0, 0, 1, 0,
-      ],
-    imagePositionPatient: getNumberValues(
-      dataset,
-      Tags.PatientPosition_CT,
-      3
-    ) ||
+    imageOrientationPatient: getNumberValues(dataset, Tags.PatientOrientation_CT, 6) ||
+      getNumberValues(dataset, Tags.PatientOrientation_CR, 6) || [1, 0, 0, 0, 1, 0],
+    imagePositionPatient: getNumberValues(dataset, Tags.PatientPosition_CT, 3) ||
       getNumberValues(dataset, Tags.PatientPosition_CT, 3) || [0, 0, 0],
     sliceThickness: getNumberValue(dataset, Tags.SliceThickness) || 1,
     spacingBetweenSlices: getNumberValue(dataset, Tags.SpacingBetweenSlices),
     imageCompression: getCompressionState({
       lossyImageCompression: dataset.string(Tags.LossyImageCompression),
-      lossyImageCompressionRatio:
-        dataset.string(Tags.LossyImageCompressionRatio) | "",
-      lossyImageCompressionMethod:
-        dataset.string(Tags.LossyImageCompressionMethod) || "",
+      lossyImageCompressionRatio: dataset.string(Tags.LossyImageCompressionRatio) | "",
+      lossyImageCompressionMethod: dataset.string(Tags.LossyImageCompressionMethod) || "",
     }),
     studyDate: dataset.string(Tags.StudyDate),
     studyTime: dataset.string(Tags.StudyTime),
@@ -122,11 +110,7 @@ const stringUTF8 = (dataset, tag) => {
   var element = dataset.elements[tag];
 
   if (element && element.length > 0) {
-    var codeList = readCodeList(
-      dataset.byteArray,
-      element.dataOffset,
-      element.length
-    );
+    var codeList = readCodeList(dataset.byteArray, element.dataOffset, element.length);
     const code = codeList.map((item) => "%" + item.toString(16)).join("");
     try {
       return decodeURIComponent(code).trim();
@@ -139,15 +123,11 @@ const stringUTF8 = (dataset, tag) => {
 
 function readCodeList(byteArray, position, length) {
   if (length < 0) {
-    throw new Error(
-      "dicomParser.readFixedString - length cannot be less than 0"
-    );
+    throw new Error("dicomParser.readFixedString - length cannot be less than 0");
   }
 
   if (position + length > byteArray.length) {
-    throw new Error(
-      "dicomParser.readFixedString: attempt to read past end of buffer"
-    );
+    throw new Error("dicomParser.readFixedString: attempt to read past end of buffer");
   }
 
   var result = [];

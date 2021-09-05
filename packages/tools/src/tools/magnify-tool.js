@@ -95,10 +95,7 @@ class MagnifyTool extends BaseTool {
     tmpCanvas.width = this.data.size * 2;
     tmpCanvas.height = this.data.size * 2;
     const ctx = canvas.getContext("2d");
-    const point = worldToLocal(
-      this.data.centerPoint.x,
-      this.data.centerPoint.y
-    );
+    const point = worldToLocal(this.data.centerPoint.x, this.data.centerPoint.y);
 
     ctx.drawImage(
       imageState.imgCanvas,

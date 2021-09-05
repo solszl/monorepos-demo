@@ -1,6 +1,6 @@
-import BaseTool from "./base/base-tool";
 import { INTERNAL_EVENTS } from "../constants";
 import { viewportState } from "../state/viewport-state";
+import BaseTool from "./base/base-tool";
 class ScaleTool extends BaseTool {
   constructor(config = {}) {
     super(config);

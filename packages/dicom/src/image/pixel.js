@@ -1,4 +1,4 @@
-import { DataSet, createJPEGBasicOffsetTable, readEncapsulatedImageFrame } from "dicom-parser";
+import { createJPEGBasicOffsetTable, readEncapsulatedImageFrame } from "dicom-parser";
 export /**
  *
  *
