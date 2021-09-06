@@ -13,7 +13,8 @@ export const getLut = (image, displayState) => {
     lutCache = {};
   }
 
-  const cacheKey = `${windowWidth}-${windowCenter}-${+invert}`;
+  const { minPixelValue, maxPixelValue } = image;
+  const cacheKey = `${windowWidth}-${windowCenter}-${+invert}-${minPixelValue}-${maxPixelValue}`;
   if (!lutCache[cacheKey]) {
     lutCache[cacheKey] = generateLut(image, windowWidth, windowCenter, invert);
   }

@@ -1,4 +1,4 @@
-import { ViewportManager, TOOL_TYPE } from "@saga/entry";
+import { TOOL_TYPE, ViewportManager } from "@saga/entry";
 import { Resource } from "@saga/loader";
 import Mip from "../../packages/viewer/src/algo/mip/mip";
 const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
@@ -39,17 +39,19 @@ fetchData(seriesId).then((json) => {
   }, 0);
 
   setTimeout(async () => {
-    mip.imageList = resource.getImages(seriesId, "standard");
     mip.method = "max";
+    mip.imageList = resource.getImages(seriesId, "standard");
+    window.mip = mip;
 
     const img = await mip.getImage(currentIndex, step);
     standard.imageView.showImage(img);
-  }, 1500);
+  }, 2000);
 });
 
 document.addEventListener("wheel", async (e) => {
   const offset = Math.sign(e.deltaY);
   currentIndex += offset;
+  currentIndex = Math.max(0, Math.min(currentIndex, 182));
   const img = await mip.getImage(currentIndex, step);
   standard.imageView.showImage(img);
 

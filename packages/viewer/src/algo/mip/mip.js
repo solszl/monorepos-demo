@@ -116,13 +116,11 @@ class Mip {
       const { data } = item; // sub image list;
       let pixelMap = new Map();
       data.forEach((img) => {
-        const { pixelData, rows, columns, slope, intercept } = img;
+        const { pixelData, rows, columns } = img;
         for (let i = 0; i < rows; i++) {
           let rowPixels = pixelMap.get(i) || [];
           let start = i * columns;
-          let pixels = pixelData
-            .subarray(start, start + columns)
-            .map((row) => row * slope + intercept);
+          let pixels = pixelData.subarray(start, start + columns);
 
           rowPixels.push(pixels);
           pixelMap.set(i, rowPixels);
