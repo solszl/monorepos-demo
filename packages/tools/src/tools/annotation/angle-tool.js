@@ -1,12 +1,12 @@
-import BaseAnnotationTool from "../base/base-annotation-tool";
-import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE, INTERNAL_EVENTS } from "../../constants";
 import { Line } from "konva/lib/shapes/Line";
-import Anchor from "../../shape/parts/anchor";
-import TextField from "../../shape/parts/textfield";
-import { randomId, connectTextNode } from "../utils";
-import DashLine from "../../shape/parts/dashline";
 import { verify } from "../../area";
+import { INTERNAL_EVENTS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
+import Anchor from "../../shape/parts/anchor";
+import DashLine from "../../shape/parts/dashline";
+import TextField from "../../shape/parts/textfield";
 import { setActionComplete } from "../../state/tool-state";
+import BaseAnnotationTool from "../base/base-annotation-tool";
+import { connectTextNode, randomId } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
 
 class AngleTool extends BaseAnnotationTool {
@@ -36,6 +36,7 @@ class AngleTool extends BaseAnnotationTool {
     if (this.pointCount === 2) {
       return;
     }
+
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
     this.pointCount += 1;
@@ -266,6 +267,15 @@ class AngleTool extends BaseAnnotationTool {
     data.textBox.y = localText[1] - localPosition[1];
 
     return data;
+  }
+
+  set data(val) {
+    super.data = val;
+    setActionComplete(true);
+  }
+
+  get data() {
+    return super.data;
   }
 }
 

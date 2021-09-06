@@ -60,6 +60,10 @@ const ee = {
     toolState.getToolInstance(which)?.mouseDoubleClick(e);
   },
   wheel: (e, toolState) => {
+    [1, 2, 3].map((button) => {
+      toolState.getToolInstance(button)?.mouseWheel(e);
+    });
+
     if (toolState.getToolType(4) && !toolState.getToolInstance(4)) {
       toolState.getToolInstance(4, true);
     }

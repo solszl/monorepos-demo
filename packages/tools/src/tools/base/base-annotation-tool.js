@@ -1,3 +1,4 @@
+import { setActionComplete } from "../../state/tool-state";
 import BaseTool from "./base-tool";
 
 class BaseAnnotationTool extends BaseTool {
@@ -27,6 +28,12 @@ class BaseAnnotationTool extends BaseTool {
 
   dragEnd(evt) {
     this.careStageEvent = false;
+  }
+
+  mouseWheel(evt) {
+    super.mouseWheel(evt);
+    this.mouseUp(evt);
+    setActionComplete(true);
   }
 }
 
