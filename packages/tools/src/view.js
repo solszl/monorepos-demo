@@ -84,9 +84,10 @@ class View extends Component {
     data.forEach((obj) => {
       const { type } = obj;
       const item = new TOOL_CONSTRUCTOR[type]();
-      item.data = item.convertLocalCoords(obj);
-      layer.add(item);
+      item.$stage = layer.getStage();
+      item.data = transformCoords(obj);
     });
+    layer.batchDraw();
   }
 
   resetData(data = new Map()) {

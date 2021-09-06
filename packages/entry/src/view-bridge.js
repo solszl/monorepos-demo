@@ -1,5 +1,5 @@
 import { Component } from "@saga/core";
-import { TOOLVIEW_INTERNAL_EVENTS, View } from "@saga/tools";
+import { API, TOOLVIEW_INTERNAL_EVENTS, View } from "@saga/tools";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@saga/viewer";
 import { appendIFrame } from "./utils";
 class Viewport extends Component {
@@ -15,6 +15,7 @@ class Viewport extends Component {
     let opt = Object.assign({}, option, { id: this.id });
     this.option = opt;
     const toolView = new View(opt);
+    const api = new API();
     appendIFrame(opt.el, (parent) => {
       // 父容器尺寸发生变化
       const { clientWidth: width, clientHeight: height } = parent;
@@ -82,18 +83,21 @@ class Viewport extends Component {
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => {
       imageView.setOffset(info.offset);
     });
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
-      imageView.setRotation(info.rotate);
-    });
+
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => {
       imageView.setScale(info.scale);
     });
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => {
-      imageView.setWWWC(info.wwwc);
+
+    [api, toolView].map((obj) => {
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
+        imageView.setRotation(info.rotate);
+      });
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => {
+        imageView.setWWWC(info.wwwc);
+      });
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
-      // console.log(info);
       const { delta } = info;
       const { plane, seriesId, resource } = this.option;
       this.currentIndex += delta;
@@ -105,6 +109,7 @@ class Viewport extends Component {
 
     this._toolView = toolView;
     this._imageView = imageView;
+    this.api = api;
   }
 
   get toolView() {
@@ -118,6 +123,11 @@ class Viewport extends Component {
   useTool(toolType, button = 1) {
     // 默认绑定左键
     this.toolView.useTool(toolType, button);
+  }
+
+  useCmd(param) {
+    const { type } = param;
+    this.api?.[type](param);
   }
 }
 

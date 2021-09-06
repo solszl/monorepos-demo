@@ -34,7 +34,7 @@ fetchData(seriesId).then((json) => {
   }, 0);
 });
 
-standard.useTool(TOOL_TYPE.STACK_SCROLL, 1);
+standard.useTool(TOOL_TYPE.LENGTH, 1);
 standard.useTool(TOOL_TYPE.TRANSLATE, 2);
 standard.useTool(TOOL_TYPE.SCALE, 3);
 standard.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, 4);
