@@ -5,14 +5,14 @@ class ScaleTool extends BaseTool {
   constructor(config = {}) {
     super(config);
     this.isDown = false;
-    this.offsetY = null;
+    this.oldOffsetY = null;
     this.scale = viewportState.scale;
   }
 
   mouseDown(e) {
     super.mouseDown(e);
     this.isDown = true;
-    this.offsetY = e.evt.offsetY;
+    this.oldOffsetY = e.evt.screenY;
   }
 
   documentMouseMove(e) {
@@ -20,8 +20,8 @@ class ScaleTool extends BaseTool {
     if (!this.isDown) {
       return;
     }
-    const stepY = e.offsetY - this.offsetY;
-    this.offsetY = e.offsetY;
+    const stepY = e.screenY - this.oldOffsetY;
+    this.oldOffsetY = e.screenY;
 
     const ticks = stepY / 200;
     const pow = 1.7;

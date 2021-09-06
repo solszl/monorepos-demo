@@ -18,9 +18,9 @@ class WWWCTool extends BaseTool {
   }
   mouseDown(e) {
     super.mouseDown(e);
-    const { offsetX, offsetY } = e.evt;
+    const { screenX, screenY } = e.evt;
     this.isDown = true;
-    this.oldOffset = [offsetX, offsetY];
+    this.oldOffset = [screenX, screenY];
     this.step = { ww: imageState.wwwc.ww, wc: imageState.wwwc.wc };
   }
 
@@ -30,8 +30,8 @@ class WWWCTool extends BaseTool {
       return;
     }
     const wwwc = {
-      ww: e.offsetX - this.oldOffset[0] + this.step.ww,
-      wc: e.offsetY - this.oldOffset[1] + this.step.wc,
+      ww: e.screenX - this.oldOffset[0] + this.step.ww,
+      wc: e.screenY - this.oldOffset[1] + this.step.wc,
     };
     this.data.wwwc = wwwc;
     this.$stage.fire(INTERNAL_EVENTS.TOOL_WWWC, { wwwc });

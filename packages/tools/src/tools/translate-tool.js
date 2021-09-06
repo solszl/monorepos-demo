@@ -21,9 +21,9 @@ class TranslateTool extends BaseTool {
 
   mouseDown(e) {
     super.mouseDown(e);
-    const { offsetX, offsetY } = e.evt;
+    const { screenX, screenY } = e.evt;
     this.isDown = true;
-    this.oldOffset = [offsetX, offsetY];
+    this.oldOffset = [screenX, screenY];
     this.step = { x: viewportState.x, y: viewportState.y };
   }
 
@@ -33,8 +33,8 @@ class TranslateTool extends BaseTool {
       return;
     }
     const offset = {
-      x: e.offsetX - this.oldOffset[0] + this.step.x,
-      y: e.offsetY - this.oldOffset[1] + this.step.y,
+      x: e.screenX - this.oldOffset[0] + this.step.x,
+      y: e.screenY - this.oldOffset[1] + this.step.y,
     };
     this.data.offset = offset;
     this.$stage.fire(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset });
