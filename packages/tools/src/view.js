@@ -1,4 +1,5 @@
 import { Component } from "@saga/core";
+import { DD } from "konva/lib/DragAndDrop";
 import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
 import Area from "./area";
@@ -80,6 +81,8 @@ class View extends Component {
       console.error(`can't find tools layer.`);
     }
 
+    // 如果有正在拖拽的， 就先取消拖拽，再清空当前layer
+    DD?._dragElements.clear();
     layer.removeChildren();
     data.forEach((obj) => {
       const { type } = obj;
