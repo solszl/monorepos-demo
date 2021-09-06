@@ -12,4 +12,6 @@ export const imageState = {
   canvas: null,
   columnPixelSpacing: null,
   rowPixelSpacing: null,
+  slope: null,
+  intercept: null,
 };

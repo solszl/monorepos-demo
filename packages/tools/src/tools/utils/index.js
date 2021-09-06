@@ -6,8 +6,8 @@ export const SELECTOR_ENUM = {
 };
 
 import { Node } from "konva/lib/Node";
-import UIComponent from "../../shape/parts/ui-component";
 import { TOOL_COLORS } from "../../constants";
+import UIComponent from "../../shape/parts/ui-component";
 export const activeUtil = {
   on: (shape) => {
     let selector = ".node-anchor";
@@ -95,6 +95,10 @@ export function getRelativePointerPosition(node, round = false) {
   const { x, y } = transform.point(pos);
   return { x: ~~x, y: ~~y };
 }
+
+export const toCT = (pixelData, slope, intercept) => {
+  return pixelData.map((value) => value * slope + intercept);
+};
 
 export const connectTextNode = (node, from, dashLine) => {
   const text = node;

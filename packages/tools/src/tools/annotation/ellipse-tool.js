@@ -9,7 +9,7 @@ import DashLine from "../../shape/parts/dashline";
 import TextItem from "../../shape/parts/text-item";
 import { imageState } from "../../state/image-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
-import { connectTextNode, randomId } from "../utils";
+import { connectTextNode, randomId, toCT } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
 class EllipseTool extends BaseAnnotationTool {
   constructor(config = {}) {
@@ -230,12 +230,10 @@ class EllipseTool extends BaseAnnotationTool {
   }
   _getArea() {
     // 计算面积
-    const { position, start, end } = this.data;
-    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
-    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const { end } = this.data;
     const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } = imageState;
-    const a = Math.abs(localStart[0] - localEnd[0]) / 2;
-    const b = Math.abs(localStart[1] - localEnd[1]) / 2;
+    const a = Math.abs(end.x) / 2;
+    const b = Math.abs(end.y) / 2;
     const area = Math.PI * (a * columnPixelSpacing) * (b * rowPixelSpacing);
     return area;
   }
@@ -268,7 +266,8 @@ class EllipseTool extends BaseAnnotationTool {
         }
       }
     }
-    return ellipsePixelData;
+
+    return toCT(ellipsePixelData, imageState.slope, imageState.intercept);
   }
 
   _getInfo(pixelData) {
@@ -280,8 +279,8 @@ class EllipseTool extends BaseAnnotationTool {
     for (let i = 0; i < pixelData.length; i++) {
       const item = pixelData[i];
       sum += item;
-      min = item < min ? item : min;
-      max = item > max ? item : max;
+      min = Math.min(min, item);
+      max = Math.max(max, item);
     }
     const avg = sum / pixelData.length; // 平均数
 
@@ -296,9 +295,7 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _inEllipse(a, b, x, y, center) {
-    return (
-      Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1
-    );
+    return Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1;
   }
 }
 

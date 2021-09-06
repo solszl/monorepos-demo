@@ -1,10 +1,9 @@
-import { Text } from "konva/lib/shapes/Text";
 import { verify } from "../../area";
-import { TOOL_COLORS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
+import { TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
 import TextField from "../../shape/parts/textfield";
 import { imageState } from "../../state/image-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
-import { randomId } from "../utils";
+import { randomId, toCT } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
 class ProbeTool extends BaseAnnotationTool {
   constructor(config = {}) {
@@ -67,7 +66,7 @@ class ProbeTool extends BaseAnnotationTool {
 
   _getCT(x, y) {
     const index = y * imageState.columns + x;
-    return imageState.pixelData[index];
+    return toCT([imageState.pixelData[index]], imageState.slope, imageState.intercept);
   }
 }
 
