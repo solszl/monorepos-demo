@@ -1,4 +1,5 @@
 import UIComponent from "../../shape/parts/ui-component";
+import { activeUtil } from "../utils";
 
 class BaseTool extends UIComponent {
   constructor(config = {}) {
@@ -32,6 +33,7 @@ class BaseTool extends UIComponent {
     this.careStageEvent = false;
     if (!this.UIInitialed) {
       this.initialUI();
+      activeUtil.off(this);
     }
     this.renderData();
   }
