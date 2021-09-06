@@ -56,7 +56,7 @@ class ToolState {
       }
       if (button !== 0) {
         // 未完成且更换按键，强制结束
-        completeState.isComplete = true;
+        setActionComplete(true);
         this.toolInstance[completeState.button].mouseUp();
       }
       return this.toolInstance[completeState.button];

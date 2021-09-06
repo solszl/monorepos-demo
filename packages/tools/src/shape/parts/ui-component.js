@@ -28,7 +28,7 @@ class UIComponent extends Group {
       cursor(this);
       activeUtil.off(this);
     });
-    this.on("dragend", (evt) => {
+    this.on("dragend mouseup", (evt) => {
       cursor(this, "grab");
       dragging = false;
     });
