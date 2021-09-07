@@ -256,6 +256,8 @@ class AbstractViewport extends Component {
     this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, { width, height });
   }
 
+  async snapshot() {}
+
   static create() {
     console.error("need implemented by subclass.");
   }
