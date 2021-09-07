@@ -4,6 +4,7 @@ import { initialState } from "../state/viewport-state";
 class API extends Component {
   constructor() {
     super();
+    this.playInterval = null;
   }
 
   rotation(rotate) {
@@ -35,6 +36,18 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
     this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
     this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
+  }
+
+  play(speed) {
+    clearInterval(this.playInterval);
+    const s = Math.max(0.25, Math.min(speed, 5));
+    this.playInterval = setInterval(() => {
+      this.emit(INTERNAL_EVENTS.TOOL_STACK_CHANGE, { delta: 1, loop: true });
+    }, 1000 / s);
+  }
+
+  stop() {
+    clearInterval(this.playInterval);
   }
 }
 export default API;

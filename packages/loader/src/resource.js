@@ -88,8 +88,11 @@ class Resource {
     return this.cacheManager.getItems(seriesId, plane);
   }
 
-  getIllegalIndex(index, seriesId, plane) {
+  getIllegalIndex(index, seriesId, plane, loop) {
     const { length } = this.taskManager.getTasks(seriesId, plane);
+    if (loop && index >= length) {
+      return 0;
+    }
     return Math.max(0, Math.min(index, length - 1));
   }
 }

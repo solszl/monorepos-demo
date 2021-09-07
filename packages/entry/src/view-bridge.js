@@ -88,16 +88,15 @@ class Viewport extends Component {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_INVERT, (info) => imageView.setInvert(info.invert));
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => imageView.setScale(info.scale));
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => imageView.setOffset(info.offset));
-    });
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
+        const { delta, loop } = info;
+        const { plane, seriesId, resource } = this.option;
+        this.currentIndex += delta;
+        this.currentIndex = resource.getIllegalIndex(this.currentIndex, seriesId, plane, loop);
+        const image = await resource.getImage(seriesId, this.currentIndex, plane);
 
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
-      const { delta } = info;
-      const { plane, seriesId, resource } = this.option;
-      this.currentIndex += delta;
-      this.currentIndex = resource.getIllegalIndex(this.currentIndex, seriesId, plane);
-      const image = await resource.getImage(seriesId, this.currentIndex, plane);
-
-      imageView.showImage(image);
+        imageView.showImage(image);
+      });
     });
 
     this._toolView = toolView;
