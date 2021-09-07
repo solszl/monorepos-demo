@@ -70,7 +70,8 @@
     "webpack-dev-server": "^3.11.0",
     "worker-loader": "^2.0.0",
     "monologue.js": "0.3.5",
-    "wslink": "^1.0.7"
+    "wslink": "^1.0.7",
+    "cheerio": "^1.0.0-rc.10"
   },
   "private": true,
   "workspaces": [

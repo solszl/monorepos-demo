@@ -1,7 +1,5 @@
 const makeTag = (group, element) => {
-  return `x${group.toString(16).padStart(4, "0")}${element
-    .toString(16)
-    .padStart(4, "0")}`;
+  return `x${group.toString(16).padStart(4, "0")}${element.toString(16).padStart(4, "0")}`;
 };
 
 export const Tags = {
@@ -173,7 +171,7 @@ export const Tags = {
    *
    * @memberof Tags
    */
-  PatientID: makeTag(0x0010, 0x000020),
+  PatientID: makeTag(0x0010, 0x0020),
 
   /**
    * 病人名字
