@@ -95,6 +95,12 @@ class Viewport extends Component {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => {
         imageView.setWWWC(info.wwwc);
       });
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPH, (info) => {
+        imageView.setFlipH(info.h);
+      });
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPV, (info) => {
+        imageView.setFlipV(info.v);
+      });
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
@@ -125,8 +131,7 @@ class Viewport extends Component {
     this.toolView.useTool(toolType, button);
   }
 
-  useCmd(param) {
-    const { type } = param;
+  useCmd(type, param) {
     this.api?.[type](param);
   }
 }

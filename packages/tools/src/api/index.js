@@ -5,12 +5,20 @@ class API extends Component {
     super();
   }
 
-  rotation(args) {
-    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, args);
+  rotation(rotation) {
+    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotation });
   }
 
-  wwwc(args) {
-    this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc: args });
+  wwwc(wwwc) {
+    this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc });
+  }
+
+  flipH(h) {
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h });
+  }
+
+  flipV(v) {
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v });
   }
 
   reset() {}

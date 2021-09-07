@@ -4,6 +4,7 @@ import { INTERNAL_EVENTS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextField from "../../shape/parts/textfield";
+import { imageState } from "../../state/image-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
@@ -89,7 +90,7 @@ class LengthTool extends BaseAnnotationTool {
       connectTextNode(textfield, from, dashLine);
     }
 
-    textfield.text(textBox.text);
+    textfield.text(`${textBox.text}mm`);
   }
 
   initialUI() {
@@ -172,8 +173,13 @@ class LengthTool extends BaseAnnotationTool {
   }
 
   _calcText() {
-    const { start, end } = this.data;
-    const distance = +Math.sqrt((start.x - end.x) ** 2 + (start.y - end.y) ** 2).toFixed(2);
+    const { start, end, position } = this.data;
+    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
+    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const { columnPixelSpacing: spX, rowPixelSpacing: spY } = imageState;
+    const x2 = (localStart[0] * spX - localEnd[0] * spX) ** 2;
+    const y2 = (localStart[1] * spY - localEnd[1] * spY) ** 2;
+    const distance = +Math.sqrt(x2 + y2).toFixed(2);
     this.data.textBox.text = distance;
   }
 

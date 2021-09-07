@@ -47,13 +47,10 @@ class Area {
   }
 
   update(config) {
-    const { rootSize, scale, rotate, width, height, position = [0, 0], offset } = config;
+    const { rootSize, scale, rotate, width, height, position = [0, 0], offset, flip } = config;
 
     // 设置视窗
-    Object.assign(
-      viewportState,
-      { rootWidth: rootSize?.width, rootHeight: rootSize?.height } ?? {}
-    );
+    Object.assign(viewportState, { rootWidth: rootSize?.width, rootHeight: rootSize?.height } ?? {});
     Object.assign(viewportState, { x: offset.x, y: offset.y } ?? {});
     Object.assign(viewportState, { scale } ?? {});
     Object.assign(viewportState, { rotate } ?? {});
@@ -61,6 +58,7 @@ class Area {
     Object.assign(viewportState, { height } ?? {});
     Object.assign(viewportState, { centerX: width / 2, centerY: height / 2 } ?? {});
     Object.assign(viewportState, { position } ?? {});
+    Object.assign(viewportState, { flip } ?? {});
 
     // 初始化时缩放和reander同时触发，判断是否有transform所需数据
     rootSize && applyTransform();

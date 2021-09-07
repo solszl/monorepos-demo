@@ -62,6 +62,8 @@ export const INTERNAL_EVENTS = {
   TOOL_SCALE: "tx_tool_scale",
   TOOL_WWWC: "tx_tool_wwwc",
   TOOL_STACK_CHANGE: "tx_stack_change",
+  TOOL_FLIPH: "tx_tool_flipH",
+  TOOL_FLIPV: "tx_tool_flipV",
 };
 
 export const TOOL_CONSTRUCTOR = {

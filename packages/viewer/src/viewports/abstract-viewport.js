@@ -133,7 +133,6 @@ class AbstractViewport extends Component {
       const { width: rootWidth, height: rootHeight } = this._getRootSize();
       const { scale, rotate, offset = { x: 0, y: 0 } } = this.displayState;
       const position = [(rootWidth - renderData.width * scale) / 2, (rootHeight - renderData.height * scale) / 2];
-
       this.emit(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, {
         width: renderData.width,
         height: renderData.height,
@@ -144,6 +143,7 @@ class AbstractViewport extends Component {
         seriesId: this.image?.seriesId,
         sliceId: this.image?.instanceNumber,
         position,
+        flip: this.displayState.flip,
       });
       needDraw = true;
     }
