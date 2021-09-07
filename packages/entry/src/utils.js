@@ -28,7 +28,7 @@ export const appendIFrame = (rootDom, sizeChangeHandler) => {
   }
 
   const iframe = document.createElement("iframe");
-  iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; pointer-events:none;`;
+  iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; pointer-events:none;z-index:-1;`;
   iframe.classList = [className];
   rootDom.style.position = "relative";
   rootDom.style.overflow = "hidden";
