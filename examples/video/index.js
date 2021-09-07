@@ -6,7 +6,6 @@ const resource = new Resource();
 vm.resource = resource;
 const viewport = vm.addViewport({
   plane: "video",
-  renderer: "canvas",
   el: document.querySelector("#root"),
 });
 

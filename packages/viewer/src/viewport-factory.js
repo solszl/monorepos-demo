@@ -1,9 +1,7 @@
 import CanvasRenderer from "./render/canvas";
 import WebglRenderer from "./render/webgl";
 import { webglSupported } from "./render/webgl/utils";
-import { StandardViewport } from "./viewports";
-import PixelViewport from "./viewports/pixel";
-import VideoViewport from "./viewports/video";
+import { PixelViewport, StandardViewport, VideoViewport } from "./viewports";
 
 export const factory = (option) => {
   let viewport = null; // 视窗
