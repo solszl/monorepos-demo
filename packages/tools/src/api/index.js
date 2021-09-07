@@ -1,6 +1,6 @@
 import { Component } from "@saga/core";
 import { INTERNAL_EVENTS } from "../constants";
-import { initState } from "../state/viewport-state";
+import { initialState } from "../state/viewport-state";
 class API extends Component {
   constructor() {
     super();
@@ -27,7 +27,7 @@ class API extends Component {
   }
 
   reset() {
-    const { rotate, x, y, scale } = initState;
+    const { rotate, x, y, scale } = initialState;
     this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
     this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset: { x, y } });
     this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });

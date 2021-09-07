@@ -11,6 +11,4 @@ export const viewportState = {
   centerY: 0,
 };
 
-export const initState = {};
-
-window.viewportState = viewportState;
+export const initialState = {};
