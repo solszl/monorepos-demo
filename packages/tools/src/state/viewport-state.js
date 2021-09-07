@@ -10,3 +10,7 @@ export const viewportState = {
   centerX: 0,
   centerY: 0,
 };
+
+export const initState = {};
+
+window.viewportState = viewportState;

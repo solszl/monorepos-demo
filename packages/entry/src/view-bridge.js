@@ -80,27 +80,14 @@ class Viewport extends Component {
       this.data[sliceKey] = sliceData;
     });
 
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => {
-      imageView.setOffset(info.offset);
-    });
-
-    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => {
-      imageView.setScale(info.scale);
-    });
-
     [api, toolView].map((obj) => {
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => {
-        imageView.setRotation(info.rotate);
-      });
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => {
-        imageView.setWWWC(info.wwwc);
-      });
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPH, (info) => {
-        imageView.setFlipH(info.h);
-      });
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPV, (info) => {
-        imageView.setFlipV(info.v);
-      });
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => imageView.setRotation(info.rotate));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => imageView.setWWWC(info.wwwc));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPH, (info) => imageView.setFlipH(info.h));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPV, (info) => imageView.setFlipV(info.v));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_INVERT, (info) => imageView.setInvert(info.invert));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => imageView.setScale(info.scale));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => imageView.setOffset(info.offset));
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {

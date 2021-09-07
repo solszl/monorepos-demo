@@ -39,7 +39,7 @@ const generateLut = (image, windowWidth, windowCenter, invert) => {
     }
   } else {
     for (let i = minPixelValue; i <= maxPixelValue; i += 1) {
-      lut[i - offset] = 255 - wwwcLutFn[mLutFn[i]];
+      lut[i - offset] = 255 - wwwcLutFn(mLutFn(i));
     }
   }
 
