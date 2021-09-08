@@ -196,11 +196,13 @@ class AbstractViewport extends Component {
   }
 
   setFlipV(val) {
-    this._propertySetter({ flip: { v: val } }, "_flipChanged");
+    const flip = { v: val, h: this.displayState.flip.h };
+    this._propertySetter({ flip }, "_flipChanged");
   }
 
   setFlipH(val) {
-    this._propertySetter({ flip: { h: val } }, "_flipChanged");
+    const flip = { v: this.displayState.flip.v, h: val };
+    this._propertySetter({ flip }, "_flipChanged");
   }
 
   setScale(val) {

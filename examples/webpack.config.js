@@ -47,6 +47,10 @@ const config = {
         },
         include: [resolve("examples"), resolve("packages")],
       },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
     ],
   },
   plugins: [
