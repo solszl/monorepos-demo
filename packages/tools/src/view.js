@@ -89,6 +89,7 @@ class View extends Component {
       const item = new TOOL_CONSTRUCTOR[type]();
       item.$stage = layer.getStage();
       item.data = transformCoords(obj);
+      item.name(obj.id);
     });
     layer.batchDraw();
   }

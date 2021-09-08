@@ -168,7 +168,7 @@ class AbstractViewport extends Component {
         columns: this.image.columns,
         rows: this.image.rows,
         pixelData: this.image.pixelData,
-        seriesId: this.image.seriesNum,
+        seriesId: this.image.seriesId,
         sliceId: this.image.instanceNumber,
         columnPixelSpacing: this.image.columnPixelSpacing,
         rowPixelSpacing: this.image.rowPixelSpacing,
