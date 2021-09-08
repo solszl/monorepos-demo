@@ -35,3 +35,7 @@ export const appendIFrame = (rootDom, sizeChangeHandler) => {
   rootDom.insertBefore(iframe, rootDom.firstChild);
   iframe.contentWindow.onresize = resizeHandler;
 };
+
+export const randomId = (len = 6) => {
+  return Math.random().toString(16).slice(2).substring(0, len);
+};

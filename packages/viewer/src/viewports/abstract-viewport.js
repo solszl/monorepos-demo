@@ -12,7 +12,6 @@ class AbstractViewport extends Component {
     this.renderer = null;
     this.el = option.el;
     this.canvas = null;
-    this.iframe = null;
 
     this.displayState = {
       flip: { h: false, v: false },
