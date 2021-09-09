@@ -7,24 +7,28 @@ class API extends Component {
     this.playInterval = null;
   }
 
-  rotation(rotate) {
-    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
+  rotation(rotate, dispatch = true) {
+    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate, dispatch });
   }
 
-  wwwc(wwwc) {
-    this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc });
+  wwwc(wwwc, dispatch = true) {
+    this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc, dispatch });
   }
 
-  flipH(h) {
-    this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h });
+  flipH(h, dispatch = true) {
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h, dispatch });
   }
 
-  flipV(v) {
-    this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v });
+  flipV(v, dispatch = true) {
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v, dispatch });
   }
 
-  invert(invert) {
-    this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert });
+  invert(invert, dispatch = true) {
+    this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert, dispatch });
+  }
+
+  scale(scale, dispatch = true) {
+    this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale, dispatch });
   }
 
   reset() {

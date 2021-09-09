@@ -11,7 +11,7 @@ class ToolBar {
   }
 
   addBtn(params) {
-    const { name, fnc } = params;
+    const { name, fun } = params;
     const btn = document.createElement("button");
     btn.className = "tx_toolBar_button";
     btn.innerText = name;
@@ -21,7 +21,7 @@ class ToolBar {
       const btns = document.querySelectorAll(".tx_toolBar_button");
       btns.forEach((item) => item.setAttribute("data-active", false));
       btn.setAttribute("data-active", true);
-      fnc && fnc();
+      fun && fun();
     };
     this.toolBarBox.appendChild(btn);
   }

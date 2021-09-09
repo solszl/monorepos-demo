@@ -7,8 +7,8 @@ class AbstractViewport extends Component {
     super(option);
 
     this.core = option.core;
-    /** @type { RenderSchedule } */
-    this.renderSchedule = this.core.renderSchedule; // from core instance.
+    /** @type { RenderSchedule } from core instance.*/
+    this.renderSchedule = this.core.renderSchedule;
     this.renderer = null;
     this.el = option.el;
     this.canvas = null;
@@ -178,38 +178,46 @@ class AbstractViewport extends Component {
     }
   }
 
-  setWWWC(val) {
+  setWWWC(val, dispatch = true) {
     this._propertySetter({ wwwc: val }, "_displayChanged");
+    this.tryDispatchInjectEvents("wwwc", val, dispatch);
   }
 
-  setInvert(val) {
+  setInvert(val, dispatch = true) {
     this._propertySetter({ invert: val }, "_displayChanged");
+    this.tryDispatchInjectEvents("invert", val, dispatch);
   }
 
-  setOffset(val) {
+  setOffset(val, dispatch = true) {
     this._propertySetter({ offset: val }, "_positionChanged");
+    this.tryDispatchInjectEvents("offset", val, dispatch);
   }
 
-  setRotation(val) {
+  setRotation(val, dispatch = true) {
     this._propertySetter({ rotate: val }, "_rotateChanged");
+    this.tryDispatchInjectEvents("rotation", val, dispatch);
   }
 
-  setFlipV(val) {
+  setFlipV(val, dispatch = true) {
     const flip = { v: val, h: this.displayState.flip.h };
     this._propertySetter({ flip }, "_flipChanged");
+    this.tryDispatchInjectEvents("flipV", val, dispatch);
   }
 
-  setFlipH(val) {
+  setFlipH(val, dispatch = true) {
     const flip = { v: this.displayState.flip.v, h: val };
     this._propertySetter({ flip }, "_flipChanged");
+    this.tryDispatchInjectEvents("flipH", val, dispatch);
   }
 
-  setScale(val) {
+  setScale(val, dispatch = true) {
     this._propertySetter({ scale: val }, "_scaleChanged");
+    this.tryDispatchInjectEvents("scale", val, dispatch);
   }
 
   setTranslation(val) {
     this._propertySetter({ translation: val }, "_positionChanged");
+    this.tryDispatchInjectEvents("translation", val, dispatch);
   }
 
   _getRootSize() {
@@ -258,6 +266,24 @@ class AbstractViewport extends Component {
   }
 
   async snapshot() {}
+
+  inject(eventNames) {
+    // ["slice", "wwwc"] 这样的
+    // 优化，如：["slice", "wwwc"] 又来了一份 ["slice", "wwwc", "flipV"] 此时会合并数据
+    this.injectEventNames = (this.injectEventNames ?? []).concat(...eventNames);
+    this.injectEventNames = [...new Set(this.injectEventNames)];
+  }
+
+  tryDispatchInjectEvents(evt, data, dispatch = true) {
+    if (!dispatch) {
+      return;
+    }
+
+    const { injectEventNames } = this;
+    if (injectEventNames.includes(evt)) {
+      this.emit(`${this.id}-${evt}`, data);
+    }
+  }
 
   static create() {
     console.error("need implemented by subclass.");

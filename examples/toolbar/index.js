@@ -46,30 +46,30 @@ standard.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, 4);
 const toolBar = new ToolBar({ root: "toolBar" });
 toolBar.addBtn({
   name: "滚动",
-  fnc: () => standard.useTool(TOOL_TYPE.STACK_SCROLL, 1),
+  fun: () => standard.useTool(TOOL_TYPE.STACK_SCROLL, 1),
 });
 
 toolBar.addBtn({
   name: "移动",
-  fnc: () => standard.useTool(TOOL_TYPE.TRANSLATE, 1),
+  fun: () => standard.useTool(TOOL_TYPE.TRANSLATE, 1),
 });
 toolBar.addBtn({
   name: "缩放",
-  fnc: () => standard.useTool(TOOL_TYPE.SCALE, 1),
+  fun: () => standard.useTool(TOOL_TYPE.SCALE, 1),
 });
 toolBar.addBtn({
   name: "放大镜",
-  fnc: () => standard.useTool(TOOL_TYPE.MAGNIFYING, 1),
+  fun: () => standard.useTool(TOOL_TYPE.MAGNIFYING, 1),
 });
 
 toolBar.addBtn({
   name: "窗宽窗位",
-  fnc: () => standard.useTool(TOOL_TYPE.WWWC, 1),
+  fun: () => standard.useTool(TOOL_TYPE.WWWC, 1),
 });
 
 toolBar.addBtn({
   name: "反色",
-  fnc: () => {
+  fun: () => {
     invert = !invert;
     standard.useCmd("invert", invert);
   },
@@ -77,7 +77,7 @@ toolBar.addBtn({
 
 toolBar.addBtn({
   name: "水平翻转",
-  fnc: () => {
+  fun: () => {
     flipH = !flipH;
     standard.useCmd("flipH", flipH);
   },
@@ -85,7 +85,7 @@ toolBar.addBtn({
 
 toolBar.addBtn({
   name: "垂直翻转",
-  fnc: () => {
+  fun: () => {
     flipV = !flipV;
     standard.useCmd("flipV", flipV);
   },
@@ -93,31 +93,31 @@ toolBar.addBtn({
 
 toolBar.addBtn({
   name: "长度测量",
-  fnc: () => standard.useTool(TOOL_TYPE.LENGTH, 1),
+  fun: () => standard.useTool(TOOL_TYPE.LENGTH, 1),
 });
 
 toolBar.addBtn({
   name: "角度测量",
-  fnc: () => standard.useTool(TOOL_TYPE.ANGLE, 1),
+  fun: () => standard.useTool(TOOL_TYPE.ANGLE, 1),
 });
 
 toolBar.addBtn({
   name: "CT点值",
-  fnc: () => standard.useTool(TOOL_TYPE.PROBE, 1),
+  fun: () => standard.useTool(TOOL_TYPE.PROBE, 1),
 });
 toolBar.addBtn({
   name: "区域CT",
-  fnc: () => standard.useTool(TOOL_TYPE.ELLIPSE_ROI, 1),
+  fun: () => standard.useTool(TOOL_TYPE.ELLIPSE_ROI, 1),
 });
 
 toolBar.addBtn({
   name: "旋转",
-  fnc: () => {
+  fun: () => {
     rotate += 90;
     standard.useCmd("rotation", rotate % 360);
   },
 });
 toolBar.addBtn({
   name: "重置",
-  fnc: () => standard.useCmd("reset"),
+  fun: () => standard.useCmd("reset"),
 });

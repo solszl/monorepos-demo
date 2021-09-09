@@ -81,13 +81,13 @@ class Viewport extends Component {
     });
 
     [api, toolView].map((obj) => {
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => imageView.setRotation(info.rotate));
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => imageView.setWWWC(info.wwwc));
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPH, (info) => imageView.setFlipH(info.h));
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPV, (info) => imageView.setFlipV(info.v));
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_INVERT, (info) => imageView.setInvert(info.invert));
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => imageView.setScale(info.scale));
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => imageView.setOffset(info.offset));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => imageView.setRotation(info.rotate, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => imageView.setWWWC(info.wwwc, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPH, (info) => imageView.setFlipH(info.h, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPV, (info) => imageView.setFlipV(info.v, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_INVERT, (info) => imageView.setInvert(info.invert, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => imageView.setScale(info.scale, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => imageView.setOffset(info.offset, info.dispatch));
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
         const { delta, loop } = info;
         const { plane, seriesId, resource } = this.option;
@@ -117,8 +117,8 @@ class Viewport extends Component {
     this.toolView.useTool(toolType, button);
   }
 
-  useCmd(type, param) {
-    this.api?.[type](param);
+  useCmd(type, param, dispatch = true) {
+    this.api?.[type](param, dispatch);
   }
 }
 
