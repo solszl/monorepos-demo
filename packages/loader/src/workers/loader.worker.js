@@ -15,7 +15,7 @@ const loadWebImage = async (imageId) => {
   return image;
 };
 
-registerPromiseWorker(async (e) => {
+export default registerPromiseWorker(async (e) => {
   const { imageUrl, seriesId, index, plane, format } = e;
   let image;
   if (format === "dicom") {

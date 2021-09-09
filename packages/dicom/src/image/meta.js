@@ -1,14 +1,13 @@
-import { DataSet } from "dicom-parser";
+import * as dicomParser from "dicom-parser";
 import { Tags } from "./tags";
+const { DataSet } = dicomParser;
 /**
  *
  *
  * @param { DataSet } dataset
  */
 export const getMetaData = (dataset) => {
-  const pixelSpacing =
-    getNumberValues(dataset, Tags.ImagerPixelSpacing_CT, 2) ||
-    getNumberValues(dataset, Tags.ImagerPixelSpacing_CR, 2);
+  const pixelSpacing = getNumberValues(dataset, Tags.ImagerPixelSpacing_CT, 2) || getNumberValues(dataset, Tags.ImagerPixelSpacing_CR, 2);
 
   const metaData = {
     byteArray: dataset.byteArray,
@@ -50,10 +49,8 @@ export const getMetaData = (dataset) => {
     // 窗宽
     windowWidth: getNumberValues(dataset, Tags.WindowWidth, 1)?.[0] || 255,
     instanceNumber: dataset.intString(Tags.InstanceNumber),
-    imageOrientationPatient: getNumberValues(dataset, Tags.PatientOrientation_CT, 6) ||
-      getNumberValues(dataset, Tags.PatientOrientation_CR, 6) || [1, 0, 0, 0, 1, 0],
-    imagePositionPatient: getNumberValues(dataset, Tags.PatientPosition_CT, 3) ||
-      getNumberValues(dataset, Tags.PatientPosition_CT, 3) || [0, 0, 0],
+    imageOrientationPatient: getNumberValues(dataset, Tags.PatientOrientation_CT, 6) || getNumberValues(dataset, Tags.PatientOrientation_CR, 6) || [1, 0, 0, 0, 1, 0],
+    imagePositionPatient: getNumberValues(dataset, Tags.PatientPosition_CT, 3) || getNumberValues(dataset, Tags.PatientPosition_CT, 3) || [0, 0, 0],
     sliceThickness: getNumberValue(dataset, Tags.SliceThickness) || 1,
     spacingBetweenSlices: getNumberValue(dataset, Tags.SpacingBetweenSlices),
     imageCompression: getCompressionState({
@@ -146,11 +143,7 @@ function readCodeList(byteArray, position, length) {
   return result;
 }
 
-const getCompressionState = ({
-  lossyImageCompression,
-  lossyImageCompressionRatio,
-  lossyImageCompressionMethod,
-}) => {
+const getCompressionState = ({ lossyImageCompression, lossyImageCompressionRatio, lossyImageCompressionMethod }) => {
   if (lossyImageCompression === "01" && lossyImageCompressionRatio !== "") {
     const compressionMethod = lossyImageCompressionMethod || "Lossy: ";
     const compressionRatio = parseFloat(lossyImageCompressionRatio).toFixed(2);

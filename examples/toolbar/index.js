@@ -87,8 +87,6 @@ toolBar.addBtn({
   name: "垂直翻转",
   fnc: () => {
     flipV = !flipV;
-    console.log(flipV);
-
     standard.useCmd("flipV", flipV);
   },
 });

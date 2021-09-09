@@ -29,8 +29,7 @@ const entries = indexs.reduce((ret, file) => {
 
 const config = {
   target: "web",
-  mode: "development",
-  devtool: "cheap-module-eval-source-map",
+  mode: "production",
   module: {
     rules: [
       {
@@ -80,6 +79,7 @@ const config = {
   entry: {
     ...entries,
   },
+  performance: { hints: false },
 };
 
 module.exports = () => {

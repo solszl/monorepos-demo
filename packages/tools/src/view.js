@@ -3,7 +3,8 @@ import { DD } from "konva/lib/DragAndDrop";
 import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
 import Area from "./area";
-import { INTERNAL_EVENTS, TOOL_CONSTRUCTOR } from "./constants";
+import { INTERNAL_EVENTS } from "./constants";
+import { TOOL_CONSTRUCTOR } from "./constructor";
 import { imageState } from "./state/image-state";
 import ToolState from "./state/tool-state";
 import { transform as transformCoords } from "./tools/utils/coords-transform";
@@ -85,11 +86,11 @@ class View extends Component {
     DD?._dragElements.clear();
     layer.removeChildren();
     data.forEach((obj) => {
-      const { type } = obj;
+      const { type, id } = obj;
       const item = new TOOL_CONSTRUCTOR[type]();
       item.$stage = layer.getStage();
       item.data = transformCoords(obj);
-      item.name(obj.id);
+      item.name(id);
     });
     layer.batchDraw();
   }

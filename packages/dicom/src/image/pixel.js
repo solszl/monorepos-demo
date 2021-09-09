@@ -1,11 +1,13 @@
-import { createJPEGBasicOffsetTable, readEncapsulatedImageFrame } from "dicom-parser";
-export /**
+import * as dicomParser from "dicom-parser";
+const { createJPEGBasicOffsetTable, readEncapsulatedImageFrame } = dicomParser;
+
+/**
  *
  *
  * @param { DataSet } dataset
  * @param { object } meta
  */
-const getPixelData = (dataset, meta) => {
+export const getPixelData = (dataset, meta) => {
   const pixelDataElement = meta.elements.x7fe00010;
   if (!pixelDataElement) {
     return null;
