@@ -4,7 +4,8 @@ import { INTERNAL_EVENTS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextField from "../../shape/parts/textfield";
-import { imageState } from "../../state/image-state";
+import { useImageState } from "../../state/image-state";
+import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
@@ -30,6 +31,10 @@ class LengthTool extends BaseAnnotationTool {
     super.mouseDown(evt);
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
+    const [imageState] = useImageState(this.$stage.id());
+    const [viewportState] = useViewportState(this.$stage.id());
+    this.viewportState = viewportState();
+    this.imageState = imageState();
   }
 
   mouseMove(evt) {
@@ -54,12 +59,13 @@ class LengthTool extends BaseAnnotationTool {
 
   verifyDataLegal() {
     const { start, end, position } = this.data;
+    const { width, height } = this.viewportState;
     const points = [
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
     ];
 
-    return points.every(([x, y]) => verify(x, y));
+    return points.every(([x, y]) => verify(x, y, width, height));
   }
 
   renderData() {
@@ -176,7 +182,7 @@ class LengthTool extends BaseAnnotationTool {
     const { start, end, position } = this.data;
     const localStart = worldToLocal(position.x + start.x, position.y + start.y);
     const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
-    const { columnPixelSpacing: spX, rowPixelSpacing: spY } = imageState;
+    const { columnPixelSpacing: spX, rowPixelSpacing: spY } = this.imageState;
     const x2 = (localStart[0] * spX - localEnd[0] * spX) ** 2;
     const y2 = (localStart[1] * spY - localEnd[1] * spY) ** 2;
     const distance = +Math.sqrt(x2 + y2).toFixed(2);

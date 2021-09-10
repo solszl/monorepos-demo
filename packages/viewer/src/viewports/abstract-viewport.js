@@ -158,7 +158,6 @@ class AbstractViewport extends Component {
       ctx.setTransform(...this.displayState.currentTransform);
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
-
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
         wwwc: {
           ww: this.displayState?.wwwc?.ww ?? this.image?.windowWidth,

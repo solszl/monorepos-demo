@@ -1,7 +1,8 @@
 import { verify } from "../../area";
 import { TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
 import TextField from "../../shape/parts/textfield";
-import { imageState } from "../../state/image-state";
+import { useImageState } from "../../state/image-state";
+import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { randomId, toCT } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
@@ -20,6 +21,11 @@ class ProbeTool extends BaseAnnotationTool {
 
   mouseDown(e) {
     super.mouseDown(e);
+    const [imageState] = useImageState(this.$stage.id());
+    const [viewportState] = useViewportState(this.$stage.id());
+    this.imageState = imageState();
+    this.viewportState = viewportState();
+
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
     this.renderData();
@@ -52,9 +58,10 @@ class ProbeTool extends BaseAnnotationTool {
   renderData() {
     super.renderData();
     const { position } = this.data;
+    const { width, height } = this.viewportState;
     const textfield = this.findOne(`.${TOOL_ITEM_SELECTOR.LABEL}`);
     this.setPosition(position);
-    if (!verify(position.x, position.y)) {
+    if (!verify(position.x, position.y, width, height)) {
       textfield.hide();
       return;
     }
@@ -65,8 +72,9 @@ class ProbeTool extends BaseAnnotationTool {
   }
 
   _getCT(x, y) {
-    const index = y * imageState.columns + x;
-    return toCT([imageState.pixelData[index]], imageState.slope, imageState.intercept);
+    const index = y * this.imageState.columns + x;
+
+    return toCT([this.imageState.pixelData[index]], this.imageState.slope, this.imageState.intercept);
   }
 }
 

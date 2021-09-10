@@ -7,7 +7,8 @@ import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR } from "../../constant
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextItem from "../../shape/parts/text-item";
-import { imageState } from "../../state/image-state";
+import { useImageState } from "../../state/image-state";
+import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId, toCT } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
@@ -25,10 +26,17 @@ class EllipseTool extends BaseAnnotationTool {
       end: { x: 0, y: 0 },
       textBox: { dragged: false, x: 0, y: 0 },
     };
+
     this.isDown = false;
   }
   mouseDown(e) {
     super.mouseDown(e);
+
+    const [imageState] = useImageState(this.$stage.id());
+    const [viewportState] = useViewportState(this.$stage.id());
+    this.imageState = imageState();
+    this.viewportState = viewportState();
+
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
     this.renderData();
@@ -180,11 +188,12 @@ class EllipseTool extends BaseAnnotationTool {
 
   verifyDataLegal() {
     const { start, end, position } = this.data;
+    const { width, height } = this.viewportState;
     const points = [
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
     ];
-    return points.every(([x, y]) => verify(x, y));
+    return points.every(([x, y]) => verify(x, y, width, height));
   }
 
   _tryUpdateData() {
@@ -231,7 +240,7 @@ class EllipseTool extends BaseAnnotationTool {
   _getArea() {
     // 计算面积
     const { end } = this.data;
-    const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } = imageState;
+    const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } = this.imageState;
     const a = Math.abs(end.x) / 2;
     const b = Math.abs(end.y) / 2;
     const area = Math.PI * (a * columnPixelSpacing) * (b * rowPixelSpacing);
@@ -241,7 +250,7 @@ class EllipseTool extends BaseAnnotationTool {
   _getPixelData() {
     // 思路：根据绘制椭圆外层的矩形宽高、起始点，循环获取pixelData值，判断当前pixelData是否在椭圆中，在则取出。
     const { position, start, end } = this.data;
-    const pixelData = imageState.pixelData;
+    const pixelData = this.imageState.pixelData;
     const localStart = worldToLocal(position.x + start.x, position.y + start.y);
     const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
     // 锚点绘制椭圆时，外层矩形的宽高
@@ -261,13 +270,13 @@ class EllipseTool extends BaseAnnotationTool {
     for (let row = 0; row < height; row++) {
       for (let column = 0; column < width; column++) {
         if (this._inEllipse(a, b, column + x, row + y, center)) {
-          const pixelDataIndex = (row + y) * imageState.columns + (column + x);
+          const pixelDataIndex = (row + y) * this.imageState.columns + (column + x);
           ellipsePixelData[index++] = pixelData[pixelDataIndex];
         }
       }
     }
 
-    return toCT(ellipsePixelData, imageState.slope, imageState.intercept);
+    return toCT(ellipsePixelData, this.imageState.slope, this.imageState.intercept);
   }
 
   _getInfo(pixelData) {

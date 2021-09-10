@@ -1,6 +1,6 @@
 import { TOOL_TYPE } from "@saga/entry";
 import { Circle } from "konva/lib/shapes/Circle";
-import { imageState } from "../state/image-state";
+import { useImageState } from "../state/image-state";
 import { useViewportState } from "../state/viewport-state";
 import BaseTool from "./base/base-tool";
 import { cursor, randomId } from "./utils";
@@ -25,6 +25,12 @@ class MagnifyTool extends BaseTool {
 
   mouseDown(e) {
     super.mouseDown(e);
+
+    const [imageState] = useImageState(this.$stage.id());
+    const [viewportState] = useViewportState(this.$stage.id());
+    this.viewportState = viewportState();
+    this.imageState = imageState();
+
     this.initialUI();
     this.findOne("#circle").visible(true);
     this.findOne("#circleBG").visible(true);
@@ -97,14 +103,12 @@ class MagnifyTool extends BaseTool {
     const ctx = canvas.getContext("2d");
     const point = worldToLocal(this.data.centerPoint.x, this.data.centerPoint.y);
 
-    const [viewportState] = useViewportState(this.$stage.id());
-    const state = viewportState();
     ctx.drawImage(
-      imageState.imgCanvas,
-      point[0] - this.data.originalRadius / state.scale,
-      point[1] - this.data.originalRadius / state.scale,
-      (this.data.originalRadius * 2) / state.scale,
-      (this.data.originalRadius * 2) / state.scale,
+      this.imageState.imgCanvas,
+      point[0] - this.data.originalRadius / this.viewportState.scale,
+      point[1] - this.data.originalRadius / this.viewportState.scale,
+      (this.data.originalRadius * 2) / this.viewportState.scale,
+      (this.data.originalRadius * 2) / this.viewportState.scale,
       0,
       0,
       tmpCanvas.width,

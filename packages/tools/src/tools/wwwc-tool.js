@@ -1,5 +1,5 @@
 import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
-import { imageState } from "../state/image-state";
+import { useImageState } from "../state/image-state";
 import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
 class WWWCTool extends BaseTool {
@@ -18,10 +18,14 @@ class WWWCTool extends BaseTool {
   }
   mouseDown(e) {
     super.mouseDown(e);
+
+    const [imageState] = useImageState(this.$stage.id());
+    this.imageState = imageState();
+
     const { screenX, screenY } = e.evt;
     this.isDown = true;
     this.oldOffset = [screenX, screenY];
-    this.step = { ww: imageState.wwwc.ww, wc: imageState.wwwc.wc };
+    this.step = { ww: this.imageState.wwwc.ww, wc: this.imageState.wwwc.wc };
   }
 
   documentMouseMove(e) {
