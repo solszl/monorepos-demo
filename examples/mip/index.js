@@ -42,7 +42,6 @@ fetchData(seriesId).then((json) => {
     mip.method = "max";
     mip.imageList = resource.getImages(seriesId, "standard");
     window.mip = mip;
-
     const img = await mip.getImage(currentIndex, step);
     standard.imageView.showImage(img);
   }, 2000);
@@ -53,7 +52,10 @@ document.addEventListener("wheel", async (e) => {
   currentIndex += offset;
   currentIndex = Math.max(0, Math.min(currentIndex, 182));
   const img = await mip.getImage(currentIndex, step);
+  resource.cacheItem(seriesId, { key: currentIndex, value: img }, "axial-mip");
   standard.imageView.showImage(img);
 
   console.log(currentIndex);
 });
+
+standard.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, 4);

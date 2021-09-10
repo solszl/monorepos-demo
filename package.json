@@ -46,7 +46,7 @@
     "@rollup/plugin-replace": "^3.0.0",
     "babel-loader": "^8.2.2",
     "cheerio": "^1.0.0-rc.10",
-    "clean-webpack-plugin": "4.0.0-alpha.0",
+    "clean-webpack-plugin": "4.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "^3.6.0",
     "eslint": "^7.30.0",
@@ -66,7 +66,6 @@
     "progress-bar-webpack-plugin": "^2.1.0",
     "rollup": "^2.56.3",
     "rollup-plugin-auto-named-exports": "^1.0.0-beta.3",
-    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -87,6 +86,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "gl-matrix": "^3.3.0"
+    "gl-matrix": "^3.3.0",
+    "simplify-js": "^1.2.4",
+    "konva": "^8.1.3"
   }
 }

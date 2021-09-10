@@ -45,6 +45,7 @@ class View extends Component {
       )
     );
     this.stage = stage;
+    this.area.stageId = stage.id();
 
     stage.add(
       new Layer({

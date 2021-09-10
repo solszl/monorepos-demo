@@ -1,7 +1,7 @@
 import { TOOL_TYPE } from "@saga/entry";
 import { Circle } from "konva/lib/shapes/Circle";
 import { imageState } from "../state/image-state";
-import { viewportState } from "../state/viewport-state";
+import { useViewportState } from "../state/viewport-state";
 import BaseTool from "./base/base-tool";
 import { cursor, randomId } from "./utils";
 import { worldToLocal } from "./utils/coords-transform";
@@ -97,6 +97,7 @@ class MagnifyTool extends BaseTool {
     const ctx = canvas.getContext("2d");
     const point = worldToLocal(this.data.centerPoint.x, this.data.centerPoint.y);
 
+    const [viewportState] = useViewportState(this.$stage.id());
     ctx.drawImage(
       imageState.imgCanvas,
       point[0] - this.data.originalRadius / viewportState.scale,

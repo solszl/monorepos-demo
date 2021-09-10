@@ -1,6 +1,6 @@
 import { Component } from "@saga/core";
 import { INTERNAL_EVENTS } from "../constants";
-import { initialState } from "../state/viewport-state";
+// import { initialState } from "../state/viewport-state";
 class API extends Component {
   constructor() {
     super();
@@ -32,14 +32,14 @@ class API extends Component {
   }
 
   reset() {
-    const { rotate, x, y, scale } = initialState;
-    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
-    this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset: { x, y } });
-    this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });
-    this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc: { ww: 0, wc: 0 } });
-    this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
-    this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
-    this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
+    // const { rotate, x, y, scale } = initialState;
+    // this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
+    // this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset: { x, y } });
+    // this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });
+    // this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc: { ww: 0, wc: 0 } });
+    // this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
+    // this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
+    // this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
   }
 
   play(speed) {

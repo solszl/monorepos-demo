@@ -1,6 +1,7 @@
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HappyPack = require("happypack");
 const os = require("os");
 const glob = require("glob");
@@ -29,7 +30,7 @@ const entries = indexs.reduce((ret, file) => {
 
 const config = {
   target: "web",
-  mode: "development",
+  mode: "none",
   devtool: "cheap-module-eval-source-map",
   module: {
     rules: [
@@ -54,6 +55,7 @@ const config = {
     ],
   },
   plugins: [
+    new CleanWebpackPlugin({ verbose: false }),
     new HappyPack({
       id: "happy-babel",
       loaders: [

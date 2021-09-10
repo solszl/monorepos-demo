@@ -1,6 +1,6 @@
 import { TOOL_TYPE } from "..";
 import { INTERNAL_EVENTS } from "../constants";
-import { viewportState } from "../state/viewport-state";
+import { useViewportState } from "../state/viewport-state";
 import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
 
@@ -24,6 +24,7 @@ class TranslateTool extends BaseTool {
     const { screenX, screenY } = e.evt;
     this.isDown = true;
     this.oldOffset = [screenX, screenY];
+    const [viewportState] = useViewportState(this.$stage.id());
     this.step = { x: viewportState.x, y: viewportState.y };
   }
 

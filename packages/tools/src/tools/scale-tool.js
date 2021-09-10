@@ -1,18 +1,21 @@
 import { INTERNAL_EVENTS } from "../constants";
-import { viewportState } from "../state/viewport-state";
+import { useViewportState } from "../state/viewport-state";
+// import { viewportState } from "../state/viewport-state";
 import BaseTool from "./base/base-tool";
 class ScaleTool extends BaseTool {
   constructor(config = {}) {
     super(config);
     this.isDown = false;
     this.oldOffsetY = null;
-    this.scale = viewportState.scale;
   }
 
   mouseDown(e) {
     super.mouseDown(e);
     this.isDown = true;
     this.oldOffsetY = e.evt.screenY;
+    const stageId = this.$stage.id();
+    const [viewportState] = useViewportState(stageId);
+    this.scale = viewportState.scale;
   }
 
   documentMouseMove(e) {

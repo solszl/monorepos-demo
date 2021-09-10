@@ -1,4 +1,4 @@
-import DicomParser from "dicom-parser";
+import * as DicomParser from "dicom-parser";
 import { decode } from "./image/decode";
 import { dump } from "./image/dump";
 import { getMetaData } from "./image/meta";
@@ -83,4 +83,9 @@ export const createWebImage = async (arrayBuffer) => {
   };
 
   return img;
+};
+
+export default {
+  createImage,
+  createWebImage,
 };

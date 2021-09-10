@@ -279,7 +279,7 @@ class AbstractViewport extends Component {
       return;
     }
 
-    const { injectEventNames } = this;
+    const { injectEventNames = [] } = this;
     if (injectEventNames.includes(evt)) {
       this.emit(`${this.id}-${evt}`, data);
     }
