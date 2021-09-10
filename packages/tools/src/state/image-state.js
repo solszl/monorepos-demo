@@ -29,8 +29,6 @@ export const useImageState = (stageId) => {
     stateDictionary[stageId] = state;
     const [, setInitialImageState] = useImageInitialState(stageId);
     setInitialImageState(state);
-
-    console.log(stateInitialDictionary);
   };
 
   const getImageState = () => {
@@ -43,10 +41,9 @@ export const useImageState = (stageId) => {
 export const useImageInitialState = (stageId) => {
   let state = stateInitialDictionary?.[stageId];
   const setInitialImageState = (newState) => {
-    if (!stateInitialDictionary[stageId]) {
-      stateInitialDictionary[stageId] = newState;
+    if (!stateInitialDictionary[stageId] && newState.pixelData) {
+      stateInitialDictionary[stageId] = { ...newState };
     }
-    console.log(stateInitialDictionary);
   };
   return [state, setInitialImageState];
 };

@@ -38,13 +38,13 @@ class API extends Component {
     const [initialImageState] = useImageInitialState(this.stageId);
     const { rotate, offset, scale } = initialState;
     // console.log(initialImageState);
-    // this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
-    // this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset });
-    // this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });
-    // this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc: initialImageState.wwwc });
-    // this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
-    // this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
-    // this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
+    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
+    this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset });
+    this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });
+    this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc: initialImageState.wwwc });
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
+    this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
     // setImageState({
     //   wwwc: { ww: 0, wc: 0 },
     //   h: false,
