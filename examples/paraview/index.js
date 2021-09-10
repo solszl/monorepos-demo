@@ -1,9 +1,8 @@
-import RemoteRenderer from "paraviewweb/src/NativeUI/Canvas/RemoteRenderer";
-import ParaViewWebClient from "paraviewweb/src/IO/WebSocket/ParaViewWebClient";
-import SizeHelper from "paraviewweb/src/Common/Misc/SizeHelper";
-import SmartConnect from "wslink/src/SmartConnect";
 import { ViewportManager } from "@saga/entry";
 import { createImage } from "@saga/remote";
+import ParaViewWebClient from "paraviewweb/src/IO/WebSocket/ParaViewWebClient";
+import RemoteRenderer from "paraviewweb/src/NativeUI/Canvas/RemoteRenderer";
+import SmartConnect from "wslink/src/SmartConnect";
 console.log("hello");
 
 let tags = null;
@@ -37,7 +36,7 @@ const sagittalViewport = vm.addViewport({
   el: sagittalEl,
 });
 
-const HOST = "192.168.110.75";
+const HOST = "192.168.108.34";
 const HTTP_PORT = "19570";
 let WS_PORT = "-1";
 
@@ -67,14 +66,11 @@ const getAllPorts = async () => {
 };
 const fetchWSPort = async () => {
   const url = `http://${HOST}:${HTTP_PORT}/${HTTP_API.create}`;
-  const req = new Request(url, {
-    method: "get",
-    data: JSON.stringify({
-      series_iuid: "1.2.392.200036.9116.2.2059767860.1616749574.11.1233000004.2",
-      study_iuid: "1.2.840.20210326.121032504593",
-    }),
+  const param = new URLSearchParams({
+    series_iuid: "1.3.12.2.1107.5.1.4.73388.30000020070600020988200183232",
+    study_iuid: "1.2.840.20210326.121032504593",
   });
-  const data = await (await fetch(req)).json();
+  const data = await (await fetch(`${url}?${param}`)).json();
   console.log(data);
   WS_PORT = data.port;
 };
@@ -135,11 +131,7 @@ const main = async () => {
   tags = await session.call("coronary.tag");
   console.log(tags);
 
-  const client = ParaViewWebClient.createClient(sc, [
-    "MouseHandler",
-    "ViewPort",
-    "ViewPortImageDelivery",
-  ]);
+  const client = ParaViewWebClient.createClient(sc, ["MouseHandler", "ViewPort", "ViewPortImageDelivery"]);
 
   const vrRenderer = new RemoteRenderer(client);
   vrRenderer.setContainer(vrEl);

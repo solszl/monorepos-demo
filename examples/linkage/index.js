@@ -1,5 +1,4 @@
-import { LINK_PROPERTY, TOOL_TYPE, ViewportManager } from "@saga/entry";
-import { Resource } from "@saga/loader";
+import { LINK_PROPERTY, Resource, TOOL_TYPE, ViewportManager } from "@saga/entry";
 import ToolBar from "../toolbar/toolBar";
 const toolbar = new ToolBar({ root: "toolBar" });
 toolbar.addBtn({

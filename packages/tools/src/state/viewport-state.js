@@ -14,7 +14,6 @@ const initialState = {
 let stateInitialDictionary = {};
 let stateDictionary = {};
 export const useViewportState = (stageId) => {
-  let state = stateDictionary?.[stageId] ?? { ...initialState };
   const setViewportState = (newState) => {
     const { rootSize, scale, rotate, width, height, position = [0, 0], offset, flip, id, stageId } = newState;
     const state = stateDictionary?.[stageId] ?? { ...initialState };
@@ -31,11 +30,16 @@ export const useViewportState = (stageId) => {
     Object.assign(state, { id } ?? {});
     Object.assign(state, { stageId });
     stateDictionary[stageId] = state;
+
     const [, setInitialViewportState] = useViewportInitialState(stageId);
     setInitialViewportState(newState);
   };
 
-  return [state, setViewportState];
+  const getViewportState = () => {
+    return stateDictionary?.[stageId];
+  };
+
+  return [getViewportState, setViewportState];
 };
 
 export const useViewportInitialState = (stageId) => {
