@@ -27,7 +27,7 @@ export const useViewportState = (stageId) => {
     Object.assign(state, { centerX: width / 2, centerY: height / 2 } ?? {});
     Object.assign(state, { position } ?? {});
     Object.assign(state, { flip } ?? {});
-    Object.assign(state, { id } ?? {});
+    // Object.assign(state, { id } ?? {});
     Object.assign(state, { stageId });
     stateDictionary[stageId] = state;
 

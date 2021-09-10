@@ -6,11 +6,12 @@ const HappyPack = require("happypack");
 const os = require("os");
 const glob = require("glob");
 const devServer = require("./serve.config");
+const TerserPlugin = require("terser-webpack-plugin");
 
 const resolve = (dir) => {
   return path.resolve(__dirname, "..", dir);
 };
-const indexs = glob("examples/*/index.js", { sync: true });
+const indexs = glob.sync("examples/*/index.js");
 const htmlPlugins = [];
 const entries = indexs.reduce((ret, file) => {
   const [, entry] = file.split("/");
@@ -38,7 +39,7 @@ const config = {
         enforce: "pre",
         test: /\.js?$/,
         loader: "happypack/loader?id=happy-babel",
-        include: [resolve("examples"), resolve("packages")],
+        include: [resolve("packages"), resolve("examples")],
       },
       {
         test: /\.worker\.js$/,
@@ -46,7 +47,7 @@ const config = {
           loader: "worker-loader",
           options: { inline: true, fallback: false },
         },
-        include: [resolve("examples"), resolve("packages")],
+        include: [resolve("packages"), resolve("examples")],
       },
       {
         test: /\.css$/,
@@ -77,6 +78,19 @@ const config = {
     }),
     ...htmlPlugins,
   ],
+  // optimization: {
+  //   minimizer: [
+  //     new TerserPlugin({
+  //       cache: true,
+  //       parallel: true,
+  //       terserOptions: {
+  //         format: {
+  //           comments: false,
+  //         },
+  //       },
+  //     }),
+  //   ],
+  // },
   devServer: devServer,
   node: { fs: "empty" },
   entry: {
