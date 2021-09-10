@@ -98,12 +98,13 @@ class MagnifyTool extends BaseTool {
     const point = worldToLocal(this.data.centerPoint.x, this.data.centerPoint.y);
 
     const [viewportState] = useViewportState(this.$stage.id());
+    const state = viewportState();
     ctx.drawImage(
       imageState.imgCanvas,
-      point[0] - this.data.originalRadius / viewportState.scale,
-      point[1] - this.data.originalRadius / viewportState.scale,
-      (this.data.originalRadius * 2) / viewportState.scale,
-      (this.data.originalRadius * 2) / viewportState.scale,
+      point[0] - this.data.originalRadius / state.scale,
+      point[1] - this.data.originalRadius / state.scale,
+      (this.data.originalRadius * 2) / state.scale,
+      (this.data.originalRadius * 2) / state.scale,
       0,
       0,
       tmpCanvas.width,

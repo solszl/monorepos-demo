@@ -2,9 +2,9 @@ import { useViewportState } from "./state/viewport-state";
 import Transform from "./transform";
 export const transform = new Transform();
 
-const applyTransform = () => {
-  const [viewportState] = useViewportState();
-  const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } = viewportState;
+const applyTransform = (stageId) => {
+  const [viewportState] = useViewportState(stageId);
+  const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } = viewportState();
 
   transform.reset();
 
@@ -51,9 +51,9 @@ class Area {
     const [viewportState, setViewportState] = useViewportState(this.stageId);
     setViewportState(Object.assign({}, config, { stageId: this.stageId }));
 
-    console.log(viewportState());
+    // console.log(viewportState());
     // 初始化时缩放和reander同时触发，判断是否有transform所需数据
-    applyTransform();
+    applyTransform(this.stageId);
   }
 }
 

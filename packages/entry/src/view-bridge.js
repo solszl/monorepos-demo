@@ -15,7 +15,7 @@ class Viewport extends Component {
     let opt = Object.assign({}, option, { id: this.id });
     this.option = opt;
     const toolView = new View(opt);
-    const api = new API();
+    const api = new API(toolView.id);
     appendIFrame(opt.el, (parent) => {
       // 父容器尺寸发生变化
       const { clientWidth: width, clientHeight: height } = parent;

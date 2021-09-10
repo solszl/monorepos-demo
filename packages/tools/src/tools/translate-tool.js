@@ -25,7 +25,8 @@ class TranslateTool extends BaseTool {
     this.isDown = true;
     this.oldOffset = [screenX, screenY];
     const [viewportState] = useViewportState(this.$stage.id());
-    this.step = { x: viewportState.x, y: viewportState.y };
+    const state = viewportState();
+    this.step = { x: state.x, y: state.y };
   }
 
   documentMouseMove(e) {

@@ -15,7 +15,7 @@ class ScaleTool extends BaseTool {
     this.oldOffsetY = e.evt.screenY;
     const stageId = this.$stage.id();
     const [viewportState] = useViewportState(stageId);
-    this.scale = viewportState.scale;
+    this.scale = viewportState().scale;
   }
 
   documentMouseMove(e) {

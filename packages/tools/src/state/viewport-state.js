@@ -43,7 +43,7 @@ export const useViewportState = (stageId) => {
 };
 
 export const useViewportInitialState = (stageId) => {
-  let state = stateDictionary?.[stageId];
+  let state = stateInitialDictionary?.[stageId];
   const setInitialViewportState = (newState) => {
     if (!stateInitialDictionary[stageId]) {
       stateInitialDictionary[stageId] = newState;
