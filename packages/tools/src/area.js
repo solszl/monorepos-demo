@@ -34,9 +34,8 @@ const applyTransform = (stageId) => {
   return transform.m;
 };
 
-export const verify = (x, y) => {
+export const verify = (x, y, width, height) => {
   const [ox, oy] = transform.invertPoint(x, y);
-  const { width, height } = viewportState;
   return ox >= 0 && ox <= width && oy >= 0 && oy <= height;
 };
 

@@ -31,8 +31,9 @@ class LengthTool extends BaseAnnotationTool {
     super.mouseDown(evt);
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
-    const [imageState] = useImageState(this.$stage.id());
-    const [viewportState] = useViewportState(this.$stage.id());
+    const stageId = this.$stage.id();
+    const [imageState] = useImageState(stageId);
+    const [viewportState] = useViewportState(stageId);
     this.viewportState = viewportState();
     this.imageState = imageState();
   }
@@ -53,6 +54,8 @@ class LengthTool extends BaseAnnotationTool {
   mouseUp(evt) {
     super.mouseUp(evt);
     this.careStageEvent = false;
+
+    console.log(this.viewportState);
     // 验证数据合法。派发事件，添加数据。 否则丢弃
     this._tryUpdateData();
   }

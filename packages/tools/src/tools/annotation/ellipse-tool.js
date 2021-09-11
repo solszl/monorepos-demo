@@ -32,8 +32,9 @@ class EllipseTool extends BaseAnnotationTool {
   mouseDown(e) {
     super.mouseDown(e);
 
-    const [imageState] = useImageState(this.$stage.id());
-    const [viewportState] = useViewportState(this.$stage.id());
+    const stageId = this.$stage.id();
+    const [imageState] = useImageState(stageId);
+    const [viewportState] = useViewportState(stageId);
     this.imageState = imageState();
     this.viewportState = viewportState();
 
