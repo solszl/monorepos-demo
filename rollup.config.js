@@ -13,11 +13,25 @@ const formats = ["es", "cjs"];
 
 export default formats.map((format) => ({
   plugins: [
-    resolve(),
     json(),
+    resolve(),
     commonjs(),
     babel({
       babelHelpers: "runtime",
+      babelrc: false,
+      exclude: "node_modules/**",
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            corejs: 2,
+            useBuiltIns: "usage",
+            targets: {
+              chrome: 49,
+            },
+          },
+        ],
+      ],
     }),
     terser(),
   ],
@@ -26,7 +40,6 @@ export default formats.map((format) => ({
     file: path.join(OUTPUT_DIR, `index.${format}.js`),
     format,
     name: "saga",
-    // globals: { crypto: "crypto" },
     sourcemap: true,
   },
 }));

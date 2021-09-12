@@ -55,7 +55,6 @@ class LengthTool extends BaseAnnotationTool {
     super.mouseUp(evt);
     this.careStageEvent = false;
 
-    console.log(this.viewportState);
     // 验证数据合法。派发事件，添加数据。 否则丢弃
     this._tryUpdateData();
   }

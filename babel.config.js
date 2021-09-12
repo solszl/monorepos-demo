@@ -1,9 +1,9 @@
 module.exports = (props) => {
   props.cache(true);
   const presetConfig =
-    props.env.NODE_ENV === "es6"
+    props.env === "es6"
       ? {
-          targets: "lastest",
+          targets: "latest",
         }
       : {
           useBuiltIns: "usage",
