@@ -38,6 +38,7 @@ export const TOOL_TYPE = {
   ROTATION: "rotation",
   SCALE: "scale",
   TRANSLATE: "translate",
+  RECT: "rect",
 };
 
 export const INTERNAL_EVENTS = {

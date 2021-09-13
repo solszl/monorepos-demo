@@ -1,12 +1,14 @@
 import { Component } from "@saga/core";
-import { INTERNAL_EVENTS } from "../constants";
+import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
+import { TOOL_CONSTRUCTOR } from "../constructor";
 import { useImageInitialState } from "../state/image-state";
 import { useViewportInitialState } from "../state/viewport-state";
 class API extends Component {
-  constructor(id) {
+  constructor(stage) {
     super();
     this.playInterval = null;
-    this.stageId = id;
+    this.stageId = stage.id();
+    this.stage = stage;
   }
 
   rotation(rotate, dispatch = true) {
@@ -33,11 +35,16 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale, dispatch });
   }
 
+  polygon(params = []) {
+    params.forEach((item) => {
+      new TOOL_CONSTRUCTOR[TOOL_TYPE.RECT]({ stage: this.stage, ...item });
+    });
+  }
+
   reset() {
     const [initialState] = useViewportInitialState(this.stageId);
     const [initialImageState] = useImageInitialState(this.stageId);
     const { rotate, offset, scale } = initialState;
-    // console.log(initialImageState);
     this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
     this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset });
     this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });
@@ -45,12 +52,6 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
     this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
     this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
-    // setImageState({
-    //   wwwc: { ww: 0, wc: 0 },
-    //   h: false,
-    //   v: false,
-    //   invert: false,
-    // });
   }
 
   play(speed) {

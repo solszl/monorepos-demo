@@ -3,6 +3,7 @@ import AngleTool from "./tools/annotation/angle-tool";
 import EllipseTool from "./tools/annotation/ellipse-tool";
 import LengthTool from "./tools/annotation/length-tool";
 import ProbeTool from "./tools/annotation/probe-tool";
+import RectTool from "./tools/annotation/rect-tool";
 import MagnifyTool from "./tools/magnify-tool";
 import PolygonTool from "./tools/polygon-tool";
 import RotationTool from "./tools/rotation-tool";
@@ -25,4 +26,5 @@ export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE.STACK_SCROLL]: StackTool,
   [TOOL_TYPE.STACK_WHEEL_SCROLL]: StackWheelTool,
   [TOOL_TYPE.ELLIPSE_ROI]: EllipseTool,
+  [TOOL_TYPE.RECT]: RectTool,
 };
