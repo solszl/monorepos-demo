@@ -5,6 +5,7 @@ import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextField from "../../shape/parts/textfield";
 import { setActionComplete } from "../../state/tool-state";
+import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
@@ -40,6 +41,9 @@ class AngleTool extends BaseAnnotationTool {
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
     this.pointCount += 1;
+
+    const [viewportState] = useViewportState(this.$stage.id());
+    this.viewportState = viewportState();
   }
 
   mouseMove(evt) {
@@ -144,13 +148,14 @@ class AngleTool extends BaseAnnotationTool {
 
   verifyDataLegal() {
     const { start, end, middle, position } = this.data;
+    const { width, height } = this.viewportState;
     const points = [
       [start.x + position.x, start.y + position.y],
       [middle.x + position.x, middle.y + position.y],
       [end.x + position.x, end.y + position.y],
     ];
 
-    return points.every(([x, y]) => verify(x, y));
+    return points.every(([x, y]) => verify(x, y, width, height));
   }
 
   dragAnchor(evt) {
