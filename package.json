@@ -6,9 +6,10 @@
   "module": "lib/index.esm.js",
   "browser": "lib/index.umd.js",
   "scripts": {
-    "start:demo": "webpack-dev-server --config examples/webpack.config.js",
+    "start:demo": "cross-env NODE_ENV=es6 webpack-dev-server --config examples/webpack.config.js",
+    "start:demo-es5": "cross-env NODE_ENV=es5 webpack-dev-server --config examples/webpack.config.js",
     "build:demo": "webpack --config examples/webpack.config.js",
-    "build": "rollup --config ",
+    "build": "rollup -c",
     "watch": "lerna exec --no-sort -- rollup -w -c=../../rollup.config.js"
   },
   "files": [
@@ -61,33 +62,26 @@
     "happypack": "^5.0.1",
     "html-webpack-plugin": "^4.5.2",
     "lerna": "^4.0.0",
-    "monologue.js": "0.3.5",
-    "nanoid": "^3.1.25",
-    "progress-bar-webpack-plugin": "^2.1.0",
     "rollup": "^2.56.3",
     "rollup-plugin-auto-named-exports": "^1.0.0-beta.3",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-polyfill-node": "^0.6.2",
     "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2",
     "style-loader": "^1.3.0",
-    "uglifyjs-webpack-plugin": "^2.2.0",
+    "terser-webpack-plugin": "^4.2.3",
     "webpack": "^4.46.0",
     "webpack-bundle-analyzer": "^3.9.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.2",
-    "worker-loader": "^2.0.0",
-    "wslink": "^1.0.7"
+    "worker-loader": "^2.0.0"
   },
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
-    "gl-matrix": "^3.3.0",
-    "simplify-js": "^1.2.4",
-    "konva": "^8.1.3"
+    "gl-matrix": "^3.3.0"
   }
 }

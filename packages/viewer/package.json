@@ -20,7 +20,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "@saga/core": "^0.0.0",
+    "@saga/core": "^0.1.0",
     "@saga/loader": "^0.0.0"
   }
 }

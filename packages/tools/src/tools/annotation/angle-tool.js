@@ -104,6 +104,7 @@ class AngleTool extends BaseAnnotationTool {
         x: textBox.x,
         y: textBox.y,
       });
+      textfield.align("center");
       const dashLine = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);
       connectTextNode(textfield, from, dashLine);
     }

@@ -1,6 +1,6 @@
 {
   "name": "@saga/dicom",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "> TODO: description",
   "author": "zhenliang.sun <solszl@163.com>",
   "homepage": "https://github.com/solszl/monorepos-demo#readme",
@@ -27,6 +27,6 @@
     "url": "https://github.com/solszl/monorepos-demo/issues"
   },
   "dependencies": {
-    "dicom-parser": "^1.8.7"
+    "dicom-parser": "^1.8.8"
   }
 }

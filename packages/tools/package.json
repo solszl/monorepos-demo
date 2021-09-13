@@ -24,6 +24,8 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "event-emitter": "^0.3.5"
+    "event-emitter": "^0.3.5",
+    "simplify-js": "^1.2.4",
+    "konva": "^8.1.3"
   }
 }

@@ -18,7 +18,8 @@ class ToolBar {
     btn.setAttribute("data-active", false);
     btn["data-active"] = false;
     btn.onclick = () => {
-      const btns = document.querySelectorAll(".tx_toolBar_button");
+      // NodeList 再低版本浏览器存在兼容问题且无法polyfill
+      const btns = Array.from(document.querySelectorAll(".tx_toolBar_button"));
       btns.forEach((item) => item.setAttribute("data-active", false));
       btn.setAttribute("data-active", true);
       fun && fun();

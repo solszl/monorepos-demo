@@ -32,13 +32,17 @@ class EllipseTool extends BaseAnnotationTool {
   mouseDown(e) {
     super.mouseDown(e);
 
-    const [imageState] = useImageState(this.$stage.id());
-    const [viewportState] = useViewportState(this.$stage.id());
+    const stageId = this.$stage.id();
+    const [imageState] = useImageState(stageId);
+    const [viewportState] = useViewportState(stageId);
     this.imageState = imageState();
     this.viewportState = viewportState();
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
+    const pixelData = this._getPixelData();
+    const data = this._getInfo(pixelData);
+    this.data.textBox = Object.assign({}, this.textBox, data);
     this.renderData();
     this.isDown = true;
   }
@@ -48,6 +52,9 @@ class EllipseTool extends BaseAnnotationTool {
       return;
     }
     this.data.end = this.getRelativePointerPosition();
+    const pixelData = this._getPixelData();
+    const data = this._getInfo(pixelData);
+    this.data.textBox = Object.assign({}, this.textBox, data);
     this.renderData();
   }
   mouseUp(e) {
@@ -119,9 +126,8 @@ class EllipseTool extends BaseAnnotationTool {
       height: end.y - start.y,
     });
 
-    const pixelData = this._getPixelData();
-    const data = this._getInfo(pixelData);
     const group = this.findOne("#textGroup");
+    const { textBox: data } = this.data;
     group.findOne("#area")?.setText("面积：", `${+data.area.toFixed(2)}mm²`);
     group.findOne("#variance")?.setText("方差：", +data.variance.toFixed(2));
     group.findOne("#avg")?.setText("平均值：", +data.avg.toFixed(2));

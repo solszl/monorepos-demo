@@ -72,13 +72,13 @@ class AbstractViewport extends Component {
       this.renderSchedule.invalidate(this.render.bind(this), this.image);
       this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, this._getRootSize());
     };
-    this.iframe = document.createElement("iframe");
-    this.iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; pointer-events:none;`;
-    this.iframe.classList = [className];
+    const iframe = document.createElement("iframe");
+    iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; pointer-events:none;`;
+    iframe.classList.add(className);
     this.el.style.position = "relative";
     this.el.style.overflow = "hidden";
-    this.viewerContainer.insertBefore(this.iframe, this.viewerContainer.firstChild);
-    this.iframe.contentWindow.onresize = resizeHandler;
+    this.viewerContainer.insertBefore(iframe, this.viewerContainer.firstChild);
+    iframe.contentWindow.onresize = resizeHandler;
   }
 
   showImage(image) {
