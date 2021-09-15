@@ -20,15 +20,19 @@ const fetchData = async (seriesId) => {
   return json;
 };
 
-fetchData(seriesId).then((json) => {
+fetchData(seriesId).then(async (json) => {
   const imageUrls = json.data.images.map((i) => {
     return `${fs}/${i.storagePath}`;
   });
 
-  resource.addItemUrls(seriesId, imageUrls, "standard");
+  const resource = vm.resource;
+  await resource.initTransfer([{ mode: "web" }]);
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  transfer.addItemUrls(seriesId, imageUrls, alias);
 
   setTimeout(async () => {
-    const image = await resource.getImage(seriesId, currentIndex, "standard");
+    const image = await transfer.getImage(seriesId, currentIndex, alias);
     standard.imageView.showImage(image);
   }, 0);
 });

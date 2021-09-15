@@ -1,2 +1,5 @@
 import { createImage } from "./image";
-export { createImage };
+import ParaViewClient from "./paraview-client";
+import SocketTransfer from "./remote-client";
+export { createImage, SocketTransfer };
+export { ParaViewClient };

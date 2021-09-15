@@ -12,10 +12,13 @@ const vm = new ViewportManager();
 const resource = new Resource();
 
 vm.resource = resource;
+vm.resource.initTransfer([{ mode: "web" }]);
 const standard = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
   el: document.querySelector(".root"),
+  alias: "axial",
+  transferMode: "web",
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
 
@@ -25,23 +28,24 @@ const fetchData = async (seriesId) => {
   return json;
 };
 
-fetchData(seriesId).then((json) => {
+fetchData(seriesId).then(async (json) => {
   const imageUrls = json.data.images.map((i) => {
     return `${fs}/${i.storagePath}`;
   });
 
-  resource.addItemUrls(seriesId, imageUrls, "standard");
-  resource.loadSeries(seriesId, "standard");
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  transfer.addItemUrls(seriesId, imageUrls, alias);
+  transfer.loadSeries(seriesId, alias);
 
   setTimeout(async () => {
-    const image = await resource.getImage(seriesId, currentIndex, "standard");
+    const image = await transfer.getImage(seriesId, currentIndex, alias);
     standard.imageView.showImage(image);
   }, 0);
 
   setTimeout(async () => {
     mip.method = "max";
-    mip.imageList = resource.getImages(seriesId, "standard");
-    window.mip = mip;
+    mip.imageList = transfer.getImages(seriesId, alias);
     const img = await mip.getImage(currentIndex, step);
     standard.imageView.showImage(img);
   }, 2000);
@@ -52,7 +56,10 @@ document.addEventListener("wheel", async (e) => {
   currentIndex += offset;
   currentIndex = Math.max(0, Math.min(currentIndex, 182));
   const img = await mip.getImage(currentIndex, step);
-  resource.cacheItem(seriesId, { key: currentIndex, value: img }, "axial-mip");
+
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  transfer.cacheItem(seriesId, { key: currentIndex, value: img }, `${alias}-mip`);
   standard.imageView.showImage(img);
 
   console.log(currentIndex);

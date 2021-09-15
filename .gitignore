@@ -2,3 +2,6 @@ node_modules
 .DS_Store
 scripts/tags/dictionary.json
 dist
+
+lerna*.log
+yarn*.log

@@ -1,13 +1,17 @@
 import AllTags from "./dictionary.json";
-const ExtensionTags = {
-  x00189305: "Revolution​Time",
-  x00083010: "Irradiation​Event​UID",
-  x00189306: "Single​Collimation​Width",
-  x00189307: "Total​Collimation​Width",
-  x00189309: "Table​Speed",
-  x00189310: "Table​Feed​Per​Rotation",
-  x00189311: "Spiral​Pitch​Factor",
-  x00209241: "Nominal​Percentage​Of​Cardiac​Phase",
+const ExternalTags = {
+  x00189305: "RevolutionTime",
+  x00083010: "IrradiationEventUID",
+  x00189306: "SingleCollimationWidth",
+  x00189307: "TotalCollimationWidth",
+  x00189309: "TableSpeed",
+  x00189310: "TableFeedPerRotation",
+  x00189311: "SpiralPitchFactor",
+  x00209241: "NominalPercentageOfCardiacPhase",
+  x00189302: "AcquisitionType",
+  x00189323: "ExposureModulationType",
+  x00189324: "EstimatedDoseSaving",
+  x00189345: "CTDIvol",
 };
 
 const isASCII = (str) => {
@@ -47,7 +51,7 @@ export const dump = (dataset) => {
     for (const propertyName in dataset.elements) {
       const element = dataset.elements[propertyName];
       const { tag, vr, length } = element;
-      const attr = AllTags[tag] ?? ExtensionTags[tag] ?? "Unknown";
+      const attr = AllTags[tag] ?? ExternalTags[tag] ?? "Unknown";
       dumpObj[tag.toLocaleLowerCase()] = {
         tag,
         vr,

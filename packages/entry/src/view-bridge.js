@@ -90,11 +90,11 @@ class Viewport extends Component {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => imageView.setOffset(info.offset, info.dispatch));
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
         const { delta, loop } = info;
-        const { plane, seriesId, resource } = this.option;
+        const { seriesId, resource, transferMode, alias } = this.option;
+        const transfer = resource.getTransfer(transferMode);
         this.currentIndex += delta;
-        this.currentIndex = resource.getIllegalIndex(this.currentIndex, seriesId, plane, loop);
-        const image = await resource.getImage(seriesId, this.currentIndex, plane);
-
+        transfer.getIllegalIndex(this.currentIndex, seriesId, alias, loop);
+        const image = await transfer.getImage(seriesId, this.currentIndex, alias);
         imageView.showImage(image);
       });
     });

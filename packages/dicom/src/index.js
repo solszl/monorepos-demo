@@ -65,15 +65,12 @@ const getMinMaxValues = (pixelData) => {
   return { min, max };
 };
 
-let dumpTags = null;
 export const createImage = async (arrayBuffer) => {
   const dataset = getDataset(arrayBuffer);
-  if (!dumpTags) {
-    dumpTags = dump(dataset); // 1ms 以内
-  }
   let meta = getMetaData(dataset);
   const pixelDataSource = getPixelData(dataset, meta);
   meta = await updateMetaForPixelData(meta, pixelDataSource);
+  meta.allTags = dump(dataset); // 1ms 以内
   return postprocess(meta);
 };
 

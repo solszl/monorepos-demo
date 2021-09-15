@@ -24,7 +24,7 @@ class ToolState {
 
   updateState(toolType, button = 1) {
     if (!Reflect.ownKeys(this.state).includes(`${button}`)) {
-      console.warn(`unsupported button,${button}. should be [1,2,3].`);
+      console.warn(`unsupported button,${button}. should be [1,2,3,4].`);
       return;
     }
 

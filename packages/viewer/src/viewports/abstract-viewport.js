@@ -18,7 +18,6 @@ class AbstractViewport extends Component {
       scale: 1,
       currentTransform: null,
     };
-    window.view = this;
 
     this.init();
   }

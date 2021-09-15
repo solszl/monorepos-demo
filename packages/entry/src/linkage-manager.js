@@ -40,7 +40,6 @@ class LinkageManager {
 
     const { viewportMap } = this;
     viewports.forEach((id) => {
-      // TODO: 注入属性变化监听并且再响应属性变化的时候，将该变化同步给其他viewport
       const viewport = viewportMap.get(id);
       // reduce出 除了当前id意外的其他viewport
       const relatedViewports = viewports.reduce((relatedViewports, id2) => {
@@ -94,7 +93,7 @@ class LinkageManager {
    * @memberof LinkageManager
    */
   removeViewport(viewportId) {
-    // TODO: 注入的事件监听要移除啊
+    // 注入的事件监听移除
     this.links.forEach((obj, key, links) => {
       const { viewports, properties } = obj;
       const index = viewports.findIndex((v) => v === viewportId);

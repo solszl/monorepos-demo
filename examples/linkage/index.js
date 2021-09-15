@@ -32,6 +32,8 @@ vm.resource = resource;
 const standard1 = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
+  alias: "axial",
+  transferMode: "web",
   el: document.querySelector("#id1"),
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
@@ -39,6 +41,8 @@ const standard1 = vm.addViewport({
 const standard2 = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
+  alias: "axial",
+  transferMode: "web",
   el: document.querySelector("#id2"),
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
@@ -46,6 +50,8 @@ const standard2 = vm.addViewport({
 const standard3 = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
+  alias: "axial",
+  transferMode: "web",
   el: document.querySelector("#id3"),
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
@@ -53,6 +59,8 @@ const standard3 = vm.addViewport({
 const standard4 = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
+  alias: "axial",
+  transferMode: "web",
   el: document.querySelector("#id4"),
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
@@ -67,21 +75,25 @@ const fetchData = async (seriesId) => {
   return json;
 };
 
-fetchData(seriesId).then((json) => {
+fetchData(seriesId).then(async (json) => {
   const imageUrls = json.data.images.map((i) => {
     return `${fs}/${i.storagePath}`;
   });
 
-  resource.addItemUrls(seriesId, imageUrls, "standard");
+  const resource = vm.resource;
+  await resource.initTransfer([{ mode: "web" }]);
+  const { transferMode, alias } = standard1.option;
+  const transfer = resource.getTransfer(transferMode);
+  transfer.addItemUrls(seriesId, imageUrls, alias);
 
   setTimeout(async () => {
-    const image1 = await resource.getImage(seriesId, currentIndex, "standard");
+    const image1 = await transfer.getImage(seriesId, currentIndex, alias);
     standard1.imageView.showImage(image1);
-    const image2 = await resource.getImage(seriesId, currentIndex + 30, "standard");
+    const image2 = await transfer.getImage(seriesId, currentIndex + 30, alias);
     standard2.imageView.showImage(image2);
-    const image3 = await resource.getImage(seriesId, currentIndex, "standard");
+    const image3 = await transfer.getImage(seriesId, currentIndex, alias);
     standard3.imageView.showImage(image3);
-    const image4 = await resource.getImage(seriesId, currentIndex + 30, "standard");
+    const image4 = await transfer.getImage(seriesId, currentIndex + 30, alias);
     standard4.imageView.showImage(image4);
   }, 0);
 });
