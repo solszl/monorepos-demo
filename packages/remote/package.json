@@ -6,6 +6,7 @@
   "homepage": "https://github.com/solszl/monorepos-demo#readme",
   "license": "ISC",
   "main": "src/index.js",
+  "module": "lib/index.es.js",
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -32,5 +33,6 @@
     "paraviewweb": "^3.2.21",
     "monologue.js": "0.3.5",
     "wslink": "^1.0.7"
-  }
+  },
+  "dependencies": {}
 }

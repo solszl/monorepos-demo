@@ -5,5 +5,5 @@ import { LINK_PROPERTY } from "./linkage-manager";
 import ViewportManager from "./viewport-manager";
 
 export { ViewportManager, TOOL_TYPE, Resource };
-export { LINK_PROPERTY };
 export { ParaViewClient };
+export { LINK_PROPERTY };

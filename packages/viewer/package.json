@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@saga/core": "^0.1.0",
-    "@saga/loader": "^0.0.0"
+    "@saga/loader": "^0.1.0"
   }
 }

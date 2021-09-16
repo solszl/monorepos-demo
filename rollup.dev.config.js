@@ -3,22 +3,29 @@ import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
 import path from "path";
-import { terser } from "rollup-plugin-terser";
+import peerDepsExternal from "rollup-plugin-peer-deps-external";
+import worker from "rollup-plugin-web-worker-loader";
 
 const PACKAGE_ROOT_PATH = process.cwd();
-const INPUT_FILE = path.resolve(PACKAGE_ROOT_PATH, "packages/entry/src/index.js");
+const INPUT_FILE = path.resolve(PACKAGE_ROOT_PATH, "src/index.js");
 const OUTPUT_DIR = path.join(PACKAGE_ROOT_PATH, "lib");
-
 console.log(INPUT_FILE);
-// const formats = ["es", "cjs"];
-const formats = ["es"];
+const formats = ["esm"];
 
 export default formats.map((format) => ({
   plugins: [
-    json(),
-    resolve(),
+    peerDepsExternal({
+      includeDependencies: false,
+    }),
+    resolve({
+      browser: true,
+    }),
+    json({ compact: true }),
     commonjs({
       sourceMap: false,
+    }),
+    worker({
+      allowAllFormats: true,
     }),
     getBabelOutputPlugin({
       babelrc: false,
@@ -28,10 +35,7 @@ export default formats.map((format) => ({
           {
             corejs: 2,
             useBuiltIns: "usage",
-            modules: false,
-            targets: {
-              chrome: 49,
-            },
+            modules: "umd",
           },
         ],
       ],
@@ -55,7 +59,6 @@ export default formats.map((format) => ({
         "@babel/plugin-proposal-object-rest-spread",
       ],
     }),
-    terser(),
   ],
   input: INPUT_FILE,
   output: {

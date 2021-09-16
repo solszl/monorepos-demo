@@ -6,6 +6,7 @@
   "author": "solszl <solszl@163.com>",
   "license": "ISC",
   "main": "src/index.js",
+  "module": "lib/index.es.js",
   "folder": [
     "lib",
     "dist"

@@ -27,6 +27,8 @@ class Resource {
       await transfer.init();
       this.transfers.set(mode, transfer);
     }
+
+    this.transferInited = true;
   }
 
   /**
