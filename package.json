@@ -6,12 +6,8 @@
   "module": "lib/index.esm.js",
   "browser": "lib/index.umd.js",
   "scripts": {
-    "start:new": "cross-env NODE_ENV=development BUILD_ENV=local webpack-dev-server --config build/webpack.dev.conf.js",
-    "start:demo": "cross-env NODE_ENV=es6 webpack-dev-server --config examples/webpack.config.js",
-    "start:demo-es5": "cross-env NODE_ENV=es5 webpack-dev-server --config examples/webpack.config.js",
-    "build:demo": "webpack --config examples/webpack.config.js",
-    "build": "rollup -c",
-    "watch": "lerna exec --no-sort -- rollup -w -c=../../rollup.config.js"
+    "start:demo": "cross-env NODE_ENV=development BUILD_ENV=local webpack-dev-server --config build/webpack.dev.conf.js",
+    "build:demo": "webpack --config examples/webpack.config.js"
   },
   "files": [
     "lib"
