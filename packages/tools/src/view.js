@@ -1,4 +1,4 @@
-import { Component } from "@saga/core";
+import { Component } from "@pkg/core/src";
 import { DD } from "konva/lib/DragAndDrop";
 import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";

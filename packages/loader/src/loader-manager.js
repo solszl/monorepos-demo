@@ -16,14 +16,19 @@ class LoaderManager {
 
   initLoader() {
     // 非xp留出一个加载线程供其他请求
-    const workerCount = isXP ? 2 : Math.min(navigator.hardwareConcurrency - 1, 5);
-    this.workers = Array.from(new Array(workerCount), (_, i) => i + 1).map((i) => {
-      const worker = new LoaderWorker();
-      const promiseWorker = new PromiseWorker(worker);
-      promiseWorker.id = i;
-      promiseWorker.working = false;
-      return promiseWorker;
-    });
+    const workerCount = isXP
+      ? 2
+      : Math.min(navigator.hardwareConcurrency - 1, 5);
+
+    this.workers = Array.from(new Array(workerCount), (_, i) => i + 1).map(
+      (i) => {
+        const worker = new LoaderWorker();
+        const promiseWorker = new PromiseWorker(worker);
+        promiseWorker.id = i;
+        promiseWorker.working = false;
+        return promiseWorker;
+      }
+    );
 
     console.log(this.workers);
   }

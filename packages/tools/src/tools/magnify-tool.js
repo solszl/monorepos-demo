@@ -1,4 +1,4 @@
-import { TOOL_TYPE } from "@saga/entry";
+import { TOOL_TYPE } from "@pkg/entry/src";
 import { Circle } from "konva/lib/shapes/Circle";
 import { useImageState } from "../state/image-state";
 import { useViewportState } from "../state/viewport-state";
@@ -102,7 +102,10 @@ class MagnifyTool extends BaseTool {
     tmpCanvas.width = this.data.size * 2;
     tmpCanvas.height = this.data.size * 2;
     const ctx = canvas.getContext("2d");
-    const point = worldToLocal(this.data.centerPoint.x, this.data.centerPoint.y);
+    const point = worldToLocal(
+      this.data.centerPoint.x,
+      this.data.centerPoint.y
+    );
 
     ctx.drawImage(
       this.imageState.imgCanvas,

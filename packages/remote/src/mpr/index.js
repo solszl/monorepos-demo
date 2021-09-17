@@ -1,4 +1,4 @@
-import { createImage } from "@saga/remote";
+import { createImage } from "@pkg/remote/src";
 import { API_METHOD } from "../constants";
 
 const getMinMaxValues = (pixelData) => {
@@ -31,7 +31,11 @@ class Axial {
 
   async getImage(index) {
     const { tags, session } = this.config;
-    const data = await session.call(API_METHOD.plane("axial"), [], { x: 0, y: 0, z: index });
+    const data = await session.call(API_METHOD.plane("axial"), [], {
+      x: 0,
+      y: 0,
+      z: index,
+    });
     const image = await createImage(
       data.pixel,
       Object.assign(
@@ -61,7 +65,11 @@ class Sagittal {
 
   async getImage(index) {
     const { tags, session } = this.config;
-    const data = await session.call(API_METHOD.plane("sagittal"), [], { x: index, y: 0, z: 0 });
+    const data = await session.call(API_METHOD.plane("sagittal"), [], {
+      x: index,
+      y: 0,
+      z: 0,
+    });
     const image = await createImage(
       data.pixel,
       Object.assign(
@@ -91,7 +99,11 @@ class Coronary {
 
   async getImage(index) {
     const { tags, session } = this.config;
-    const data = await session.call(API_METHOD.plane("coronary"), [], { x: 0, y: index, z: 0 });
+    const data = await session.call(API_METHOD.plane("coronary"), [], {
+      x: 0,
+      y: index,
+      z: 0,
+    });
     const image = await createImage(
       data.pixel,
       Object.assign(

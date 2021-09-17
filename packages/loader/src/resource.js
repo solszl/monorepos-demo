@@ -1,4 +1,4 @@
-import { SocketTransfer } from "@saga/remote";
+import { SocketTransfer } from "@pkg/remote/src";
 import WebTransfer from "./strategies/web/web-transfer";
 
 class Resource {

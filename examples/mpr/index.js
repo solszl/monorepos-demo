@@ -1,5 +1,5 @@
-import { Resource, ViewportManager } from "@saga/entry";
-import { ObliqueSampler, Plane, Volume } from "@saga/viewer";
+import { Resource, ViewportManager } from "@pkg/entry/src";
+import { ObliqueSampler, Plane, Volume } from "@pkg/viewer/src";
 import { vec3 } from "gl-matrix";
 const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
 const fs = "http://192.168.111.115:8000";
@@ -79,7 +79,10 @@ document.addEventListener("wheel", async (e) => {
   let offset = Math.sign(e.wheelDelta);
   currentIndex += offset;
 
-  plane.makeFrom1Point1Vector(vec3[offset > 0 ? "add" : "sub"](center, center, vector), vector);
+  plane.makeFrom1Point1Vector(
+    vec3[offset > 0 ? "add" : "sub"](center, center, vector),
+    vector
+  );
   sampler.plane = plane;
 
   console.log(center, vector);

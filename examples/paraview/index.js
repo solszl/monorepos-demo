@@ -1,5 +1,5 @@
-import { Resource, TOOL_TYPE, ViewportManager } from "@saga/entry";
-import { ParaViewClient } from "@saga/remote";
+import { Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
+import { ParaViewClient } from "@pkg/remote/src";
 console.log("hello");
 
 let tags = null;

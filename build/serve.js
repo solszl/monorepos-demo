@@ -1,6 +1,6 @@
-const path = require("path");
-const devServer = {
-  contentBase: path.resolve("./examples"),
+const { resolve } = require("./tools");
+const serve = {
+  contentBase: resolve("dist"),
   port: 13333,
   open: true,
   hot: true,
@@ -29,4 +29,4 @@ const devServer = {
   },
 };
 
-module.exports = devServer;
+module.exports = { serve };

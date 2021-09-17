@@ -1,5 +1,5 @@
-import { ViewportManager } from "@saga/entry";
-import { Resource } from "@saga/loader";
+import { ViewportManager } from "@pkg/entry/src";
+import { Resource } from "@pkg/loader/src";
 const VIDEO_URL = "https://www.runoob.com/try/demo_source/mov_bbb.mp4";
 const vm = new ViewportManager();
 const resource = new Resource();

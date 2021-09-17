@@ -1,4 +1,4 @@
-import { Component, RenderSchedule } from "@saga/core";
+import { Component, RenderSchedule } from "@pkg/core/src";
 import { VIEWER_INTERNAL_EVENTS } from "../constants";
 import { applyTransform } from "../transform/apply";
 import { validate } from "../validator";
@@ -50,7 +50,10 @@ class AbstractViewport extends Component {
     this.canvas = canvas;
     this.canvas.className = "__tx-dicom";
     this.canvas.id = this.id;
-    this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
+    this.viewerContainer.insertBefore(
+      this.canvas,
+      this.viewerContainer.firstChild
+    );
   }
 
   initResize() {
@@ -117,9 +120,19 @@ class AbstractViewport extends Component {
       this.canvas.height = height;
     }
 
-    if (this._flipChanged || this._positionChanged || this._rotateChanged || this._scaleChanged || this._sizeChanged) {
+    if (
+      this._flipChanged ||
+      this._positionChanged ||
+      this._rotateChanged ||
+      this._scaleChanged ||
+      this._sizeChanged
+    ) {
       const { renderData } = this.renderer;
-      this.displayState.currentTransform = applyTransform(this.displayState, this.canvas, this.renderer.renderData);
+      this.displayState.currentTransform = applyTransform(
+        this.displayState,
+        this.canvas,
+        this.renderer.renderData
+      );
 
       // 矩阵变换
       this._flipChanged = false;
@@ -130,7 +143,10 @@ class AbstractViewport extends Component {
 
       const { width: rootWidth, height: rootHeight } = this._getRootSize();
       const { scale, rotate, offset = { x: 0, y: 0 } } = this.displayState;
-      const position = [(rootWidth - renderData.width * scale) / 2, (rootHeight - renderData.height * scale) / 2];
+      const position = [
+        (rootWidth - renderData.width * scale) / 2,
+        (rootHeight - renderData.height * scale) / 2,
+      ];
       this.emit(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, {
         width: renderData.width,
         height: renderData.height,

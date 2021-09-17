@@ -1,4 +1,4 @@
-import { Component } from "@saga/core";
+import { Component } from "@pkg/core/src";
 import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
 import { TOOL_CONSTRUCTOR } from "../constructor";
 import { useImageInitialState } from "../state/image-state";

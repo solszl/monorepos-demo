@@ -7,7 +7,8 @@ module.exports = (props) => {
         }
       : {
           useBuiltIns: "usage",
-          shippedProposals: true,
+          // shippedProposals: true,
+          corejs: 2,
         };
 
   const presets = [["@babel/preset-env", presetConfig]];

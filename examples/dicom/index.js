@@ -1,5 +1,6 @@
-import { Resource } from "@saga/loader";
-const seriesId = "1.3.46.670589.33.1.63758074643606917200002.5725553829146337340";
+import { Resource } from "@pkg/loader/src";
+const seriesId =
+  "1.3.46.670589.33.1.63758074643606917200002.5725553829146337340";
 const fs = "http://192.168.111.115:8000";
 
 const resource = new Resource();

@@ -1,6 +1,7 @@
-import { ViewportManager } from "@saga/entry";
-import { Resource } from "@saga/loader";
-const seriesId = "1.3.46.670589.33.1.63759620259124964400001.4675988079426718788";
+import { ViewportManager } from "@pkg/entry/src";
+import { Resource } from "@pkg/loader/src";
+const seriesId =
+  "1.3.46.670589.33.1.63759620259124964400001.4675988079426718788";
 const fs = "http://192.168.111.115:8000";
 let currentIndex = 10;
 const API_GRAY = "/api/v1/series/";

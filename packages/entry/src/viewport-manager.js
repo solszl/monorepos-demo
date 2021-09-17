@@ -1,4 +1,4 @@
-import { Core } from "@saga/core";
+import { Core } from "@pkg/core/src";
 import LinkageManager from "./linkage-manager";
 import Viewport from "./view-bridge";
 class ViewportManager {

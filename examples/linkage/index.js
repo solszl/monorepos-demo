@@ -1,4 +1,9 @@
-import { LINK_PROPERTY, Resource, TOOL_TYPE, ViewportManager } from "@saga/entry";
+import {
+  LINK_PROPERTY,
+  Resource,
+  TOOL_TYPE,
+  ViewportManager,
+} from "@pkg/entry/src";
 import ToolBar from "../toolbar/toolBar";
 const toolbar = new ToolBar({ root: "toolBar" });
 toolbar.addBtn({

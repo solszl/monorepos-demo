@@ -1,5 +1,5 @@
-import { TOOL_TYPE, ViewportManager } from "@saga/entry";
-import { Resource } from "@saga/loader";
+import { TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
+import { Resource } from "@pkg/loader/src";
 let currentIndex = 0;
 
 const vm = new ViewportManager();
