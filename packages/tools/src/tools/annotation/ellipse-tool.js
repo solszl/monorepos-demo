@@ -40,9 +40,7 @@ class EllipseTool extends BaseAnnotationTool {
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
-    const pixelData = this._getPixelData();
-    const data = this._getInfo(pixelData);
-    this.data.textBox = Object.assign({}, this.textBox, data);
+    this._updateTextBox();
     this.renderData();
     this.isDown = true;
   }
@@ -52,9 +50,7 @@ class EllipseTool extends BaseAnnotationTool {
       return;
     }
     this.data.end = this.getRelativePointerPosition();
-    const pixelData = this._getPixelData();
-    const data = this._getInfo(pixelData);
-    this.data.textBox = Object.assign({}, this.textBox, data);
+    this._updateTextBox();
     this.renderData();
   }
   mouseUp(e) {
@@ -153,6 +149,7 @@ class EllipseTool extends BaseAnnotationTool {
 
   dragMove() {
     this.data.position = this.getPosition();
+    this._updateTextBox();
     this.renderData();
   }
 
@@ -169,8 +166,11 @@ class EllipseTool extends BaseAnnotationTool {
     } else if (anchor.getId() === "endAnchor") {
       this._data.end = anchor.getPosition();
     }
+
+    this._updateTextBox();
     this.renderData();
   }
+
   dragAnchorEnd(e) {
     super.dragAnchorEnd(e);
     this._tryUpdateData();
@@ -243,6 +243,7 @@ class EllipseTool extends BaseAnnotationTool {
     data.textBox.y = localText[1] - localPosition[1];
     return data;
   }
+
   _getArea() {
     // 计算面积
     const { end } = this.data;
@@ -311,6 +312,12 @@ class EllipseTool extends BaseAnnotationTool {
 
   _inEllipse(a, b, x, y, center) {
     return Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1;
+  }
+
+  _updateTextBox() {
+    const pixelData = this._getPixelData();
+    const data = this._getInfo(pixelData);
+    this.data.textBox = Object.assign({}, this.textBox, data);
   }
 }
 
