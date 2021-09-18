@@ -1,16 +1,14 @@
 const { resolve } = require("./tools");
 const serve = {
-  contentBase: resolve("dist"),
   port: 13333,
   open: true,
-  hot: true,
   host: "0.0.0.0",
-  index: "index.html",
-  overlay: {
-    errors: true,
-    warnings: true,
-  },
   historyApiFallback: true,
+  client: {
+    overlay: true,
+    logging: "none",
+    progress: false,
+  },
   proxy: {
     "/api": {
       target: "http://192.168.111.115:13000",
