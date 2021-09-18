@@ -3,6 +3,7 @@ import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
 import { TOOL_CONSTRUCTOR } from "../constructor";
 import { useImageInitialState } from "../state/image-state";
 import { useViewportInitialState } from "../state/viewport-state";
+
 class API extends Component {
   constructor(stage) {
     super();
@@ -11,27 +12,27 @@ class API extends Component {
     this.stage = stage;
   }
 
-  rotation(rotate, dispatch = true) {
+  rotation_cmd(rotate, dispatch = true) {
     this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate, dispatch });
   }
 
-  wwwc(wwwc, dispatch = true) {
+  wwwc_cmd(wwwc, dispatch = true) {
     this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc, dispatch });
   }
 
-  flipH(h, dispatch = true) {
+  flip_h_cmd(h, dispatch = true) {
     this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h, dispatch });
   }
 
-  flipV(v, dispatch = true) {
+  flip_v_cmd(v, dispatch = true) {
     this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v, dispatch });
   }
 
-  invert(invert, dispatch = true) {
+  invert_cmd(invert, dispatch = true) {
     this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert, dispatch });
   }
 
-  scale(scale, dispatch = true) {
+  scale_cmd(scale, dispatch = true) {
     this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale, dispatch });
   }
 
@@ -41,7 +42,7 @@ class API extends Component {
     });
   }
 
-  reset() {
+  reset_cmd() {
     const [initialState] = useViewportInitialState(this.stageId);
     const [initialImageState] = useImageInitialState(this.stageId);
     const { rotate, offset, scale } = initialState;
@@ -54,15 +55,24 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
   }
 
-  play(speed) {
+  /**
+   *  默认以basis 毫秒播放一张图
+   * 例1：设置 play_cmd(1,1000)  以1秒切一张图的速度进行1倍速播放, 实际切图间隔为1000ms
+   * 例2：设置 play_cmd(2,500) 以500毫秒切一张图的速度进行2倍播放，实际切图间隔为250ms
+   *
+   * @param { number } speed 播放速度倍数
+   * @param {number} [basis=1000] 时间间隔基数
+   * @memberof API
+   */
+  play_cmd(speed, basis = 1000) {
     clearInterval(this.playInterval);
     const s = Math.max(0.25, Math.min(speed, 5));
     this.playInterval = setInterval(() => {
       this.emit(INTERNAL_EVENTS.TOOL_STACK_CHANGE, { delta: 1, loop: true });
-    }, 1000 / s);
+    }, basis / s);
   }
 
-  stop() {
+  stop_cmd() {
     clearInterval(this.playInterval);
   }
 }

@@ -52,8 +52,7 @@ class TaskManager {
     const fn0 = (task) => task;
     const fn1 = (task) => task.seriesId === seriesId;
     const fn2 = (task) => task.seriesId === seriesId && task.plane === plane;
-    const fn3 = (task) =>
-      task.seriesId === seriesId && task.plane === plane && task.index === index;
+    const fn3 = (task) => task.seriesId === seriesId && task.plane === plane && task.index === index;
     const sortFn = [fn0, fn1, fn2, fn3];
 
     return this.getTasks().filter(sortFn[length]);
@@ -78,7 +77,6 @@ class TaskManager {
     if (existIndex !== -1) {
       const oldTask = this.pendingTask[existIndex];
       oldTask.priority = Date.now();
-      this.pendingTask.splice(existIndex, 1, oldTask);
     } else {
       task.priority = Date.now();
       this.pendingTask.push(task);

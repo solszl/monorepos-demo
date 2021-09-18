@@ -3,6 +3,9 @@ const serve = {
   port: 13333,
   open: true,
   host: "0.0.0.0",
+  static: {
+    directory: "examples",
+  },
   historyApiFallback: true,
   client: {
     overlay: true,

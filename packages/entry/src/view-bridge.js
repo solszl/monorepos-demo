@@ -1,9 +1,6 @@
 import { Component } from "@pkg/core/src";
 import { API, TOOLVIEW_INTERNAL_EVENTS, View } from "@pkg/tools/src";
-import {
-  factory as ViewFactory,
-  VIEWER_INTERNAL_EVENTS,
-} from "@pkg/viewer/src";
+import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@pkg/viewer/src";
 import { appendIFrame } from "./utils";
 class Viewport extends Component {
   constructor(option) {
@@ -84,38 +81,20 @@ class Viewport extends Component {
     });
 
     [api, toolView].map((obj) => {
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) =>
-        imageView.setRotation(info.rotate, info.dispatch)
-      );
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) =>
-        imageView.setWWWC(info.wwwc, info.dispatch)
-      );
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPH, (info) =>
-        imageView.setFlipH(info.h, info.dispatch)
-      );
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPV, (info) =>
-        imageView.setFlipV(info.v, info.dispatch)
-      );
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_INVERT, (info) =>
-        imageView.setInvert(info.invert, info.dispatch)
-      );
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) =>
-        imageView.setScale(info.scale, info.dispatch)
-      );
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) =>
-        imageView.setOffset(info.offset, info.dispatch)
-      );
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) => imageView.setRotation(info.rotate, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_WWWC, (info) => imageView.setWWWC(info.wwwc, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPH, (info) => imageView.setFlipH(info.h, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_FLIPV, (info) => imageView.setFlipV(info.v, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_INVERT, (info) => imageView.setInvert(info.invert, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => imageView.setScale(info.scale, info.dispatch));
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) => imageView.setOffset(info.offset, info.dispatch));
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_STACK_CHANGE, async (info) => {
         const { delta, loop } = info;
         const { seriesId, resource, transferMode, alias } = this.option;
         const transfer = resource.getTransfer(transferMode);
         this.currentIndex += delta;
-        transfer.getIllegalIndex(this.currentIndex, seriesId, alias, loop);
-        const image = await transfer.getImage(
-          seriesId,
-          this.currentIndex,
-          alias
-        );
+        this.currentIndex = transfer.getIllegalIndex(this.currentIndex, seriesId, alias, loop);
+        const image = await transfer.getImage(seriesId, this.currentIndex, alias);
         imageView.showImage(image);
       });
     });
@@ -139,7 +118,7 @@ class Viewport extends Component {
   }
 
   useCmd(type, param, dispatch = true) {
-    this.api?.[type](param, dispatch);
+    this.api?.[type]?.(param, dispatch);
   }
 }
 

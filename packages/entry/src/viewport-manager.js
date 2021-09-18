@@ -23,6 +23,10 @@ class ViewportManager {
     this.viewports.delete(id);
   }
 
+  getViewport(id) {
+    return this.viewports.get(id);
+  }
+
   link(viewports, properties) {}
 }
 

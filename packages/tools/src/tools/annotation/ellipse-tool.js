@@ -3,11 +3,7 @@ import { Group } from "konva/lib/Group";
 import { Ellipse } from "konva/lib/shapes/Ellipse";
 import { Rect } from "konva/lib/shapes/Rect";
 import { verify } from "../../area";
-import {
-  INTERNAL_EVENTS,
-  TOOL_COLORS,
-  TOOL_ITEM_SELECTOR,
-} from "../../constants";
+import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR } from "../../constants";
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextItem from "../../shape/parts/text-item";
@@ -139,7 +135,7 @@ class EllipseTool extends BaseAnnotationTool {
     group.findOne("#max")?.setText("最大值：", data.max);
     group.findOne("#min")?.setText("最小值：", data.min);
 
-    if (this.data.textBox.dragged) {
+    if (data.dragged) {
       const dashline = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);
       const from = [
         [(start.x + end.x) / 2, start.y],
@@ -147,7 +143,8 @@ class EllipseTool extends BaseAnnotationTool {
         [(start.x + end.x) / 2, end.y],
         [start.x, (start.y + end.y) / 2],
       ];
-      group.setPosition({ x: textBox.x, y: textBox.y });
+
+      group.setPosition({ x: data.x, y: data.y });
       connectTextNode(group, from, dashline);
     } else {
       const x = Math.max(start.x, end.x);
@@ -197,7 +194,6 @@ class EllipseTool extends BaseAnnotationTool {
       },
       group.position()
     );
-
     this.renderData();
   }
 
@@ -236,10 +232,7 @@ class EllipseTool extends BaseAnnotationTool {
     const localPosition = worldToLocal(position.x, position.y);
     const localStart = worldToLocal(position.x + start.x, position.y + start.y);
     const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
-    const localText = worldToLocal(
-      position.x + textBox.x,
-      position.y + textBox.y
-    );
+    const localText = worldToLocal(position.x + textBox.x, position.y + textBox.y);
 
     const data = JSON.parse(JSON.stringify(this.data));
     data.position = { x: localPosition[0], y: localPosition[1] };
@@ -259,8 +252,7 @@ class EllipseTool extends BaseAnnotationTool {
   _getArea() {
     // 计算面积
     const { end } = this.data;
-    const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } =
-      this.imageState;
+    const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } = this.imageState;
     const a = Math.abs(end.x) / 2;
     const b = Math.abs(end.y) / 2;
     const area = Math.PI * (a * columnPixelSpacing) * (b * rowPixelSpacing);
@@ -283,28 +275,20 @@ class EllipseTool extends BaseAnnotationTool {
     const a = Math.abs(localStart[0] - localEnd[0]) / 2;
     const b = Math.abs(localStart[1] - localEnd[1]) / 2;
     // 椭圆中心点
-    const center = [
-      (localStart[0] + localEnd[0]) / 2,
-      (localStart[1] + localEnd[1]) / 2,
-    ];
+    const center = [(localStart[0] + localEnd[0]) / 2, (localStart[1] + localEnd[1]) / 2];
 
     let ellipsePixelData = [];
     let index = 0;
     for (let row = 0; row < height; row++) {
       for (let column = 0; column < width; column++) {
         if (this._inEllipse(a, b, column + x, row + y, center)) {
-          const pixelDataIndex =
-            (row + y) * this.imageState.columns + (column + x);
+          const pixelDataIndex = (row + y) * this.imageState.columns + (column + x);
           ellipsePixelData[index++] = pixelData[pixelDataIndex];
         }
       }
     }
 
-    return toCT(
-      ellipsePixelData,
-      this.imageState.slope,
-      this.imageState.intercept
-    );
+    return toCT(ellipsePixelData, this.imageState.slope, this.imageState.intercept);
   }
 
   _getInfo(pixelData) {
@@ -332,17 +316,13 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _inEllipse(a, b, x, y, center) {
-    return (
-      Math.pow(x - center[0], 2) / Math.pow(a, 2) +
-        Math.pow(y - center[1], 2) / Math.pow(b, 2) <=
-      1
-    );
+    return Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1;
   }
 
   _updateTextBox() {
     const pixelData = this._getPixelData();
     const data = this._getInfo(pixelData);
-    this.data.textBox = Object.assign({}, this.textBox, data);
+    this.data.textBox = Object.assign({}, this.textBox, this.data.textBox, data);
   }
 }
 

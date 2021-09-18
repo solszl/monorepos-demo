@@ -39,6 +39,15 @@ export const TOOL_TYPE = {
   SCALE: "scale",
   TRANSLATE: "translate",
   RECT: "rect",
+  INVERT_CMD: "invert_cmd",
+  FLIP_H_CMD: "flip_h_cmd",
+  FLIP_V_CMD: "flip_v_cmd",
+  WWWC_CMD: "wwwc_cmd",
+  RESET_CMD: "reset_cmd",
+  ROTATION_CMD: "rotation_cmd",
+  SCALE_CMD: "scale_cmd",
+  PLAY_CMD: "play_cmd",
+  STOP_CMD: "stop_cmd",
 };
 
 export const INTERNAL_EVENTS = {

@@ -1,5 +1,4 @@
 import { Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
-import { ParaViewClient } from "@pkg/remote/src";
 console.log("hello");
 
 let tags = null;
@@ -20,7 +19,7 @@ const STUDY_ID = "1.2.840.20210326.121032504593";
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
-const HOST = "192.168.108.91";
+const HOST = "192.168.108.34";
 const HTTP_PORT = "19570";
 let WS_PORT = "-1";
 
@@ -126,11 +125,11 @@ const main = async () => {
   const img2 = await transfer.getImage(SERIES_ID, 100, alias2);
   sagittalViewport.imageView.showImage(img2);
 
-  const connection = resource.getTransfer("socket")?.connection;
-  const viewport = new ParaViewClient({
-    connection,
-    el: vrEl,
-  });
+  // const connection = resource.getTransfer("socket")?.connection;
+  // const viewport = new ParaViewClient({
+  //   connection,
+  //   el: vrEl,
+  // });
 
   axialViewport.useTool(TOOL_TYPE.WWWC);
   axialViewport.useTool(TOOL_TYPE.TRANSLATE, 2);

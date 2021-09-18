@@ -12,6 +12,12 @@ const ExternalTags = {
   x00189323: "ExposureModulationType",
   x00189324: "EstimatedDoseSaving",
   x00189345: "CTDIvol",
+  x00189318: "ReconstructionTargetCenterPatient",
+  x00189327: "TablePosition",
+  x00189334: "FluoroscopyFlag",
+  x00209056: "StackID",
+  x00209057: "InStackPositionNumber",
+  x00209128: "TemporalPositionIndex",
 };
 
 const isASCII = (str) => {

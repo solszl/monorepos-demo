@@ -77,7 +77,7 @@ toolBar.addBtn({
   name: "反色",
   fun: () => {
     invert = !invert;
-    standard.useCmd("invert", invert);
+    standard.useCmd(TOOL_TYPE.INVERT_CMD, invert);
   },
 });
 
@@ -85,7 +85,7 @@ toolBar.addBtn({
   name: "水平翻转",
   fun: () => {
     flipH = !flipH;
-    standard.useCmd("flipH", flipH);
+    standard.useCmd(TOOL_TYPE.FLIP_H_CMD, flipH);
   },
 });
 
@@ -93,7 +93,7 @@ toolBar.addBtn({
   name: "垂直翻转",
   fun: () => {
     flipV = !flipV;
-    standard.useCmd("flipV", flipV);
+    standard.useCmd(TOOL_TYPE.FLIP_V_CMD, flipV);
   },
 });
 
@@ -120,10 +120,10 @@ toolBar.addBtn({
   name: "旋转",
   fun: () => {
     rotate += 90;
-    standard.useCmd("rotation", rotate % 360);
+    standard.useCmd(TOOL_TYPE.ROTATION_CMD, rotate % 360);
   },
 });
 toolBar.addBtn({
   name: "重置",
-  fun: () => standard.useCmd("reset"),
+  fun: () => standard.useCmd(TOOL_TYPE.RESET_CMD),
 });
