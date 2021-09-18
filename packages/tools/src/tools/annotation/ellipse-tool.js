@@ -199,7 +199,8 @@ class EllipseTool extends BaseAnnotationTool {
 
   verifyDataLegal() {
     const { start, end, position } = this.data;
-    const { width, height } = this.viewportState;
+    const [viewportState] = useViewportState(this.$stage.id());
+    const { width, height } = viewportState();
     const points = [
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
