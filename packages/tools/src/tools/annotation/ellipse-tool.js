@@ -321,6 +321,8 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _updateTextBox() {
+    const [imageState] = useImageState(this.$stage.id());
+    this.imageState = imageState();
     const pixelData = this._getPixelData();
     const data = this._getInfo(pixelData);
     this.data.textBox = Object.assign({}, this.textBox, this.data.textBox, data);
