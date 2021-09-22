@@ -6,7 +6,6 @@ class Viewport extends Component {
   constructor(option) {
     super();
     this.init(option);
-    window.a = this;
     this.data = {};
     this.currentIndex = 0;
   }
@@ -119,6 +118,12 @@ class Viewport extends Component {
 
   useCmd(type, param, dispatch = true) {
     this.api?.[type]?.(param, dispatch);
+  }
+
+  destroy() {
+    this.toolView.destroy();
+    this.imageView.destroy();
+    this.data = {};
   }
 }
 

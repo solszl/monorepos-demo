@@ -47,3 +47,8 @@ export const useImageInitialState = (stageId) => {
   };
   return [state, setInitialImageState];
 };
+
+export const removeImageState = (stageId) => {
+  delete stateInitialDictionary[stageId];
+  delete stateDictionary[stageId];
+};

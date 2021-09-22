@@ -61,6 +61,10 @@ class WebTransfer {
     this.cacheManager.purge(seriesId, plane);
   }
 
+  purgeTasks(seriesId) {
+    this.taskManager.removeTasks(seriesId);
+  }
+
   getImages(seriesId, plane) {
     return this.cacheManager.getItems(seriesId, plane);
   }

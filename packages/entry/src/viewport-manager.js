@@ -19,6 +19,13 @@ class ViewportManager {
   }
 
   removeViewport(id) {
+    const { option } = this.viewports.get(id);
+    const { transferMode, seriesId } = option;
+    const transfer = this?.resource?.getTransfer(transferMode);
+    transfer?.purgeCache(seriesId);
+    transfer?.purgeTasks(seriesId);
+
+    this.linkManager.removeViewport(id);
     this.viewports.get(id)?.destroy();
     this.viewports.delete(id);
   }
@@ -26,8 +33,6 @@ class ViewportManager {
   getViewport(id) {
     return this.viewports.get(id);
   }
-
-  link(viewports, properties) {}
 }
 
 export default ViewportManager;

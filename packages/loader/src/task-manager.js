@@ -84,6 +84,16 @@ class TaskManager {
 
     this.sort(this.pendingTask);
   }
+
+  removeTasks(seriesId) {
+    this.tasks.map((task) => {
+      if (task.seriesId === seriesId) {
+        task.remove = true;
+      }
+    });
+
+    this.tasks = this.tasks.filter((task) => !task?.remove).map((task) => task);
+  }
 }
 
 /**

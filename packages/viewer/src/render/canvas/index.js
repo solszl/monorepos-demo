@@ -1,5 +1,5 @@
-import { renderColorImage } from "./render-color";
 import { getLut } from "./lut";
+import { renderColorImage } from "./render-color";
 import { renderGrayImage } from "./render-gray";
 class CanvasRenderer {
   constructor() {
@@ -17,6 +17,10 @@ class CanvasRenderer {
 
   get renderData() {
     return this.renderCanvas;
+  }
+
+  destroy() {
+    this.renderCanvas = null;
   }
 }
 

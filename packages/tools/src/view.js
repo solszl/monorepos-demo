@@ -5,8 +5,9 @@ import { Stage } from "konva/lib/Stage";
 import Area from "./area";
 import { INTERNAL_EVENTS } from "./constants";
 import { TOOL_CONSTRUCTOR } from "./constructor";
-import { useImageState } from "./state/image-state";
+import { removeImageState, useImageState } from "./state/image-state";
 import ToolState from "./state/tool-state";
+import { removeViewportState } from "./state/viewport-state";
 import { transform as transformCoords } from "./tools/utils/coords-transform";
 import MouseTrap from "./trap/mouse-trap";
 
@@ -68,6 +69,12 @@ class View extends Component {
   updateImageState(config = {}) {
     const [, setImageState] = useImageState(this.stage.id());
     setImageState(config);
+  }
+
+  destroy() {
+    removeImageState(this.stage.id());
+    removeViewportState(this.stage.id());
+    this.stage.destroy();
   }
 
   /**

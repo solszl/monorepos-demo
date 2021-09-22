@@ -52,3 +52,8 @@ export const useViewportInitialState = (stageId) => {
 
   return [state, setInitialViewportState];
 };
+
+export const removeViewportState = (stageId) => {
+  delete stateInitialDictionary[stageId];
+  delete stateDictionary[stageId];
+};
