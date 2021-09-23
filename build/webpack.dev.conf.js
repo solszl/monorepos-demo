@@ -1,7 +1,4 @@
-const {
-  HotModuleReplacementPlugin,
-  container: { ModuleFederationPlugin },
-} = require("webpack");
+const { HotModuleReplacementPlugin } = require("webpack");
 const { merge } = require("webpack-merge");
 const { devServer } = require("./config");
 const { getEntries } = require("./tools");
@@ -33,17 +30,7 @@ const devConfig = {
       },
     ],
   },
-  plugins: [
-    new HotModuleReplacementPlugin(),
-    new ModuleFederationPlugin({
-      name: "SDK",
-      filename: "sdkEntry.js",
-      exposes: {
-        "./Entry": resolve("packages/entry/src/index.js"),
-      },
-    }),
-    ...htmlPlugins,
-  ],
+  plugins: [new HotModuleReplacementPlugin(), ...htmlPlugins],
   devServer: devServer,
 };
 

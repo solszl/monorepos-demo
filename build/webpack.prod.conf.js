@@ -1,10 +1,15 @@
-const chalk = require('chalk');
-const { merge } = require('webpack-merge');
-const TerserPlugin = require('terser-webpack-plugin');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const baseConfig = require('./webpack.base.conf');
-
+const chalk = require("chalk");
+const { merge } = require("webpack-merge");
+const TerserPlugin = require("terser-webpack-plugin");
+const ProgressBarPlugin = require("progress-bar-webpack-plugin");
+const baseConfig = require("./webpack.base.conf");
+const { getEntries } = require("./tools");
+const { resolve } = require("./tools");
+// entry: {
+//   entry: resolve("packages/entry/src/index.js"),
+// },
 const prodConfig = {
+  entry: resolve("packages/entry/src/empty.js"),
   optimization: {
     minimize: true,
     minimizer: [
@@ -20,7 +25,7 @@ const prodConfig = {
   },
   plugins: [
     new ProgressBarPlugin({
-      format: '  build [:bar] ' + chalk.green.bold(':percent') + ' (:elapsed seconds)',
+      format: "  build [:bar] " + chalk.green.bold(":percent") + " (:elapsed seconds)",
     }),
   ],
 };
