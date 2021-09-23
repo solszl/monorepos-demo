@@ -87,7 +87,6 @@ class WebTransfer {
 
       task.resolve = resolve;
       this.taskManager.addPendingTask(task);
-      this.taskManager.sort(this.taskManager.pendingTask);
 
       this.preloadManager.buildPreloadTask({ seriesId, plane, index });
       this.loaderManager.load();

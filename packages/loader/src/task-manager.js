@@ -12,22 +12,6 @@ class TaskManager {
     this.tasks.push(new Task(obj));
   }
 
-  pickTask() {
-    return this.tasks.shift();
-  }
-
-  modifyTaskPriority(property, value, priority) {
-    this.tasks = this.tasks.map((task) => {
-      if (task?.[property] === value) {
-        task.priority = priority;
-      }
-
-      return task;
-    });
-
-    this.sort(this.tasks);
-  }
-
   sort(tasks) {
     tasks.sort((a, b) => a.priority - b.priority);
   }

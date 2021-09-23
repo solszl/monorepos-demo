@@ -133,16 +133,29 @@ class Viewport extends Component {
     this.api?.[type]?.(param, dispatch);
   }
 
+  /**
+   * 根据seriesId,index显示影像数据
+   *
+   * @param { string } seriesId 影像序列id
+   * @param { number } index 影像索引，0开始
+   * @memberof Viewport
+   */
   async showImage(seriesId, index) {
     const { resource, transferMode, alias } = this.option;
     const transfer = resource.getTransfer(transferMode);
 
-    this.currentIndex = index;
+    this.currentIndex = +index;
     this.currentIndex = transfer.getIllegalIndex(this.currentIndex, seriesId, alias);
     const image = await transfer.getImage(seriesId, this.currentIndex, alias);
     this.imageView.showImage(image);
   }
 
+  /**
+   * 销毁，该销毁方式会将对应的各种数据进行一一清空，包含任务队列，缓存数据，影像dom，工具图层dom等
+   * 如果多个viewport共享一套数据，需要考虑一下是否需要完全清空
+   *
+   * @memberof Viewport
+   */
   destroy() {
     this.toolView.destroy();
     this.imageView.destroy();

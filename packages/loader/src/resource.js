@@ -5,7 +5,6 @@ class Resource {
   constructor() {
     /** @type { Map <string, SocketTransfer | WebTransfer > } {@link SocketTransfer} {@link WebTransfer} */
     this.transfers = new Map();
-    window.__TX_RESOURCE__ = this;
   }
 
   /**

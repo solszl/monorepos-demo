@@ -15,7 +15,17 @@ export const LINK_PROPERTY = {
 
 const events = {};
 
+/**
+ * 联动管理器
+ *
+ * @class LinkageManager
+ */
 class LinkageManager {
+  /**
+   * Creates an instance of LinkageManager.
+   * @param {*} viewports
+   * @memberof LinkageManager
+   */
   constructor(viewports) {
     /** @type { Map } */
     this.viewportMap = viewports ?? new Map();
@@ -25,11 +35,11 @@ class LinkageManager {
   }
 
   /**
+   * 对viewport集合和对应的属性集合进行联动
    *
-   *
-   * @param { Array<string> } viewports
-   * @param { Array<string> } properties
-   * @return { string }
+   * @param { Array<string> } viewports 视窗集合
+   * @param { Array<string> } properties 需要联动的属性集合
+   * @return { string } 返回一个关联id，以此来证明关联关系
    * @memberof LinkageManager
    */
   link(viewports, properties) {
@@ -55,7 +65,7 @@ class LinkageManager {
         const key = `${id}-${prop}`;
         const fn = (data) => {
           relatedViewports.forEach((relatedViewport) => {
-            relatedViewport?.useCmd(prop, data, false);
+            relatedViewport?.useCmd(`${prop}_cmd`, data, false);
           });
         };
         events[key] = fn;
@@ -71,7 +81,7 @@ class LinkageManager {
   }
 
   /**
-   *
+   * 取消联动，对应的联动id， 如果不存在就算了。并且删除对应的联动id
    *
    * @param { string } linkId
    * @returns { Boolean }

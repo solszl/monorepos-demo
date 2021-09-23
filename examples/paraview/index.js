@@ -13,13 +13,13 @@ let planeEls = document.querySelectorAll(".plane");
 let horizonEl = document.querySelector(".horizon");
 let portraitEl = document.querySelector(".portrait");
 
-const SERIES_ID = "1.3.12.2.1107.5.1.4.73388.30000020070600020988200183232";
+const SERIES_ID = "1.2.826.0.1.3680043.10.605.243079253442158709823";
 const STUDY_ID = "1.2.840.20210326.121032504593";
 
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
-const HOST = "192.168.108.34";
+const HOST = "192.168.109.229";
 const HTTP_PORT = "19570";
 let WS_PORT = "-1";
 

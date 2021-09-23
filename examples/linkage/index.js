@@ -1,9 +1,4 @@
-import {
-  LINK_PROPERTY,
-  Resource,
-  TOOL_TYPE,
-  ViewportManager,
-} from "@pkg/entry/src";
+import { LINK_PROPERTY, Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 import ToolBar from "../toolbar/toolBar";
 const toolbar = new ToolBar({ root: "toolBar" });
 toolbar.addBtn({
@@ -92,14 +87,10 @@ fetchData(seriesId).then(async (json) => {
   transfer.addItemUrls(seriesId, imageUrls, alias);
 
   setTimeout(async () => {
-    const image1 = await transfer.getImage(seriesId, currentIndex, alias);
-    standard1.imageView.showImage(image1);
-    const image2 = await transfer.getImage(seriesId, currentIndex + 30, alias);
-    standard2.imageView.showImage(image2);
-    const image3 = await transfer.getImage(seriesId, currentIndex, alias);
-    standard3.imageView.showImage(image3);
-    const image4 = await transfer.getImage(seriesId, currentIndex + 30, alias);
-    standard4.imageView.showImage(image4);
+    await standard1.showImage(seriesId, currentIndex);
+    await standard2.showImage(seriesId, currentIndex + 30);
+    await standard3.showImage(seriesId, currentIndex);
+    await standard4.showImage(seriesId, currentIndex + 30);
   }, 0);
 });
 
