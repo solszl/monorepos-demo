@@ -11,6 +11,8 @@ const standard = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
   el: document.querySelector(".root"),
+  alias: "axial",
+  transferMode: "web",
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
 });
 
@@ -32,8 +34,10 @@ fetchData(seriesId).then(async (json) => {
   transfer.addItemUrls(seriesId, imageUrls, alias);
 
   setTimeout(async () => {
-    const image = await transfer.getImage(seriesId, currentIndex, alias);
-    standard.imageView.showImage(image);
+    // const image = await transfer.getImage(seriesId, currentIndex, alias);
+    // standard.imageView.showImage(image);
+
+    await standard.showImage(seriesId, 20);
   }, 0);
 });
 

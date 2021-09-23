@@ -1,6 +1,7 @@
 import { Component } from "@pkg/core/src";
 import { API, TOOLVIEW_INTERNAL_EVENTS, View } from "@pkg/tools/src";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@pkg/viewer/src";
+import { EVENTS } from "./constants";
 import { appendIFrame } from "./utils";
 class Viewport extends Component {
   constructor(option) {
@@ -29,10 +30,17 @@ class Viewport extends Component {
       const sliceKey = `${info.seriesId}-${info.sliceId}`;
       const sliceData = this.data?.[sliceKey] ?? new Map();
       toolView.resetData(sliceData);
+      this.emit(EVENTS.MATRIX_CHANGED, {
+        matrix: info,
+      });
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, (info) => {
       toolView.updateImageState(info);
+      this.emit(EVENTS.IMAGE_RENDERED, {
+        imageState: info,
+        image: imageView.image,
+      });
     });
 
     // 记录上次刷新toolview数据时间，如果时间间隔过短，就不再刷新。从而提升性能
@@ -42,6 +50,11 @@ class Viewport extends Component {
       this.option.seriesId = info.seriesId;
       const sliceKey = `${info.seriesId}-${info.sliceId}`;
       this.sliceKey = sliceKey;
+      this.emit(EVENTS.SLICE_CHANGED, {
+        seriesId: info.seriesId,
+        currentIndex: this.currentIndex,
+        viewportId: this.id,
+      });
       const sliceData = this.data?.[sliceKey] ?? new Map();
       const now = Date.now();
       if (now - lastRenderDataElapsed < 100) {
@@ -118,6 +131,16 @@ class Viewport extends Component {
 
   useCmd(type, param, dispatch = true) {
     this.api?.[type]?.(param, dispatch);
+  }
+
+  async showImage(seriesId, index) {
+    const { resource, transferMode, alias } = this.option;
+    const transfer = resource.getTransfer(transferMode);
+
+    this.currentIndex = index;
+    this.currentIndex = transfer.getIllegalIndex(this.currentIndex, seriesId, alias);
+    const image = await transfer.getImage(seriesId, this.currentIndex, alias);
+    this.imageView.showImage(image);
   }
 
   destroy() {
