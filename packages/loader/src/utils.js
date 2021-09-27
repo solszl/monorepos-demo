@@ -3,7 +3,7 @@ let canvas = document.createElement("canvas");
 export const postprocessor = async (image, task) => {
   return new Promise((resolve, reject) => {
     let img = image;
-    const { format } = task;
+    const { format, seriesId, index } = task;
     if (format === "webimage") {
       img = {};
       let tempImg = new Image();
@@ -24,6 +24,8 @@ export const postprocessor = async (image, task) => {
         img.minPixelValue = 0;
         img.intercept = 0;
         img.slope = 1;
+        img.seriesId = seriesId;
+        img.instanceNumber = index;
 
         canvas.width = tempImg.width;
         canvas.height = tempImg.height;
