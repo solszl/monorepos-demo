@@ -1,4 +1,4 @@
-import { Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
+import { ParaViewClient, Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 console.log("hello");
 
 let tags = null;
@@ -125,11 +125,11 @@ const main = async () => {
   const img2 = await transfer.getImage(SERIES_ID, 100, alias2);
   sagittalViewport.imageView.showImage(img2);
 
-  // const connection = resource.getTransfer("socket")?.connection;
-  // const viewport = new ParaViewClient({
-  //   connection,
-  //   el: vrEl,
-  // });
+  const connection = resource.getTransfer("socket")?.connection;
+  const viewport = new ParaViewClient({
+    connection,
+    el: vrEl,
+  });
 
   axialViewport.useTool(TOOL_TYPE.WWWC);
   axialViewport.useTool(TOOL_TYPE.TRANSLATE, 2);

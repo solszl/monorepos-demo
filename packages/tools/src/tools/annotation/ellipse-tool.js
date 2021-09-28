@@ -252,10 +252,10 @@ class EllipseTool extends BaseAnnotationTool {
 
   _getArea() {
     // 计算面积
-    const { end } = this.data;
+    const { start, end } = this.data;
     const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } = this.imageState;
-    const a = Math.abs(end.x) / 2;
-    const b = Math.abs(end.y) / 2;
+    const a = Math.abs(start.x - end.x) / 2;
+    const b = Math.abs(start.y - end.y) / 2;
     const area = Math.PI * (a * columnPixelSpacing) * (b * rowPixelSpacing);
     return area;
   }

@@ -6,7 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <!-- <link rel="stylesheet" href="./index.css" /> -->
-    <link rel="stylesheet" href="paraview/test.css" />
+    <!-- <link rel="stylesheet" href="test.css" /> -->
+    <style>
+      ul,
+      li,
+      html,
+      body {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .app {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+      }
+      .app .left {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        border: 1px solid red;
+      }
+      .app .left .left-top {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .app .left .left-top .item {
+        width: 50%;
+        box-sizing: border-box;
+        border-right: 1px solid red;
+        border-bottom: 1px solid red;
+        display: flex;
+        height: 33.33%;
+        align-items: center;
+        justify-content: center;
+      }
+      .app .left .left-top .item:nth-of-type(2n) {
+        border-right: none;
+      }
+      .app .left .left-bottom {
+        height: 80px;
+        flex-basis: 80px;
+      }
+
+      .app .middle {
+        width: 120px;
+        flex-basis: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+
+      .app .middle .plane {
+        height: 120px;
+        border: 1px solid red;
+        border-left: none;
+        border-right: none;
+      }
+      .app .right {
+        width: 80px;
+        flex-basis: 80px;
+        border: 1px solid red;
+      }
+    </style>
   </head>
   <body>
     <!-- <div class="app">
