@@ -24,55 +24,74 @@ const isASCII = (str) => {
   return /^[\x00-\x7F]*$/.test(str);
 };
 
-const getValue = (dataset, tag, length) => {
-  if (length < 128) {
-    if (length === 2) {
-      return dataset.uint16(tag);
-    } else if (length === 4) {
-      return dataset.uint32(tag);
-    }
+const dumpDataSet = (dataSet, output) => {
+  try {
+    for (var propertyName in dataSet.elements) {
+      var element = dataSet.elements[propertyName];
 
-    const str = dataset.string(tag);
-    if (isASCII(str)) {
-      if (str !== undefined) {
-        return str;
+      const { vr, tag } = element;
+      let obj = {};
+      obj.tag = tag;
+      obj.vr = vr;
+      obj.length = element.length;
+      if (element.hadUndefinedLength) {
+        obj.length = -1;
       }
-    } else {
-      if (length !== 2 && length !== 4) {
-        return "binary data";
-      }
-    }
+      const attr = AllTags[tag] ?? ExternalTags[tag] ?? "Unknown";
+      obj.attr = attr;
+      if (element.items) {
+        obj.items = [];
+        element.items.forEach((item) => {
+          let out = {};
+          const itemObj = {};
+          dumpDataSet(item.dataSet, out);
+          Object.assign(itemObj, out);
+          obj.items.push(itemObj);
+        });
+      } else if (element.fragments) {
+        element.fragments.forEach((fragment, index) => {
+          let basicOffset;
+          if (element.basicOffsetTable) {
+            basicOffset = element.basicOffsetTable[index];
+          }
 
-    if (length === 0) {
-      return "";
+          let value = `offset=${fragment.offset}(${basicOffset});length=${fragment.length}`;
+        });
+      } else {
+        let value = "";
+        if (element.length < 128) {
+          // if (element.length === 2) {
+          //   value += "(" + dataSet.uint16(propertyName) + ")";
+          // } else if (element.length === 4) {
+          //   value += "(" + dataSet.uint32(propertyName) + ")";
+          // }
+
+          var str = dataSet.string(propertyName);
+          if (isASCII(str)) {
+            if (str !== undefined) {
+              value += `${str}`;
+            }
+          } else {
+            if (element.length !== 2 && element.length !== 4) {
+              value += "binary data";
+            }
+          }
+        } else {
+          value = "data too long to show.";
+        }
+
+        obj.value = value;
+      }
+
+      output[element.tag.toLocaleLowerCase()] = obj;
     }
-  } else {
-    return "data too long to show.";
+  } catch (err) {
+    console.error("dump error", err);
   }
 };
 
 export const dump = (dataset) => {
   const dumpObj = {};
-  try {
-    for (const propertyName in dataset.elements) {
-      const element = dataset.elements[propertyName];
-      const { tag, vr, length } = element;
-      const attr = AllTags[tag] ?? ExternalTags[tag] ?? "Unknown";
-      dumpObj[tag.toLocaleLowerCase()] = {
-        tag,
-        vr,
-        length,
-        attr,
-        value: getValue(dataset, tag, length),
-      };
-
-      if (attr === "Unknown") {
-        // console.log("dump unknown key", tag);
-      }
-    }
-  } catch (err) {
-    console.error("dump error", err);
-  }
-
+  dumpDataSet(dataset, dumpObj);
   return dumpObj;
 };

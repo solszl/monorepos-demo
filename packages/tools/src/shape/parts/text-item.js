@@ -13,7 +13,7 @@ class TextItem extends Group {
     this.textfield2 = new TextField({
       height: 20,
       x: 70,
-      width: 90,
+      width: 100,
     });
     this.textfield2.align("right");
     this.textfield2.draggable(false);

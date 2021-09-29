@@ -84,7 +84,7 @@ class EllipseTool extends BaseAnnotationTool {
     const group = new Group({
       id: "textGroup",
       draggable: true,
-      width: 165,
+      width: 170,
       height: 100,
     });
     group.on("dragmove", this.dragText.bind(this));
