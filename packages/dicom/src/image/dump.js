@@ -24,6 +24,14 @@ const isASCII = (str) => {
   return /^[\x00-\x7F]*$/.test(str);
 };
 
+const isStringVR = (vr) => {
+  return ["AT", "FL", "FD", "OB", "OF", "OW", "SI", "SQ", "SS", "UL", "US"].includes(vr.toLocaleUpperCase());
+};
+
+const escapeSpecialCharacters = (str) => {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+};
+
 const dumpDataSet = (dataSet, output) => {
   try {
     for (var propertyName in dataSet.elements) {
@@ -37,6 +45,7 @@ const dumpDataSet = (dataSet, output) => {
       if (element.hadUndefinedLength) {
         obj.length = -1;
       }
+
       const attr = AllTags[tag] ?? ExternalTags[tag] ?? "Unknown";
       obj.attr = attr;
       if (element.items) {
@@ -60,20 +69,57 @@ const dumpDataSet = (dataSet, output) => {
       } else {
         let value = "";
         if (element.length < 128) {
-          // if (element.length === 2) {
-          //   value += "(" + dataSet.uint16(propertyName) + ")";
-          // } else if (element.length === 4) {
-          //   value += "(" + dataSet.uint32(propertyName) + ")";
-          // }
+          if (!vr) {
+            if (element.length === 2) {
+              value = dataSet.uint16(propertyName);
+            } else if (element.length === 4) {
+              value = dataSet.uint32(propertyName);
+            }
 
-          var str = dataSet.string(propertyName);
-          if (isASCII(str)) {
-            if (str !== undefined) {
-              value += `${str}`;
+            var str = dataSet.string(propertyName);
+            if (isASCII(str)) {
+              if (str) {
+                value = `${str}`;
+              }
+            } else {
+              if (element.length !== 2 && element.length !== 4) {
+                value = "binary data";
+              }
             }
           } else {
-            if (element.length !== 2 && element.length !== 4) {
-              value += "binary data";
+            if (!isStringVR(vr)) {
+              let str = dataSet.string(propertyName);
+              if (isASCII(str)) {
+                if (str) {
+                  value = escapeSpecialCharacters(str);
+                }
+              } else {
+                if (element.length !== 2 && element.length !== 4) {
+                  value = "binary data";
+                }
+              }
+            } else if (vr === "US") {
+              value = dataSet.uint16(propertyName);
+            } else if (vr === "SS") {
+              value = dataSet.int16(propertyName);
+            } else if (vr === "UL") {
+              value = dataSet.uint32(propertyName);
+            } else if (vr === "SL") {
+              value = dataSet.uint32(propertyName);
+            } else if (vr == "FD") {
+              value = dataSet.double(propertyName);
+            } else if (vr == "FL") {
+              value = dataSet.float(propertyName);
+            } else if (vr === "OB" || vr === "OW" || vr === "UN" || vr === "OF" || vr === "UT") {
+              value = "binary data";
+            } else if (vr === "AT") {
+              var group = dataSet.uint16(propertyName, 0);
+              var groupHexStr = ("0000" + group.toString(16)).substr(-4);
+              var element = dataSet.uint16(propertyName, 1);
+              var elementHexStr = ("0000" + element.toString(16)).substr(-4);
+              value += "x" + groupHexStr + elementHexStr;
+            } else if (vr === "SQ") {
+            } else {
             }
           }
         } else {
