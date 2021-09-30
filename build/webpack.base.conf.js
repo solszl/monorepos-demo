@@ -30,6 +30,7 @@ const baseConfig = {
     alias: {
       "@pkg": resolve("packages"),
     },
+    fallback: { zlib: false },
   },
   stats: {
     children: true,
