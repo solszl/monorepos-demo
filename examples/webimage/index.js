@@ -17,7 +17,8 @@ vm.resource = resource;
 
 const imageUrls = [
   // "https://rawgit.com/cornerstonejs/cornerstoneWebImageLoader/master/examples/Renal_Cell_Carcinoma.jpg",
-  "http://192.168.108.38:2333/common/media/public/1/IMAGE/patient/539/wsi/preview.jpg",
+  // "http://192.168.108.38:2333/common/media/public/1/IMAGE/patient/539/wsi/preview.jpg",
+  "http://192.168.109.138:2333/common/media/public/1/IMAGE/patient/540/wsi/rzy_n_43s_0002467281_jch_E15-282520200701180332005.jpg",
 ];
 
 const seriesId = "1.2.3.4.5";

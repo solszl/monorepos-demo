@@ -171,6 +171,7 @@ class AbstractViewport extends Component {
         rowPixelSpacing: this.image.rowPixelSpacing,
         slope: this.image.slope,
         intercept: this.image.intercept,
+        imageType: this.image.imageType ?? "dicom",
       });
       needDraw = false;
     }

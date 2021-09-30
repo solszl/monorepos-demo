@@ -12,7 +12,6 @@ export const postprocessor = async (image, task) => {
       const urlCreator = window.URL || window.webkitURL;
       const imageUrl = urlCreator.createObjectURL(blob);
       tempImg.src = imageUrl;
-      // document.body.append(tempImg);
       tempImg.onload = (evt) => {
         img.columns = tempImg.width;
         img.rows = tempImg.height;
@@ -26,6 +25,7 @@ export const postprocessor = async (image, task) => {
         img.slope = 1;
         img.seriesId = seriesId;
         img.instanceNumber = index;
+        img.imageType = "webImage";
 
         canvas.width = tempImg.width;
         canvas.height = tempImg.height;

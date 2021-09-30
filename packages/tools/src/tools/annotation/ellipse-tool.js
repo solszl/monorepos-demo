@@ -12,6 +12,10 @@ import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId, toCT } from "../utils";
 import { worldToLocal } from "../utils/coords-transform";
+const MeasureUnit = {
+  dicom: "mm",
+  webImage: "px",
+};
 class EllipseTool extends BaseAnnotationTool {
   constructor(config = {}) {
     super(config);
@@ -24,7 +28,7 @@ class EllipseTool extends BaseAnnotationTool {
       position: { x: 0, y: 0 },
       start: { x: 0, y: 0 },
       end: { x: 0, y: 0 },
-      textBox: { dragged: false, x: 0, y: 0 },
+      textBox: { dragged: false, x: 0, y: 0, suffix: "mm" },
     };
 
     this.isDown = false;
@@ -109,7 +113,7 @@ class EllipseTool extends BaseAnnotationTool {
 
   renderData() {
     super.renderData();
-    const { position, start, end, textBox } = this.data;
+    const { position, start, end } = this.data;
     this.setPosition(position);
     this.findOne("#startAnchor").setPosition(start);
     this.findOne("#endAnchor").setPosition(end);
@@ -129,7 +133,7 @@ class EllipseTool extends BaseAnnotationTool {
 
     const group = this.findOne("#textGroup");
     const { textBox: data } = this.data;
-    group.findOne("#area")?.setText("面积：", `${+data.area.toFixed(2)}mm²`);
+    group.findOne("#area")?.setText("面积：", `${+data.area.toFixed(2)}${data.suffix}²`);
     group.findOne("#variance")?.setText("方差：", +data.variance.toFixed(2));
     group.findOne("#avg")?.setText("平均值：", +data.avg.toFixed(2));
     group.findOne("#max")?.setText("最大值：", data.max);
@@ -325,7 +329,8 @@ class EllipseTool extends BaseAnnotationTool {
     this.imageState = imageState();
     const pixelData = this._getPixelData();
     const data = this._getInfo(pixelData);
-    this.data.textBox = Object.assign({}, this.textBox, this.data.textBox, data);
+    this.data.textBox.suffix = MeasureUnit[this.imageState.imageType] ?? "mm";
+    this.data.textBox = Object.assign({}, this.data.textBox, data);
   }
 }
 
