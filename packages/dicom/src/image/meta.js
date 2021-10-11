@@ -1,14 +1,14 @@
-import { DataSet } from "dicom-parser";
+import * as dicomParser from "dicom-parser";
 import { Tags } from "./tags";
+const { DataSet } = dicomParser;
 /**
  *
  *
  * @param { DataSet } dataset
  */
 export const getMetaData = (dataset) => {
-  const pixelSpacing =
-    getNumberValues(dataset, Tags.ImagerPixelSpacing_CT, 2) ||
-    getNumberValues(dataset, Tags.ImagerPixelSpacing_CR, 2);
+  const pixelSpacing = getNumberValues(dataset, Tags.ImagerPixelSpacing_CT, 2) ||
+    getNumberValues(dataset, Tags.ImagerPixelSpacing_CR, 2) || [0.5, 0.5];
 
   const metaData = {
     byteArray: dataset.byteArray,
@@ -69,6 +69,9 @@ export const getMetaData = (dataset) => {
     patientName: stringUTF8(dataset, Tags.PatientName) || "",
     patientSex: dataset.string(Tags.PatientSex) || "",
     patientAge: dataset.string(Tags.PatientAge) || "",
+    studyId: dataset.string(Tags.StudyInstanceUID),
+
+    seriesId: dataset.string(Tags.SeriesInstanceUID),
   };
 
   return metaData;
@@ -143,11 +146,7 @@ function readCodeList(byteArray, position, length) {
   return result;
 }
 
-const getCompressionState = ({
-  lossyImageCompression,
-  lossyImageCompressionRatio,
-  lossyImageCompressionMethod,
-}) => {
+const getCompressionState = ({ lossyImageCompression, lossyImageCompressionRatio, lossyImageCompressionMethod }) => {
   if (lossyImageCompression === "01" && lossyImageCompressionRatio !== "") {
     const compressionMethod = lossyImageCompressionMethod || "Lossy: ";
     const compressionRatio = parseFloat(lossyImageCompressionRatio).toFixed(2);

@@ -8,15 +8,17 @@ export const getLut = (image, displayState) => {
     windowWidth = ww;
   }
 
-  const cacheKey = `${windowWidth}-${windowCenter}-${+invert}`;
-  if (!lutCache[cacheKey]) {
-    lutCache[cacheKey] = generateLut(image, windowWidth, windowCenter, invert);
-  }
-
   // 做一个缓存清理机制
   if (Reflect.ownKeys(lutCache).length > 50) {
     lutCache = {};
   }
+
+  const { minPixelValue, maxPixelValue } = image;
+  const cacheKey = `${windowWidth}-${windowCenter}-${+invert}-${minPixelValue}-${maxPixelValue}`;
+  if (!lutCache[cacheKey]) {
+    lutCache[cacheKey] = generateLut(image, windowWidth, windowCenter, invert);
+  }
+
   return lutCache[cacheKey];
 };
 
@@ -37,7 +39,7 @@ const generateLut = (image, windowWidth, windowCenter, invert) => {
     }
   } else {
     for (let i = minPixelValue; i <= maxPixelValue; i += 1) {
-      lut[i - offset] = 255 - wwwcLutFn[mLutFn[i]];
+      lut[i - offset] = 255 - wwwcLutFn(mLutFn(i));
     }
   }
 

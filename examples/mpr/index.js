@@ -1,32 +1,25 @@
-import { Core } from "@saga/core";
-import { Resource } from "@saga/loader";
-import { Volume, Plane, ObliqueSampler, factory as ViewFactory } from "@saga/viewer";
+import { Resource, ViewportManager } from "@pkg/entry/src";
+import { ObliqueSampler, Plane, Volume } from "@pkg/viewer/src";
 import { vec3 } from "gl-matrix";
-const seriesId = "1.2.410.200010.1160924.3152.150159.175159.1169700.175159";
-const fs = "http://192.168.109.92:8000";
+const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
+const fs = "http://192.168.111.115:8000";
 let currentIndex = 0;
-const API = "/ct_chest/api/combine/";
+const API = "/api/v1/series/";
 
-const core = new Core({ fps: 10 });
-const resource = new Resource();
+const vm = new ViewportManager();
+vm.resource = new Resource();
 
 let plane;
 /** @type {ObliqueSampler} */
 let sampler;
 let center, vector;
 
-// let plane1 = new Plane();
-// plane1.makeFrom3Points([2, -1, 4], [-1, 3, -2], [0, 2, 3]);
-// console.log("111", plane1);
-// let plane2 = new Plane();
-// plane2.makeFrom1Point1Vector([2, -3, 0], [1, -2, 3]);
-// console.log("222", plane2);
-
-const standard = ViewFactory({
+const standard = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
+  alias: "axial",
+  transferMode: "web",
   el: document.querySelector("#axis"),
-  core,
 });
 
 const fetchData = async (seriesId) => {
@@ -35,27 +28,27 @@ const fetchData = async (seriesId) => {
   return json;
 };
 
-fetchData(seriesId).then((json) => {
-  const imageUrls = json.series.images.map((i) => {
+fetchData(seriesId).then(async (json) => {
+  const imageUrls = json.data.images.map((i) => {
     return `${fs}/${i.storagePath}`;
   });
 
-  // const imageUrls = Array.from(
-  //   new Array(303),
-  //   (_, i) => `http://localhost:8887/IMG${(i + 1).toString().padStart(4, 0)}.dcm`
-  // );
-
-  resource.addItemUrls(seriesId, imageUrls, "standard");
+  const resource = vm.resource;
+  await resource.initTransfer([{ mode: "web" }]);
+  console.log(standard.option);
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  transfer.addItemUrls(seriesId, imageUrls, alias);
 
   setTimeout(async () => {
-    const image = await resource.getImage(seriesId, currentIndex, "standard");
-    standard.showImage(image);
+    const image = await transfer.getImage(seriesId, currentIndex, alias);
+    standard.imageView.showImage(image);
   }, 0);
 
-  resource.loadSeries(seriesId, "standard");
+  transfer.loadSeries(seriesId, alias);
 
   setTimeout(async () => {
-    const data = resource.getImages(seriesId, "standard");
+    const data = transfer.getImages(seriesId, alias);
     const volume = new Volume();
     console.time("cost");
     volume.pretreatmentData(data);
@@ -64,7 +57,7 @@ fetchData(seriesId).then((json) => {
 
     // center = volume.dimensionInfo.center;
     const [x, y, z] = volume.dimensionInfo.sizeInPx;
-    center = [192.99999999999997, 151.49999999999997, 152.5113635452896];
+    center = [190, 150, 152];
     vector = [0, 1, 0]; // [1,0,0],[0,1,0],[0,0,1]
     plane = new Plane();
     plane.makeFrom1Point1Vector(center, vector);
@@ -74,11 +67,11 @@ fetchData(seriesId).then((json) => {
     sampler.update();
     sampler.startSampling();
 
-    let tmpImage = await resource.getImage(seriesId, currentIndex, "standard");
+    let tmpImage = await transfer.getImage(seriesId, currentIndex, alias);
     tmpImage.pixelData = sampler.image.data;
     tmpImage.rows = sampler.image.height;
     tmpImage.columns = sampler.image.width;
-    standard.showImage(tmpImage);
+    standard.imageView.showImage(tmpImage);
   }, 7000);
 });
 
@@ -86,19 +79,26 @@ document.addEventListener("wheel", async (e) => {
   let offset = Math.sign(e.wheelDelta);
   currentIndex += offset;
 
-  plane.makeFrom1Point1Vector(vec3[offset > 0 ? "add" : "sub"](center, center, vector), vector);
+  plane.makeFrom1Point1Vector(
+    vec3[offset > 0 ? "add" : "sub"](center, center, vector),
+    vector
+  );
   sampler.plane = plane;
 
   console.log(center, vector);
   sampler.update();
   sampler.startSampling();
-  let tmpImage = await resource.getImage(seriesId, currentIndex, "standard");
+
+  const resource = vm.resource;
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  let tmpImage = await transfer.getImage(seriesId, currentIndex, alias);
   tmpImage.pixelData = sampler.image.data;
   tmpImage.rows = sampler.image.height;
   tmpImage.columns = sampler.image.width;
-  standard.showImage(tmpImage);
+  standard.imageView.showImage(tmpImage);
 
-  resource.cacheItem(seriesId, { key: currentIndex, value: tmpImage }, "sagittal");
+  transfer.cacheItem(seriesId, { key: currentIndex, value: tmpImage }, alias);
 
   console.log("currentIndex", currentIndex);
 

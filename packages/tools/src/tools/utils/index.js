@@ -6,8 +6,8 @@ export const SELECTOR_ENUM = {
 };
 
 import { Node } from "konva/lib/Node";
-import UIComponent from "../../shape/parts/ui-component";
 import { TOOL_COLORS } from "../../constants";
+import UIComponent from "../../shape/parts/ui-component";
 export const activeUtil = {
   on: (shape) => {
     let selector = ".node-anchor";
@@ -64,7 +64,10 @@ export const activeUtil = {
  * @param { string } cursor
  */
 export const cursor = (ctx, cursor = "auto") => {
-  ctx.getStage().container().style.cursor = cursor || "auto";
+  const stage = ctx.getStage();
+  if (stage) {
+    stage.container().style.cursor = cursor || "auto";
+  }
 };
 
 /**
@@ -92,6 +95,10 @@ export function getRelativePointerPosition(node, round = false) {
   const { x, y } = transform.point(pos);
   return { x: ~~x, y: ~~y };
 }
+
+export const toCT = (pixelData, slope, intercept) => {
+  return pixelData.map((value) => value * slope + intercept);
+};
 
 export const connectTextNode = (node, from, dashLine) => {
   const text = node;
@@ -124,6 +131,7 @@ export const connectTextNode = (node, from, dashLine) => {
 
   // 定义虚线的点
   dashLine.points([formPoint[0], formPoint[1], toPoint[0], toPoint[1]]);
+  dashLine.show();
 };
 
 export const randomId = () => {

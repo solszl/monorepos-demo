@@ -1,13 +1,16 @@
 import UIComponent from "../../shape/parts/ui-component";
+import { activeUtil } from "../utils";
 
 class BaseTool extends UIComponent {
   constructor(config = {}) {
     super(config);
     this._data = null;
+    this.UIInitialed = false;
   }
 
   initialUI() {}
   verifyDataLegal() {}
+  convertLocalCoords(data) {}
   renderData() {}
 
   mouseEnter(e) {}
@@ -22,14 +25,25 @@ class BaseTool extends UIComponent {
   mouseDoubleClick(e) {}
   mouseWheel(e) {}
   mouseWheelClick(e) {}
+  documentMouseMove(e) {}
+  documentMouseUp(e) {}
 
   set data(val) {
     this._data = val;
+    this.careStageEvent = false;
+    if (!this.UIInitialed) {
+      this.initialUI();
+      activeUtil.off(this);
+    }
     this.renderData();
   }
 
   get data() {
     return this._data;
+  }
+
+  setData(val) {
+    this._data = val;
   }
 }
 

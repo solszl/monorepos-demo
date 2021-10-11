@@ -1,5 +1,6 @@
-import DicomParser from "dicom-parser";
+import * as DicomParser from "dicom-parser";
 import { decode } from "./image/decode";
+import { dump } from "./image/dump";
 import { getMetaData } from "./image/meta";
 import { getPixelData } from "./image/pixel";
 
@@ -56,20 +57,32 @@ const getMinMaxValues = (pixelData) => {
   let pixel;
   while (i < len) {
     pixel = pixelData[i];
-    min = min < pixel ? min : pixel;
-    max = max > pixel ? max : pixel;
+    min = Math.min(min, pixel);
+    max = Math.max(max, pixel);
     i += 1;
   }
 
   return { min, max };
 };
+
 export const createImage = async (arrayBuffer) => {
-  // origin parse data.
   const dataset = getDataset(arrayBuffer);
-  // origin metadata
   let meta = getMetaData(dataset);
-  // origin pixelDataSource
   const pixelDataSource = getPixelData(dataset, meta);
   meta = await updateMetaForPixelData(meta, pixelDataSource);
+  meta.allTags = dump(dataset); // 1ms 以内
   return postprocess(meta);
+};
+
+export const createWebImage = async (arrayBuffer) => {
+  const img = {
+    data: arrayBuffer,
+  };
+
+  return img;
+};
+
+export default {
+  createImage,
+  createWebImage,
 };

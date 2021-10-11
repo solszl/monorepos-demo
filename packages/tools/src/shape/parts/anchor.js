@@ -1,5 +1,5 @@
 import { Circle } from "konva/lib/shapes/Circle";
-import { TOOL_COLORS, TOOL_ITEM_SELECTOR, TOOL_CONSTANTS } from "./../../constants";
+import { TOOL_COLORS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR } from "./../../constants";
 
 class Anchor extends Circle {
   constructor(config = {}) {

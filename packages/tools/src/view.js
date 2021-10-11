@@ -1,10 +1,15 @@
-import { Component } from "@saga/core";
+import { Component } from "@pkg/core/src";
+import { DD } from "konva/lib/DragAndDrop";
 import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
-import ToolState from "./tool-state";
-import MouseTrap from "./trap/mouse-trap";
-import { INTERNAL_EVENTS } from "./constants";
 import Area from "./area";
+import { INTERNAL_EVENTS } from "./constants";
+import { TOOL_CONSTRUCTOR } from "./constructor";
+import { removeImageState, useImageState } from "./state/image-state";
+import ToolState from "./state/tool-state";
+import { removeViewportState } from "./state/viewport-state";
+import { transform as transformCoords } from "./tools/utils/coords-transform";
+import MouseTrap from "./trap/mouse-trap";
 
 class View extends Component {
   constructor(option = {}) {
@@ -30,12 +35,18 @@ class View extends Component {
     toolContainer.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2;`;
     el.appendChild(toolContainer);
 
-    const stage = new Stage({
-      container: toolContainer,
-      width: toolContainer.clientWidth,
-      height: toolContainer.clientHeight,
-    });
+    const stage = new Stage(
+      Object.assign(
+        {},
+        {
+          container: toolContainer,
+          id: this.id,
+        },
+        this._getRootSize(el)
+      )
+    );
     this.stage = stage;
+    this.area.stageId = stage.id();
 
     stage.add(
       new Layer({
@@ -43,17 +54,71 @@ class View extends Component {
       })
     );
 
-    stage.on(INTERNAL_EVENTS.DATA_CREATED, (e) => {
-      console.log(e);
+    // 整理事件监听
+    Object.values(INTERNAL_EVENTS).forEach((eventName) => {
+      stage.on(eventName, (info) => {
+        this.emit(eventName, info);
+      });
     });
-
-    stage.on(INTERNAL_EVENTS.DATA_UPDATED, (e) => {});
-
-    stage.on(INTERNAL_EVENTS.DATA_REMOVED, (e) => {});
   }
 
   updateViewport(config = {}) {
     this.area.update(config);
+  }
+
+  updateImageState(config = {}) {
+    const [, setImageState] = useImageState(this.stage.id());
+    setImageState(config);
+  }
+
+  destroy() {
+    removeImageState(this.stage.id());
+    removeViewportState(this.stage.id());
+    this.stage.destroy();
+  }
+
+  /**
+   * 设置工具层数据
+   *
+   * @param { array } data
+   * @memberof View
+   */
+  renderData(data = new Map()) {
+    const layer = this.stage.findOne("#toolsLayer");
+    if (!layer) {
+      console.error(`can't find tools layer.`);
+    }
+
+    // 如果有正在拖拽的， 就先取消拖拽，再清空当前layer
+    DD?._dragElements.clear();
+    layer.removeChildren();
+    data.forEach((obj) => {
+      const { type, id } = obj;
+      const item = new TOOL_CONSTRUCTOR[type]();
+      item.$stage = layer.getStage();
+      item.data = transformCoords(obj);
+      item.name(id);
+    });
+    layer.batchDraw();
+  }
+
+  resetData(data = new Map()) {
+    const layer = this.stage.findOne("#toolsLayer");
+    if (!layer) {
+      console.error(`can't find tools layer.`);
+    }
+    data.forEach((obj) => {
+      const item = layer.findOne(`.${obj.id}`);
+      const data = transformCoords(obj);
+      item.setData(data);
+      item.renderData();
+    });
+    layer.batchDraw();
+  }
+
+  _getRootSize(el) {
+    let { clientWidth, clientHeight } = el;
+    return { width: clientWidth, height: clientHeight };
   }
 }
 

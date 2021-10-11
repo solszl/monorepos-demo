@@ -1,4 +1,43 @@
+import { useViewportState } from "./state/viewport-state";
 import Transform from "./transform";
+export const transform = new Transform();
+
+const applyTransform = (stageId) => {
+  const [viewportState] = useViewportState(stageId);
+  const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } = viewportState();
+
+  transform.reset();
+
+  if (x || y) {
+    transform.translate(x, y);
+  }
+
+  transform.translate(rootWidth / 2, rootHeight / 2);
+
+  if (flip) {
+    const { h = false, v = false } = flip;
+    const fv = v ? -1 : 1;
+    const fh = h ? -1 : 1;
+    transform.scale(fh, fv);
+  }
+
+  if (!!scale) {
+    transform.scale(scale, scale);
+  }
+
+  if (!!rotate) {
+    transform.rotate(rotate);
+  }
+
+  transform.translate(-width / 2, -height / 2);
+
+  return transform.m;
+};
+
+export const verify = (x, y, width, height) => {
+  const [ox, oy] = transform.invertPoint(x, y);
+  return ox >= 0 && ox <= width && oy >= 0 && oy <= height;
+};
 
 class Area {
   constructor(config = {}) {
@@ -8,36 +47,13 @@ class Area {
   }
 
   update(config) {
-    const { rootSize, offset, scale, rotation } = config;
-    // 设置视窗
-    Object.assign(viewState, rootSize ?? {});
-    Object.assign(viewState, offset ?? {});
-    Object.assign(viewState, scale ?? {});
-    Object.assign(viewState, rotation ?? {});
+    const [viewportState, setViewportState] = useViewportState(this.stageId);
+    setViewportState(Object.assign({}, config, { stageId: this.stageId }));
 
-    // TODO: update transform
+    // console.log(viewportState());
+    // 初始化时缩放和reander同时触发，判断是否有transform所需数据
+    applyTransform(this.stageId);
   }
 }
-
-export const transform = new Transform();
-
-export const viewState = {
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  rotate: 0,
-  scale: 1,
-  rootWidth: 0,
-  rootHeight: 0,
-  centerX: 0,
-  centerY: 0,
-};
-
-export const verify = (x, y) => {
-  const [ox, oy] = transform.invertPoint(x, y);
-  // TODO: 根据viewState 判断是否在内部
-  return true;
-};
 
 export default Area;

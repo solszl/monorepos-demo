@@ -1,6 +1,7 @@
 import Transform from "./transform";
+const transform = new Transform();
 export const applyTransform = (displayState, canvas, renderCanvas) => {
-  const transform = new Transform();
+  transform.reset();
   const { offset, scale, rotate, flip } = displayState;
   if (offset) {
     transform.translate(offset.x, offset.y);

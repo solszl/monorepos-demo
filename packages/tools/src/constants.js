@@ -1,6 +1,3 @@
-import AngleTool from "./tools/annotation/angle-tool";
-import LengthTool from "./tools/annotation/length-tool";
-
 export const TOOL_CONSTANTS = {
   HIT_STROKE_WIDTH: 20,
   ANCHOR_HIT_STROKE_WIDTH: 20,
@@ -30,34 +27,39 @@ export const TOOL_ITEM_SELECTOR = {
 
 export const TOOL_TYPE = {
   STACK_SCROLL: "stack_scroll",
-  MOVE: "move",
+  STACK_WHEEL_SCROLL: "stack_wheel_scroll",
   MAGNIFYING: "magnifying",
-  ZOOM: "zoom",
   WWWC: "wwwc",
   LENGTH: "length",
   ANGLE: "angle",
   PROBE: "probe",
   ELLIPSE_ROI: "ellipse_roi",
-};
-
-export const EVENTS = {
-  MOUSE_DOWN: "tx_mouse_down",
-  MOUSE_UP: "tx_mouse_up",
-  MOUSE_CLICK: "tx_mouse_click",
-  MOUSE_DOUBLE_CLICK: "tx_mouse_double_click",
-  MOUSE_WHEEL: "tx_mouse_wheel",
+  POLYGON: "polygon",
+  ROTATION: "rotation",
+  SCALE: "scale",
+  TRANSLATE: "translate",
+  RECT: "rect",
+  INVERT_CMD: "invert_cmd",
+  FLIP_H_CMD: "flip_h_cmd",
+  FLIP_V_CMD: "flip_v_cmd",
+  WWWC_CMD: "wwwc_cmd",
+  RESET_CMD: "reset_cmd",
+  ROTATION_CMD: "rotation_cmd",
+  SCALE_CMD: "scale_cmd",
+  PLAY_CMD: "play_cmd",
+  STOP_CMD: "stop_cmd",
 };
 
 export const INTERNAL_EVENTS = {
   DATA_CREATED: "tx_data_created",
   DATA_UPDATED: "tx_data_updated",
   DATA_REMOVED: "tx_data_removed",
-  TOOL_ZOOM: "tx_tool_zoom",
   TOOL_TRANSLATE: "tx_tool_translate",
   TOOL_ROTATION: "tx_tool_rotation",
-};
-
-export const TOOL_CONSTRUCTOR = {
-  [TOOL_TYPE.LENGTH]: LengthTool,
-  [TOOL_TYPE.ANGLE]: AngleTool,
+  TOOL_SCALE: "tx_tool_scale",
+  TOOL_WWWC: "tx_tool_wwwc",
+  TOOL_STACK_CHANGE: "tx_stack_change",
+  TOOL_FLIPH: "tx_tool_flipH",
+  TOOL_FLIPV: "tx_tool_flipV",
+  TOOL_INVERT: "tx_tool_invert",
 };

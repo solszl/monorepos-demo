@@ -1,7 +1,8 @@
-import LoaderWorker from "./workers/loader.worker";
 import PromiseWorker from "promise-worker";
+import { postprocessor } from "./utils";
+import LoaderWorker from "./workers/loader.worker";
 
-/** @type { Boolean } 是否是xp系统 */
+/** @type { Boolean } 简单的通过判断是否是Chrome49版本来确定是否是xp系统 */
 const isXP = /Windows NT 5\.1.+Chrome\/49/.test(navigator.userAgent);
 
 class LoaderManager {
@@ -15,15 +16,19 @@ class LoaderManager {
 
   initLoader() {
     // 非xp留出一个加载线程供其他请求
-    const workerCount = isXP ? 2 : Math.min(navigator.hardwareConcurrency - 1, 5);
+    const workerCount = isXP
+      ? 2
+      : Math.min(navigator.hardwareConcurrency - 1, 5);
 
-    this.workers = Array.from(new Array(workerCount), (_, i) => i + 1).map((i) => {
-      const worker = new LoaderWorker();
-      const promiseWorker = new PromiseWorker(worker);
-      promiseWorker.id = i;
-      promiseWorker.working = false;
-      return promiseWorker;
-    });
+    this.workers = Array.from(new Array(workerCount), (_, i) => i + 1).map(
+      (i) => {
+        const worker = new LoaderWorker();
+        const promiseWorker = new PromiseWorker(worker);
+        promiseWorker.id = i;
+        promiseWorker.working = false;
+        return promiseWorker;
+      }
+    );
 
     console.log(this.workers);
   }
@@ -59,9 +64,10 @@ class LoaderManager {
     this.workers.push(worker);
 
     const { seriesId, plane, index, image } = data;
-    this.cacheManager.cacheItem(seriesId, { key: index, value: image }, plane);
+    let img = await postprocessor(image, task);
+    this.cacheManager.cacheItem(seriesId, { key: index, value: img }, plane);
 
-    resolve?.(image);
+    resolve?.(img);
     await this.delay(0); // 减压、涓流
     this._startCheck(); // 可能有更好的办法？？？
   }

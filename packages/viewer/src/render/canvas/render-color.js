@@ -13,13 +13,14 @@ export const renderColorImage = (image, lut, renderCanvas) => {
 
   const renderCanvasData = ctx.getImageData(0, 0, width, height);
   let imageDataIndex = 0;
-  let numPixels = width * height * samplesPerPixel;
+  let numPixels = width * height;
   let i = 0;
   while (i < numPixels * samplesPerPixel) {
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Red
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Green
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Blue
-    renderCanvasData.data[imageDataIndex++] = 255;
+    renderCanvasData.data[imageDataIndex++] = 255; // lut[pixelData[i++] + -image.minPixelValue];
+    i += 1;
   }
 
   ctx.putImageData(renderCanvasData, 0, 0);

@@ -1,4 +1,4 @@
-import { createImage } from "@saga/dicom";
+import { createImage, createWebImage } from "@pkg/dicom/src";
 import registerPromiseWorker from "promise-worker/register";
 
 const loadImage = async (imageId) => {
@@ -9,8 +9,22 @@ const loadImage = async (imageId) => {
   return image;
 };
 
-registerPromiseWorker(async (e) => {
-  const { imageUrl, seriesId, index, plane } = e;
-  const image = await loadImage(imageUrl);
+const loadWebImage = async (imageId) => {
+  const ab = await (await fetch(imageId)).arrayBuffer();
+  const image = await createWebImage(ab);
+  return image;
+};
+
+const LoaderWorker = registerPromiseWorker(async (e) => {
+  const { imageUrl, seriesId, index, plane, format } = e;
+  let image;
+  if (format === "dicom") {
+    image = await loadImage(imageUrl);
+  } else if (format === "webimage") {
+    image = await loadWebImage(imageUrl);
+  } else {
+  }
   return { seriesId, index, plane, image };
 });
+
+export { LoaderWorker };

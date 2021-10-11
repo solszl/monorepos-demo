@@ -9,6 +9,10 @@ class WebglRenderer {
   get renderData() {
     return this.renderCanvas;
   }
+
+  destroy() {
+    this.renderCanvas = null;
+  }
 }
 
 export default WebglRenderer;

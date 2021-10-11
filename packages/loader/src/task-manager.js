@@ -12,22 +12,6 @@ class TaskManager {
     this.tasks.push(new Task(obj));
   }
 
-  pickTask() {
-    return this.tasks.shift();
-  }
-
-  modifyTaskPriority(property, value, priority) {
-    this.tasks = this.tasks.map((task) => {
-      if (task?.[property] === value) {
-        task.priority = priority;
-      }
-
-      return task;
-    });
-
-    this.sort(this.tasks);
-  }
-
   sort(tasks) {
     tasks.sort((a, b) => a.priority - b.priority);
   }
@@ -52,8 +36,7 @@ class TaskManager {
     const fn0 = (task) => task;
     const fn1 = (task) => task.seriesId === seriesId;
     const fn2 = (task) => task.seriesId === seriesId && task.plane === plane;
-    const fn3 = (task) =>
-      task.seriesId === seriesId && task.plane === plane && task.index === index;
+    const fn3 = (task) => task.seriesId === seriesId && task.plane === plane && task.index === index;
     const sortFn = [fn0, fn1, fn2, fn3];
 
     return this.getTasks().filter(sortFn[length]);
@@ -78,13 +61,22 @@ class TaskManager {
     if (existIndex !== -1) {
       const oldTask = this.pendingTask[existIndex];
       oldTask.priority = Date.now();
-      this.pendingTask.splice(existIndex, 1, oldTask);
     } else {
       task.priority = Date.now();
       this.pendingTask.push(task);
     }
 
     this.sort(this.pendingTask);
+  }
+
+  removeTasks(seriesId) {
+    this.tasks.map((task) => {
+      if (task.seriesId === seriesId) {
+        task.remove = true;
+      }
+    });
+
+    this.tasks = this.tasks.filter((task) => !task?.remove).map((task) => task);
   }
 }
 
@@ -95,12 +87,13 @@ class TaskManager {
  */
 class Task {
   constructor(obj) {
-    const { url = "", seriesId = "", plane = "", index } = obj;
+    const { url = "", seriesId = "", plane = "", index, format = "dicom" } = obj;
     this.priority = 0;
     this.imageUrl = url;
     this.seriesId = seriesId;
     this.plane = plane;
     this.index = index;
+    this.format = format;
   }
 }
 

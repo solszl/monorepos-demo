@@ -1,7 +1,7 @@
 import CanvasRenderer from "./render/canvas";
 import WebglRenderer from "./render/webgl";
 import { webglSupported } from "./render/webgl/utils";
-import { StandardViewport } from "./viewports";
+import { PixelViewport, StandardViewport, VideoViewport } from "./viewports";
 
 export const factory = (option) => {
   let viewport = null; // 视窗
@@ -16,6 +16,12 @@ export const factory = (option) => {
   switch (option.plane) {
     case "standard":
       viewport = StandardViewport.create(option);
+      break;
+    case "pixel":
+      viewport = PixelViewport.create(option);
+      break;
+    case "video":
+      viewport = VideoViewport.create(option);
       break;
   }
 

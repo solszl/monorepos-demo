@@ -1,91 +1,44 @@
-import LoaderManager from "./loader-manager";
-import CacheManager from "./cache-manager";
-import PreloadManager from "./preload";
-import TaskManager from "./task-manager";
+import { SocketTransfer } from "@pkg/remote/src";
+import WebTransfer from "./strategies/web/web-transfer";
 
 class Resource {
   constructor() {
-    // 加载管理器
-    this.loaderManager = new LoaderManager();
-    // 预加载管理器
-    this.preloadManager = new PreloadManager();
-    // 缓存管理器
-    this.cacheManager = new CacheManager();
-    // 任务管理器
-    this.taskManager = new TaskManager();
-    this.loaderManager.cacheManager = this.cacheManager;
-    this.loaderManager.taskManager = this.taskManager;
-    this.preloadManager.taskManager = this.taskManager;
-
-    window.__TX_RESOURCE__ = this;
+    /** @type { Map <string, SocketTransfer | WebTransfer > } {@link SocketTransfer} {@link WebTransfer} */
+    this.transfers = new Map();
   }
 
   /**
+   * 初始化传输方案，支持web与socket两种
    *
-   * @param { string} seriesId
-   * @param { Array } imageUrls
-   * @param { string } [plane="axis"]
+   * @param { array } patterns
+   * @return {*}
    * @memberof Resource
    */
-  addItemUrls(seriesId, imageUrls, plane = "axis") {
-    imageUrls.forEach((url, index) => {
-      this.taskManager.addTask({ seriesId, url, plane, index });
-    });
+  async initTransfer(patterns) {
+    for await (const pattern of patterns) {
+      const { mode } = pattern;
+      if (this.transfers.has(mode)) {
+        return;
+      }
+
+      let constructor = mode === "socket" ? SocketTransfer : WebTransfer;
+      const transfer = new constructor(pattern);
+      await transfer.init();
+      this.transfers.set(mode, transfer);
+    }
+
+    this.transferInited = true;
   }
 
   /**
+   * 获取特定类型的传输方案
    *
-   *
-   * @param { string } seriesId
-   * @param { Array<string, object>} objArray
-   * @param { string } [plane="axis"]
+   * @param {string} [transferMode="web"]
+   * @return { WebTransfer | SocketTransfer } WebTransfer | SocketTransfer
    * @memberof Resource
    */
-  cacheItems(seriesId, objArray, plane = "axis") {
-    objArray.forEach((obj) => {
-      this.cacheItem(seriesId, obj, plane);
-    });
-  }
-
-  cacheItem(seriesId, obj, plane = "axis") {
-    this.cacheManager.cacheItem(seriesId, obj, plane);
-  }
-
-  async getImage(seriesId, index, plane = "axis") {
-    return new Promise((resolve, reject) => {
-      const image = this.cacheManager.getItem(seriesId, index, plane);
-      if (image) {
-        resolve(image);
-        this.preloadManager.buildPreloadTask({ seriesId, plane, index });
-        this.loaderManager.load();
-        return;
-      }
-
-      const task = this.taskManager.getTask(seriesId, plane, index)[0];
-      if (!task) {
-        console.error(`not have task ${seriesId}, ${plane}, ${index}.`);
-        return;
-      }
-
-      task.resolve = resolve;
-      this.taskManager.addPendingTask(task);
-      this.taskManager.sort(this.taskManager.pendingTask);
-
-      this.preloadManager.buildPreloadTask({ seriesId, plane, index });
-      this.loaderManager.load();
-    });
-  }
-
-  loadSeries(seriesId, plane) {
-    this.loaderManager.loadSeries(seriesId, plane);
-  }
-
-  purgeCache(seriesId, plane) {
-    this.cacheManager.purge(seriesId, plane);
-  }
-
-  getImages(seriesId, plane) {
-    return this.cacheManager.getItems(seriesId, plane);
+  getTransfer(transferMode = "web") {
+    return this.transfers.get(transferMode);
   }
 }
 

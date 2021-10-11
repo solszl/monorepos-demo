@@ -5,22 +5,33 @@ class UIComponent extends Group {
   constructor(config = {}) {
     super(config);
 
-    this.on("mouseover", this._onMouseOver.bind(this));
-    this.on("mouseout mouseleave", this._onMouseOut.bind(this));
+    if (config.useDefaultMouseEffect ?? true) {
+      // 绑定鼠标交互样式与外观样式。
+      this._bindMouseEffect();
+    }
   }
 
-  fromData(val) {}
-
-  toData() {}
-
-  _onMouseOver(event) {
-    cursor(this, "pointer");
-    activeUtil.on(this);
-  }
-
-  _onMouseOut(event) {
-    cursor(this);
-    activeUtil.off(this);
+  _bindMouseEffect() {
+    let dragging = false;
+    this.on("mouseover", (evt) => {
+      cursor(this, "grab");
+      activeUtil.on(this);
+    });
+    this.on("mousedown", (evt) => {
+      cursor(this, "grabbing");
+      dragging = true;
+    });
+    this.on("mouseout mouseleave", (evt) => {
+      if (dragging) {
+        return;
+      }
+      cursor(this);
+      activeUtil.off(this);
+    });
+    this.on("dragend mouseup", (evt) => {
+      cursor(this, "grab");
+      dragging = false;
+    });
   }
 }
 

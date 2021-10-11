@@ -1,6 +1,6 @@
-import Volume from "./volume";
-import Plane from "./plane";
 import { vectorUtil } from "../math";
+import Plane from "./plane";
+import Volume from "./volume";
 
 class ObliqueSampler {
   /**
@@ -33,7 +33,7 @@ class ObliqueSampler {
    *  - 无限多个点， 边线与平面重叠
    */
   computeCubePlaneHitPoints() {
-    const EPS = 0.00001;
+    const EPS = 1e-5;
     let hitPoints = [];
     for (let i = 0; i < this._cubeEdges.length; i += 1) {
       const [pointVector, point] = this._cubeEdges[i];
@@ -321,7 +321,7 @@ class ObliqueSampler {
   _initObliqueImage(width, height) {
     if (this?.image?.width !== width || this?.image?.height !== height) {
       this._obliqueImage = {
-        data: new Uint16Array(width * height).fill(-2000),
+        data: new Uint16Array(width * height),
         mask: new Int8Array(width * height),
         width,
         height,
