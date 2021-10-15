@@ -67,6 +67,12 @@ export const localToWorld = (x, y) => {
   return coord.transformPoint(x, y);
 };
 
+/**
+ * 将x,y坐标系转换成为512下坐标
+ * @param {*} x 当前变换矩阵下的横坐标
+ * @param {*} y 当前变换矩阵下的横坐标
+ * @returns
+ */
 export const worldToLocal = (x, y) => {
   return coord.invertPoint(x, y);
 };
