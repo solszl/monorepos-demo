@@ -256,10 +256,12 @@ class EllipseTool extends BaseAnnotationTool {
 
   _getArea() {
     // 计算面积
-    const { start, end } = this.data;
+    const { position, start, end } = this.data;
     const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } = this.imageState;
-    const a = Math.abs(start.x - end.x) / 2;
-    const b = Math.abs(start.y - end.y) / 2;
+    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
+    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const a = Math.abs(localStart[0] - localEnd[0]) / 2;
+    const b = Math.abs(localStart[1] - localEnd[1]) / 2;
     const area = Math.PI * (a * columnPixelSpacing) * (b * rowPixelSpacing);
     return area;
   }
