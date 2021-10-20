@@ -19,8 +19,9 @@ export const renderColorImage = (image, lut, renderCanvas) => {
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Red
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Green
     renderCanvasData.data[imageDataIndex++] = lut[pixelData[i++] + -image.minPixelValue]; // Blue
-    renderCanvasData.data[imageDataIndex++] = 255; // lut[pixelData[i++] + -image.minPixelValue];
-    i += 1;
+    renderCanvasData.data[imageDataIndex++] = 255; //lut[pixelData[i++] + -image.minPixelValue];
+
+    i += samplesPerPixel === 4 ? 1 : 0; // 判断如果像素位数为4，则需要调过alpha通道
   }
 
   ctx.putImageData(renderCanvasData, 0, 0);
