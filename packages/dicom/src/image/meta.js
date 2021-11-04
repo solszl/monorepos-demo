@@ -53,7 +53,7 @@ export const getMetaData = (dataset) => {
     imageOrientationPatient: getNumberValues(dataset, Tags.PatientOrientation_CT, 6) ||
       getNumberValues(dataset, Tags.PatientOrientation_CR, 6) || [1, 0, 0, 0, 1, 0],
     imagePositionPatient: getNumberValues(dataset, Tags.PatientPosition_CT, 3) ||
-      getNumberValues(dataset, Tags.PatientPosition_CT, 3) || [0, 0, 0],
+      getNumberValues(dataset, Tags.PatientPosition_CR, 3) || [0, 0, 0],
     sliceThickness: getNumberValue(dataset, Tags.SliceThickness) || 1,
     spacingBetweenSlices: getNumberValue(dataset, Tags.SpacingBetweenSlices),
     imageCompression: getCompressionState({

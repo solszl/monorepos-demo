@@ -42,14 +42,15 @@ class API extends Component {
     });
   }
 
-  reset_cmd() {
+  reset_cmd(useViewportState = true) {
     const [initialState] = useViewportInitialState(this.stageId);
     const [initialImageState] = useImageInitialState(this.stageId);
     const { rotate, offset, scale } = initialState;
     this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
     this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset });
     this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });
-    this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc: initialImageState.wwwc });
+    // 如果不适用viewport 的默认属性。则从图里读取
+    this.emit(INTERNAL_EVENTS.TOOL_WWWC, useViewportState ?? { wwwc: initialImageState.wwwc });
     this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
     this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
     this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });

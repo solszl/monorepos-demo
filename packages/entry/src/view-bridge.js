@@ -114,6 +114,13 @@ class Viewport extends Component {
     this._toolView = toolView;
     this._imageView = imageView;
     this.api = api;
+
+    const { disableTools = [] } = opt;
+    if (Array.isArray(disableTools)) {
+      this.disableTools = disableTools;
+    } else if (typeof disableTools === "string") {
+      this.disableTools = "all";
+    }
   }
 
   get toolView() {
@@ -125,11 +132,19 @@ class Viewport extends Component {
   }
 
   useTool(toolType, button = 1) {
+    if (this.disableTools === "all" || this.disableTools.includes(toolType)) {
+      return;
+    }
+
     // 默认绑定左键
     this.toolView.useTool(toolType, button);
   }
 
   useCmd(type, param, dispatch = true) {
+    if (this.disableTools === "all" || this.disableTools.includes(type)) {
+      return;
+    }
+
     this.api?.[type]?.(param, dispatch);
   }
 
