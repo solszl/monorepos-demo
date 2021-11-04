@@ -1,19 +1,19 @@
 module.exports = (props) => {
   props.cache(true);
-  const presetConfig =
-    props.env === "es6"
-      ? {
-          targets: "latest",
-        }
-      : {
-          useBuiltIns: "usage",
-          // shippedProposals: true,
-          corejs: 2,
-        };
+  const presetConfig = {
+    targets: {
+      chrome: "49",
+    },
+    useBuiltIns: "usage",
+    corejs: {
+      version: 3,
+      proposals: true,
+    },
+  };
 
   const presets = [["@babel/preset-env", presetConfig]];
   const plugins = [
-    ["@babel/plugin-transform-runtime", { corejs: 2 }],
+    ["@babel/plugin-transform-runtime"],
     "@babel/plugin-proposal-export-default-from", // Stage 1
     "@babel/plugin-proposal-logical-assignment-operators",
     ["@babel/plugin-proposal-optional-chaining", { loose: false }],

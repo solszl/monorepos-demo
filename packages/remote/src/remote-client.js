@@ -1,26 +1,25 @@
-import SmartConnect from "wslink/src/SmartConnect";
-import { API_METHOD } from "./constants";
-import { MPR } from "./mpr";
+import { SmartConnect } from "wslink/src";
 class SocketTransfer {
   constructor(cfg = {}) {
     this.config = cfg;
   }
 
   async init() {
-    const { host, port } = this.config;
+    const { host, port, route } = this.config;
 
     const config = {
-      sessionURL: `ws://${host}:${port}/ws`,
+      sessionURL: `ws://${host}:${port}/${route}`,
     };
     const sc = SmartConnect.newInstance({ config });
     const session = await this.connect(sc).catch((err) => {
+      console.log(err);
       return false;
     });
     this.connection = sc;
-    const tags = await session.call(API_METHOD.tag);
+    // const tags = await session.call(API_METHOD.tag);
 
-    this.mpr = new MPR({ tags, session });
-    console.log(tags);
+    // this.mpr = new MPR({ tags, session });
+    // console.log(tags);
     return true;
   }
 
@@ -32,7 +31,10 @@ class SocketTransfer {
       });
       sc.onConnectionError((callback) => {
         console.log("connected error");
-        reject();
+        reject(new Error("connected error"));
+      });
+      sc.onConnectionClose((data, err) => {
+        reject(new Error(err));
       });
       sc.connect();
     });
