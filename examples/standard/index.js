@@ -30,7 +30,7 @@ const fetchData = async (seriesId) => {
 
 const main = async () => {
   const imageUrls = [
-    "http://192.168.111.115:8000/RESULT/ssr/1.3.46.670589.33.1.63758067581447369900002.4616848034254364611/dcm/filmImages/VR/289FRONT.dcm",
+    "http://10.0.70.3:8000/ct_heart/4487824/1.2.124.113532.55507.34297.41430.20190318.134932.89059128/1.3.12.2.1107.5.1.4.74356.30000019031800002060400067195/1.3.12.2.1107.5.1.4.74356.30000019031800002060400067348",
   ];
   const resource = vm.resource;
   await resource.initTransfer([{ mode: "web" }]);

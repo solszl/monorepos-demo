@@ -1,7 +1,7 @@
 import { Resource, ViewportManager } from "@pkg/entry/src";
-import { ObliqueSampler, Plane, Volume } from "@pkg/viewer/src";
+import { ObliqueSampler } from "@pkg/viewer/src";
 import { vec3 } from "gl-matrix";
-const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
+const seriesId = "1.3.46.670589.33.1.63758067581447369900002.4616848034254364611";
 const fs = "http://192.168.111.115:8000";
 let currentIndex = 0;
 const API = "/api/v1/series/";
@@ -40,49 +40,44 @@ fetchData(seriesId).then(async (json) => {
   const transfer = resource.getTransfer(transferMode);
   transfer.addItemUrls(seriesId, imageUrls, alias);
 
-  setTimeout(async () => {
-    const image = await transfer.getImage(seriesId, currentIndex, alias);
-    standard.imageView.showImage(image);
-  }, 0);
+  const image = await transfer.getImage(seriesId, currentIndex, alias);
+  standard.imageView.showImage(image);
 
   transfer.loadSeries(seriesId, alias);
 
-  setTimeout(async () => {
-    const data = transfer.getImages(seriesId, alias);
-    const volume = new Volume();
-    console.time("cost");
-    volume.pretreatmentData(data);
-    window.__VV__ = volume;
-    console.timeEnd("cost");
+  // setTimeout(async () => {
+  //   const data = transfer.getImages(seriesId, alias);
+  //   const volume = new Volume();
+  //   console.time("cost");
+  //   volume.pretreatmentData(data);
+  //   window.__VV__ = volume;
+  //   console.timeEnd("cost");
 
-    // center = volume.dimensionInfo.center;
-    const [x, y, z] = volume.dimensionInfo.sizeInPx;
-    center = [190, 150, 152];
-    vector = [0, 1, 0]; // [1,0,0],[0,1,0],[0,0,1]
-    plane = new Plane();
-    plane.makeFrom1Point1Vector(center, vector);
-    console.log(plane);
+  //   // center = volume.dimensionInfo.center;
+  //   const [x, y, z] = volume.dimensionInfo.sizeInPx;
+  //   center = [190, 150, 152];
+  //   vector = [0, 1, 0]; // [1,0,0],[0,1,0],[0,0,1]
+  //   plane = new Plane();
+  //   plane.makeFrom1Point1Vector(center, vector);
+  //   console.log(plane);
 
-    sampler = new ObliqueSampler(volume, plane);
-    sampler.update();
-    sampler.startSampling();
+  //   sampler = new ObliqueSampler(volume, plane);
+  //   sampler.update();
+  //   sampler.startSampling();
 
-    let tmpImage = await transfer.getImage(seriesId, currentIndex, alias);
-    tmpImage.pixelData = sampler.image.data;
-    tmpImage.rows = sampler.image.height;
-    tmpImage.columns = sampler.image.width;
-    standard.imageView.showImage(tmpImage);
-  }, 7000);
+  //   let tmpImage = await transfer.getImage(seriesId, currentIndex, alias);
+  //   tmpImage.pixelData = sampler.image.data;
+  //   tmpImage.rows = sampler.image.height;
+  //   tmpImage.columns = sampler.image.width;
+  //   standard.imageView.showImage(tmpImage);
+  // }, 7000);
 });
 
 document.addEventListener("wheel", async (e) => {
   let offset = Math.sign(e.wheelDelta);
   currentIndex += offset;
 
-  plane.makeFrom1Point1Vector(
-    vec3[offset > 0 ? "add" : "sub"](center, center, vector),
-    vector
-  );
+  plane.makeFrom1Point1Vector(vec3[offset > 0 ? "add" : "sub"](center, center, vector), vector);
   sampler.plane = plane;
 
   console.log(center, vector);
