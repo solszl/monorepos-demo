@@ -1,5 +1,5 @@
 const cheerio = require("cheerio");
-const TAG = "0018,9305";
+const TAG = "0028,0030";
 
 const payload = {
   from: 0,
@@ -12,7 +12,7 @@ const payload = {
 };
 
 const child_process = require("child_process");
-const curl = `curl https://search.dicom.innolitics.com/_search/ -H "Content-Type: application/json" -X POST -d '${JSON.stringify(
+const curl = `curl https://search.dicom.innolitics.com/_search/ -k -H "Content-Type: application/json" -X POST -d '${JSON.stringify(
   payload
 )}'`;
 
@@ -35,7 +35,7 @@ child_process.exec(curl, (err, stdout, stderr) => {
   const HOST = "https://dicom.innolitics.com/ciods/";
   let uri = obj._source.node.join("/");
   let url = `${HOST}${uri}`;
-  const curl = `curl ${url} -H "Content-Type: text/html"`;
+  const curl = `curl ${url} -k -H "Content-Type: text/html"`;
 
   // console.log(curl);
   child_process.exec(curl, (err, stdout, stderr) => {
