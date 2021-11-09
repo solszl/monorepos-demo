@@ -129,7 +129,7 @@ const dumpDataSet = (dataSet, output) => {
         obj.value = value;
       }
 
-      output[element.tag.toLocaleLowerCase()] = obj;
+      output[obj.tag.toLocaleLowerCase()] = obj;
     }
   } catch (err) {
     console.error("dump error", err);
