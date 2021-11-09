@@ -1,12 +1,13 @@
 {
   "name": "saga",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "start:demo": "cross-env NODE_ENV=development BUILD_ENV=local webpack-dev-server --config build/webpack.dev.conf.js",
     "build": "cross-env NODE_ENV=production BUILD_ENV=local webpack --config build/webpack.prod.conf.js",
-    "build:demo": "webpack --config examples/webpack.config.js"
+    "build:demo": "webpack --config examples/webpack.config.js",
+    "build:docker": "npm run build && node ./deploy.js"
   },
   "files": [
     "lib"
