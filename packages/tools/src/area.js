@@ -47,8 +47,8 @@ class Area {
   }
 
   update(config) {
-    const [viewportState, setViewportState] = useViewportState(this.stageId);
-    setViewportState(Object.assign({}, config, { stageId: this.stageId }));
+    const [state, setViewportState] = useViewportState(this.stageId);
+    setViewportState(Object.assign({}, state, config, { stageId: this.stageId }));
 
     // console.log(viewportState());
     // 初始化时缩放和reander同时触发，判断是否有transform所需数据

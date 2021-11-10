@@ -19,7 +19,7 @@ const STUDY_ID = "1.2.840.20210326.121032504593";
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
-const HOST = "10.0.70.3";
+const HOST = "10.0.50.6";
 const HTTP_PORT = "19570";
 let WS_PORT = "-1";
 
@@ -40,7 +40,7 @@ const fetchWSPort = async () => {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        series_iuid: "1.2.392.200036.9116.2.2059767860.1617866629.8.1307500001.2",
+        series_iuid: "1.2.392.200036.9116.2.2059767860.1617004309.8.1241300001.2",
         predict_type: "ct_heart",
         vr: {},
         mip: {},
