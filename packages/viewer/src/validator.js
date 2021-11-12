@@ -23,5 +23,8 @@ export const validate = (displayInfo, newVal) => {
     });
 
     return !allSame;
+  } else if (newType === "undefined") {
+    delete displayInfo[key];
+    return false;
   }
 };
