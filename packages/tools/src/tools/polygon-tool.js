@@ -1,5 +1,4 @@
 import { Line } from "konva/lib/shapes/Line";
-import simplify from "simplify-js";
 import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../constants";
 import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
@@ -9,7 +8,7 @@ class PolygonTool extends BaseTool {
     config.useDefaultMouseEffect = false;
     super(config);
     this.type = TOOL_TYPE.POLYGON;
-    this.name = randomId();
+    this.name(randomId());
     this._data = {
       id: this.name,
       type: this.type,
@@ -31,7 +30,7 @@ class PolygonTool extends BaseTool {
       closed: true,
       stroke: "white",
       strokeWidth: 2,
-      opacity: 0.2,
+      opacity: 0.8,
       fillAfterStrokeEnabled: false,
     });
     this.add(line);
@@ -75,15 +74,25 @@ class PolygonTool extends BaseTool {
 
   renderData() {
     super.renderData();
-    let { position, points } = this.data;
+    let { position, points, useCustomColourConfig, colour } = this.data;
     this.setPosition(position);
     // console.log("before", points.length);
-    points = simplify(points, 0.3, true);
+    // points = simplify(points, 0.3, true);
     // console.log("after", points.length);
     let pts = points.map((p) => {
       return [p.x, p.y];
     });
     this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`).points(pts.flat());
+
+    if (useCustomColourConfig) {
+      const node = this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`);
+      node.fill(colour.fillColor);
+      // node.fill("rgba(255,0,0,0.3)");
+      // node.opacity(colour.opacity);
+      // node.stroke(colour.lineColor);
+      node.stroke("rgba(0,255,0,1)");
+      node.strokeWidth(colour.lineWidth);
+    }
     this.draw();
   }
 

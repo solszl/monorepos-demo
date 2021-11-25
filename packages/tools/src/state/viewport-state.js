@@ -36,7 +36,7 @@ export const useViewportState = (stageId) => {
   };
 
   const getViewportState = () => {
-    return stateDictionary?.[stageId];
+    return stateDictionary?.[stageId] ?? initialState;
   };
 
   return [getViewportState, setViewportState];

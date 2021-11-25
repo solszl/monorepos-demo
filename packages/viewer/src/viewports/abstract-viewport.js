@@ -154,7 +154,9 @@ class AbstractViewport extends Component {
       ctx.fillStyle = "black";
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-      ctx.setTransform(...this.displayState.currentTransform);
+      if (this.displayState.currentTransform) {
+        ctx.setTransform(...this.displayState.currentTransform);
+      }
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {

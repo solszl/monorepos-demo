@@ -57,7 +57,21 @@ const ellipse_roi = (data) => {
   return obj;
 };
 
-const fnList = { length, angle, ellipse_roi };
+const polygon = (data) => {
+  const obj = JSON.parse(JSON.stringify(data));
+  const position = coord.transformPoint(data.position.x, data.position.y);
+  const points = data.points.map((point) => {
+    const p = coord.transformPoint(data.position.x + point[0], data.position.y + point[1]);
+    return { x: p[0] - position[0], y: p[1] - position[1] };
+  });
+
+  obj.position.x = position[0];
+  obj.position.y = position[1];
+  obj.points = points;
+  return obj;
+};
+
+const fnList = { length, angle, ellipse_roi, polygon };
 export const transform = (data) => {
   const { type } = data;
   return fnList?.[type](data);

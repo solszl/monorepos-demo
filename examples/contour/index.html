@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>standard</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      #root {
+        width: 512px;
+        height: 512px;
+        border: 1px solid #000;
+      }
+
+      .bar {
+        width: 450px;
+        display: flex;
+        flex: 1;
+        margin-top: 10px;
+      }
+
+      .btn {
+        width: 100px;
+        /* border: 1px solid black; */
+        border-radius: 4px;
+        text-align: center;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div class="bar">
+      <button class="btn" id="btnStart">开启</button>
+      <button class="btn" id="btnEnd">关闭</button>
+    </div>
+    <div class="bar">
+      <button class="btn" id="btnLM">LM 蓝</button>
+      <button class="btn" id="btnLAD">LAD 绿</button>
+      <button class="btn" id="btnLCX">LCX 橙</button>
+      <button class="btn" id="btnRCA">RCA 紫</button>
+    </div>
+  </body>
+</html>

@@ -1973,6 +1973,20 @@ cssesc@^3.0.0:
   resolved "https://registry.npm.taobao.org/cssesc/download/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha1-N3QZGZA7hoVl4cCep0dEXNGJg+4=
 
+"d3-array@2 - 3":
+  version "3.1.1"
+  resolved "https://registry.npmmirror.com/d3-array/download/d3-array-3.1.1.tgz#7797eb53ead6b9083c75a45a681e93fc41bc468c"
+  integrity sha1-d5frU+rWuQg8daRaaB6T/EG8Row=
+  dependencies:
+    internmap "1 - 2"
+
+d3-contour@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.nlark.com/d3-contour/download/d3-contour-3.0.1.tgz#2c64255d43059599cd0dba8fe4cc3d51ccdd9bbd"
+  integrity sha1-LGQlXUMFlZnNDbqP5Mw9Uczdm70=
+  dependencies:
+    d3-array "2 - 3"
+
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.nlark.com/d/download/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -3120,6 +3134,11 @@ internal-slot@^1.0.3:
     has "^1.0.3"
     side-channel "^1.0.4"
 
+"internmap@1 - 2":
+  version "2.0.3"
+  resolved "https://registry.nlark.com/internmap/download/internmap-2.0.3.tgz#6685f23755e43c524e251d29cbc97248e3061009"
+  integrity sha1-ZoXyN1XkPFJOJR0py8lySOMGEAk=
+
 interpret@^1.0.0:
   version "1.4.0"
   resolved "https://registry.npm.taobao.org/interpret/download/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
@@ -3642,6 +3661,11 @@ monologue.js@^0.3.5:
   dependencies:
     lodash "3.x"
     riveter "0.2.0"
+
+mousetrap@^1.6.5:
+  version "1.6.5"
+  resolved "https://registry.npm.taobao.org/mousetrap/download/mousetrap-1.6.5.tgz#8a766d8c272b08393d5f56074e0b5ec183485bf9"
+  integrity sha1-inZtjCcrCDk9X1YHTgtewYNIW/k=
 
 ms@2.0.0:
   version "2.0.0"
