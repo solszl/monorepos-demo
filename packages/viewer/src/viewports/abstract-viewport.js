@@ -13,11 +13,7 @@ class AbstractViewport extends Component {
     this.el = option.el;
     this.canvas = null;
 
-    this.displayState = {
-      flip: { h: false, v: false },
-      scale: 1,
-      currentTransform: null,
-    };
+    this.resetDisplayState();
 
     this.init();
   }
@@ -87,8 +83,8 @@ class AbstractViewport extends Component {
     if (rw !== rows || rh !== columns) {
       this.renderer.renderData.width = columns;
       this.renderer.renderData.height = rows;
-      this._calcSuitableSizeRatio();
     }
+    this._calcSuitableSizeRatio();
     this._displayChanged = true;
     this.renderSchedule.invalidate(this.render.bind(this), image);
     this.emit(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, {
@@ -256,6 +252,11 @@ class AbstractViewport extends Component {
       scaleResult = height / rh;
     }
 
+    const { scale = 1 } = this.displayState;
+    if (Math.abs(scaleResult - scale) < 1e-4) {
+      return;
+    }
+
     this.setScale(scaleResult);
   }
 
@@ -292,6 +293,14 @@ class AbstractViewport extends Component {
     if (injectEventNames.includes(evt)) {
       this.emit(`${this.id}-${evt}`, data);
     }
+  }
+
+  resetDisplayState() {
+    this.displayState = {
+      flip: { h: false, v: false },
+      scale: 1,
+      currentTransform: null,
+    };
   }
 
   static create() {

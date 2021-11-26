@@ -2,7 +2,7 @@ import { Component } from "@pkg/core/src";
 import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
 import { TOOL_CONSTRUCTOR } from "../constructor";
 import { useImageInitialState } from "../state/image-state";
-import { useViewportInitialState } from "../state/viewport-state";
+import { removeViewportState, useViewportInitialState } from "../state/viewport-state";
 
 class API extends Component {
   constructor(stage) {
@@ -54,6 +54,10 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
     this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
     this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
+  }
+
+  remove_viewport_state_cmd() {
+    removeViewportState(this.stageId);
   }
 
   /**
