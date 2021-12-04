@@ -5,7 +5,7 @@ export const config = {
       lineWidth: 1,
       lineAlpha: 1,
       fillColor: "#0072fe",
-      fillAlpha: 0.2,
+      fillAlpha: 0.6,
     },
   },
   LAD: {

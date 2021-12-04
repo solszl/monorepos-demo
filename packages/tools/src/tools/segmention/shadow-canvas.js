@@ -25,8 +25,11 @@ class ShadowCanvas {
   resize(w, h) {
     this._cvs.width = w;
     this._cvs.height = h;
+    this._cvs.style.width = `${w}px`;
+    this._cvs.style.height = `${h}px`;
     this.width = w;
     this.height = h;
+    this.imageDataBuffer = new Uint32Array();
   }
 
   getContext() {
@@ -81,7 +84,6 @@ class ShadowCanvas {
     const data = this.getImageDataBuffer();
     // find contours
     const { coordinates: contours } = findContours(data);
-
     return contours;
 
     // simplify contours
@@ -147,6 +149,13 @@ class ShadowCanvas {
     }
 
     this.brush.onMouseMove(e);
+  }
+
+  pointInContour(x, y) {
+    const { width } = this;
+    const index = y * width + x;
+    const buffer = this.getImageDataBuffer();
+    return buffer.at(index) !== 0;
   }
 }
 

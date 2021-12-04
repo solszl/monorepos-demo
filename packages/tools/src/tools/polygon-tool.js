@@ -1,5 +1,5 @@
-import { Line } from "konva/lib/shapes/Line";
-import { TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../constants";
+import { Image } from "konva/lib/shapes/Image";
+import { TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../constants";
 import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
 
@@ -15,6 +15,8 @@ class PolygonTool extends BaseTool {
       position: { x: 0, y: 0 },
       points: [],
     };
+
+    this._canvas = document.createElement("canvas");
   }
 
   initialUI() {
@@ -23,17 +25,13 @@ class PolygonTool extends BaseTool {
       return;
     }
 
-    const line = new Line({
-      hitStrokeWidth: TOOL_CONSTANTS.HIT_STROKE_WIDTH,
+    const img = new Image({
       name: TOOL_ITEM_SELECTOR.ITEM,
-      fill: "blue",
-      closed: true,
-      stroke: "white",
-      strokeWidth: 2,
-      opacity: 0.8,
-      fillAfterStrokeEnabled: false,
+      image: this.getCanvas(),
+      draggable: false,
     });
-    this.add(line);
+    this.add(img);
+
     const toolLayer = this.$stage.findOne("#toolsLayer");
     toolLayer.add(this);
     this.draw();
@@ -79,24 +77,44 @@ class PolygonTool extends BaseTool {
     // console.log("before", points.length);
     // points = simplify(points, 0.3, true);
     // console.log("after", points.length);
-    let pts = points.map((p) => {
-      return [p.x, p.y];
-    });
-    this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`).points(pts.flat());
+    // this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`).points(pts.flat(Infinity));
 
+    const ctx = this.getContext();
     if (useCustomColourConfig) {
-      const node = this.findOne(`.${TOOL_ITEM_SELECTOR.ITEM}`);
-      node.fill(colour.fillColor);
-      // node.fill("rgba(255,0,0,0.3)");
-      // node.opacity(colour.opacity);
-      // node.stroke(colour.lineColor);
-      node.stroke("rgba(0,255,0,1)");
-      node.strokeWidth(colour.lineWidth);
+      ctx.fillStyle = colour.fillColor;
+      ctx.strokeStyle = colour.lineColor;
+      ctx.strokeWidth = colour.lineWidth;
     }
+
+    ctx.beginPath();
+    // 通常是一维的
+    points.map((point) => {
+      point.map((pt, index) => {
+        if (index === 0) {
+          ctx.moveTo(pt[0], pt[1]);
+        }
+
+        ctx.lineTo(pt[0], pt[1]);
+      });
+    });
+    ctx.stroke();
+    ctx.closePath();
+    ctx.fill("evenodd");
     this.draw();
   }
 
   _tryUpdateData() {}
+
+  getCanvas() {
+    this._canvas.width = 512;
+    this._canvas.height = 512;
+    return this._canvas;
+  }
+
+  getContext() {
+    const ctx = this._canvas.getContext("2d");
+    return ctx;
+  }
 }
 
 export default PolygonTool;

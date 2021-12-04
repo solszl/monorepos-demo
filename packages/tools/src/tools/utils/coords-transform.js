@@ -60,9 +60,12 @@ const ellipse_roi = (data) => {
 const polygon = (data) => {
   const obj = JSON.parse(JSON.stringify(data));
   const position = coord.transformPoint(data.position.x, data.position.y);
-  const points = data.points.map((point) => {
-    const p = coord.transformPoint(data.position.x + point[0], data.position.y + point[1]);
-    return { x: p[0] - position[0], y: p[1] - position[1] };
+  const points = data.points.map((points) => {
+    return points.map((point) => {
+      const p = coord.transformPoint(data.position.x + point[0], data.position.y + point[1]);
+      // return { x: p[0] - position[0], y: p[1] - position[1] };
+      return [p[0] - position[0], p[1] - position[1]];
+    });
   });
 
   obj.position.x = position[0];

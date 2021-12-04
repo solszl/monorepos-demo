@@ -9,7 +9,7 @@ import { config as colorConfig } from "./contour-config";
 import contourData from "./data.json";
 import imageUrls from "./img";
 const seriesId = "1.2.392.200036.9116.2.1796265700.1617665962.13.2282000001.2";
-let currentIndex = 229;
+let currentIndex = 133;
 
 const vm = new ViewportManager();
 vm.resource = new Resource();
@@ -39,6 +39,7 @@ const convertToSagaToolDataStruct = (contour) => {
     useCustomColourConfig: !!contour.colour,
     colour: contour.colour,
   };
+
   return data;
 };
 
@@ -119,17 +120,36 @@ document.querySelector("#btnEnd").addEventListener("click", (e) => {
 });
 
 const mergeContours = (contourKey) => {
+  document.querySelector("#temp").innerHTML = "";
+  const result = [];
   const foundContours = editor.shadowCanvas.findContour() ?? [];
 
   const slimedContours = slim(foundContours);
   // 跟目标key进行合并。 对其他key进行擦除
   // TODO: union rectangle
-  const shouldAddContours = cm.getSpecifiedContour(currentIndex, contourKey);
-
+  const shouldUnionContour = cm.getSpecifiedContour(currentIndex, contourKey).map((c) => c.data);
   // TODO: subtract rectangle
-  const otherContours = cm.getContoursBySlice(currentIndex).filter((contour) => contour.key !== contourKey);
+  const shouldSubtractContours = cm.getContoursBySlice(currentIndex).filter((contour) => contour.key !== contourKey);
 
-  console.log(shouldAddContours, otherContours);
+  const unionData = {
+    key: contourKey,
+    data: editor.unionContours(shouldUnionContour, slimedContours, { width: 512, height: 512 }),
+  };
+  result.push(unionData);
+
+  shouldSubtractContours.map((contour) => {
+    const { key, data, boundRect } = contour;
+    console.log("key", contour);
+    const subtractData = {
+      key,
+      data: editor.subtractContours(data, slimedContours, { width: 512, height: 512, boundRect }),
+    };
+
+    result.push(subtractData);
+  });
+
+  console.log(result);
+  // console.log(slimedContours, shouldUnionContour, shouldSubtractContour);
 
   // const drawContours = editor.shadowCanvas.findContour().map((contour) => {
   //   return makeContour(contour, contourKey, currentIndex);
