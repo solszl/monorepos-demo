@@ -1,16 +1,18 @@
-import { TOOL_TYPE, ViewportEvents, ViewportManager } from "@pkg/entry/src";
+import { TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 import ContourColourConfig from "../../packages/tools/src/tools/segmention/contour/contour-colour-config";
 import ContourItem from "../../packages/tools/src/tools/segmention/contour/contour-item";
 import ContourManager from "../../packages/tools/src/tools/segmention/contour/contour-manager";
 import ContourEditor from "../../packages/tools/src/tools/segmention/editor";
 import { slim } from "../../packages/tools/src/tools/segmention/utils/slim";
+import { calcAgatston } from "./agatston";
 import { config as colorConfig } from "./contour-config";
 import contourData from "./data.json";
 import imageUrls from "./img";
-const seriesId = "1.2.392.200036.9116.2.1796265700.1617665962.13.2282000001.2";
-let currentIndex = 133;
 
+const seriesId = "1.2.840.20210406.121033010419";
+let currentIndex = 133;
+let currentBlood = "";
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
@@ -19,7 +21,6 @@ const cm = new ContourManager();
 const standard = vm.addViewport({
   plane: "standard",
   renderer: "canvas",
-  alias: "axial",
   transferMode: "web",
   el: document.querySelector("#root"),
 });
@@ -38,6 +39,7 @@ const convertToSagaToolDataStruct = (contour) => {
     position: { x: 0, y: 0 },
     useCustomColourConfig: !!contour.colour,
     colour: contour.colour,
+    key: contour.key,
   };
 
   return data;
@@ -52,9 +54,8 @@ const main = async () => {
   standard.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, 4);
 
   setTimeout(async () => {
-    // const image = await transfer.getImage(seriesId, currentIndex, alias);
-    // standard.imageView.showImage(image);
-    standard.showImage(seriesId, currentIndex);
+    const image = await transfer.getImage(seriesId, currentIndex, alias);
+    standard.imageView.showImage(image);
   }, 0);
 
   console.log(contourData);
@@ -82,35 +83,32 @@ const main = async () => {
   cm.getAllSlices().map((pageIndex) => {
     const contours = cm.getContoursBySlice(pageIndex);
     const sliceKey = `${seriesId}-${pageIndex}`;
-    const sliceData = standard.data?.[sliceKey] ?? new Map();
+    const sliceData = editor.data?.[sliceKey] ?? new Map();
 
     contours.map((contour) => {
       const data = convertToSagaToolDataStruct(contour);
       sliceData.set(data.id, data.data);
     });
 
-    standard.data[sliceKey] = sliceData;
+    // standard.data[sliceKey] = sliceData;
+
+    editor.data[sliceKey] = sliceData;
   });
+
+  editor.start();
+  editor.regOperateCallback(() => {
+    mergeContours(currentBlood);
+  });
+  const sliceKey = `${seriesId}-${currentIndex}`;
+  editor.setDataAndKey(sliceKey, "LM");
+  editor.useStrategy("erase.dauber");
 };
 
-standard.on(ViewportEvents.SLICE_CHANGED, (info) => {
-  const { currentIndex } = info;
-  const contours = cm.getContoursBySlice(currentIndex);
-  // console.log(currentIndex, contours);
-});
-
-document.querySelector("#btnLM").addEventListener("click", (e) => {
-  mergeContours("LM");
-});
-document.querySelector("#btnLAD").addEventListener("click", (e) => {
-  mergeContours("LAD");
-});
-document.querySelector("#btnLCX").addEventListener("click", (e) => {
-  mergeContours("LCX");
-});
-document.querySelector("#btnRCA").addEventListener("click", (e) => {
-  mergeContours("RCA");
-});
+// standard.on(ViewportEvents.SLICE_CHANGED, (info) => {
+//   const { currentIndex } = info;
+//   const contours = cm.getContoursBySlice(currentIndex);
+//   // console.log(currentIndex, contours);
+// });
 
 document.querySelector("#btnStart").addEventListener("click", (e) => {
   editor.start();
@@ -119,7 +117,25 @@ document.querySelector("#btnEnd").addEventListener("click", (e) => {
   editor.stop();
 });
 
-const mergeContours = (contourKey) => {
+document.querySelector("#union").addEventListener("change", (e) => {
+  const select = e.target;
+  const { options, selectedIndex } = select;
+  currentBlood = options[selectedIndex].value;
+  const sliceKey = `${seriesId}-${currentIndex}`;
+  editor.setDataAndKey(sliceKey, currentBlood);
+  editor.useStrategy("draw.dauber");
+});
+
+document.querySelector("#subtract").addEventListener("change", (e) => {
+  const select = e.target;
+  const { options, selectedIndex } = select;
+  currentBlood = options[selectedIndex].value;
+  const sliceKey = `${seriesId}-${currentIndex}`;
+  editor.setDataAndKey(sliceKey, currentBlood);
+  editor.useStrategy("erase.dauber");
+});
+
+const mergeContours = async (contourKey) => {
   document.querySelector("#temp").innerHTML = "";
   const result = [];
   const foundContours = editor.shadowCanvas.findContour() ?? [];
@@ -129,26 +145,33 @@ const mergeContours = (contourKey) => {
   // TODO: union rectangle
   const shouldUnionContour = cm.getSpecifiedContour(currentIndex, contourKey).map((c) => c.data);
   // TODO: subtract rectangle
-  const shouldSubtractContours = cm.getContoursBySlice(currentIndex).filter((contour) => contour.key !== contourKey);
+  const shouldSubtractContours = cm
+    .getContoursBySlice(currentIndex)
+    .filter((contour) => contour.key !== contourKey);
 
   const unionData = {
     key: contourKey,
-    data: editor.unionContours(shouldUnionContour, slimedContours, { width: 512, height: 512 }),
+    ...editor.unionContours(shouldUnionContour, slimedContours, { width: 512, height: 512 }),
   };
   result.push(unionData);
 
   shouldSubtractContours.map((contour) => {
     const { key, data, boundRect } = contour;
-    console.log("key", contour);
     const subtractData = {
       key,
-      data: editor.subtractContours(data, slimedContours, { width: 512, height: 512, boundRect }),
+      ...editor.subtractContours(data, slimedContours, { width: 512, height: 512, boundRect }),
     };
 
     result.push(subtractData);
   });
 
-  console.log(result);
+  const resource = vm.resource;
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  let dicom = await transfer.getImage(seriesId, currentIndex);
+  const ca = calcAgatston(dicom, result[0]);
+  console.log(ca);
+
   // console.log(slimedContours, shouldUnionContour, shouldSubtractContour);
 
   // const drawContours = editor.shadowCanvas.findContour().map((contour) => {
@@ -180,6 +203,7 @@ const makeContour = (contour, contourKey, currentIndex) => {
 
   return item;
 };
+
 window.a = standard; // viewer
 window.cm = cm; // contour manager
 window.editor = editor;

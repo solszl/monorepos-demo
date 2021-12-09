@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Mousetrap from "mousetrap";
 import ShadowCanvas from "../shadow-canvas";
 class Context {
@@ -42,16 +43,7 @@ class Context {
       return;
     }
 
-    if (this.drawStrategy) {
-      const tempStrategy = new strategy();
-      if (this.drawStrategy.type !== tempStrategy) {
-        this.drawStrategy = tempStrategy;
-      }
-      return;
-    }
-
-    this.drawStrategy = new strategy();
-    this.shadowCanvas.injectStrategy(this.drawStrategy);
+    this.drawStrategy = strategy;
   }
 
   useEraser(strategy) {
@@ -59,15 +51,7 @@ class Context {
       return;
     }
 
-    if (this.eraseStrategy) {
-      const tempStrategy = new strategy();
-      if (this.eraseStrategy.type !== tempStrategy) {
-        this.eraseStrategy = tempStrategy;
-      }
-      return;
-    }
-
-    this.eraseStrategy = new strategy();
+    this.eraseStrategy = strategy;
   }
 
   useHotkey(val) {

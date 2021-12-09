@@ -1,5 +1,6 @@
 // import { arrayToObject } from "./utils/array-to-object";
 import { findContours } from "./utils/find-contours";
+import { throttle } from "./utils/throttle";
 // import { simplifyContours } from "./utils/simplify-contours";
 
 class ShadowCanvas {
@@ -15,7 +16,11 @@ class ShadowCanvas {
       mousedown: this._mouseDownHandler.bind(this),
       mousemove: this._mouseMoveHandler.bind(this),
       mouseup: this._mouseUpHandler.bind(this),
+      mouseleave: this._mouseOutHandler.bind(this),
+      mouseout: this._mouseOutHandler.bind(this),
     };
+
+    this.mouseUpHandlerCallback = null;
   }
 
   clear() {
@@ -142,6 +147,8 @@ class ShadowCanvas {
   _mouseUpHandler(e) {
     this.isMouseDown = false;
     this.brush.onMouseUp(e);
+
+    throttle(this.mouseUpHandlerCallback());
   }
   _mouseMoveHandler(e) {
     if (!this.isMouseDown) {
@@ -149,6 +156,15 @@ class ShadowCanvas {
     }
 
     this.brush.onMouseMove(e);
+  }
+
+  _mouseOutHandler(e) {
+    if (!this.isMouseDown) {
+      return;
+    }
+    this.isMouseDown = false;
+    this.brush.onMouseUp(e);
+    throttle(this.mouseUpHandlerCallback());
   }
 
   pointInContour(x, y) {

@@ -15,11 +15,13 @@ const strategies = {
 };
 
 export const getDrawStrategy = (strategy) => {
-  return strategies["draw"]?.[strategy];
+  const Clazz = strategies["draw"]?.[strategy];
+  return new Clazz();
 };
 
 export const getEraseStrategy = (strategy) => {
-  return strategies["erase"]?.[strategy];
+  const Clazz = strategies["erase"]?.[strategy];
+  return new Clazz();
 };
 
 export const getStrategy = (strategy) => {

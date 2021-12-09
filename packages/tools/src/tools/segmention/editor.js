@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-expressions */
 import ShadowCanvas from "./shadow-canvas";
 import Context from "./strategies/context";
-import { getDrawStrategy, getEraseStrategy, getStrategy } from "./strategies/index";
+import { getDrawStrategy, getEraseStrategy } from "./strategies/index";
 import { findBoundingRect } from "./utils/find-bounding-rect";
 import { findContours } from "./utils/find-contours";
 import { rectIntersect } from "./utils/rect-intersect";
@@ -11,6 +12,7 @@ class ContourEditor {
       option: { el },
     } = viewport;
     this.el = el;
+    this.backgroundCanvas = new ShadowCanvas();
     this.shadowCanvas = new ShadowCanvas();
     this.currentDrawStrategy = null;
     this.currentEraseStrategy = null;
@@ -18,7 +20,7 @@ class ContourEditor {
 
     this.context = new Context();
     this.context.useCanvas(this.shadowCanvas);
-    console.log("editor", el);
+    this.data = {};
   }
 
   start(strategyConfig = { draw: "dauber", eraser: "dauber", useHotkey: true }) {
@@ -29,6 +31,7 @@ class ContourEditor {
     }
 
     iframe.addEventListener("resize", this._resizeShadowCanvas.bind(this));
+    this.el.appendChild(this.backgroundCanvas.getCanvas());
     this.el.appendChild(this.shadowCanvas.getCanvas());
     this._resizeShadowCanvas();
     this.useStrategies(strategyConfig);
@@ -38,7 +41,8 @@ class ContourEditor {
     this.context.terminate();
 
     const iframe = this.el.querySelector("iframe");
-    iframe?.removeEventListener("resize", this._resizeShadowCanvas);
+    iframe && iframe.removeEventListener("resize", this._resizeShadowCanvas);
+    this.el.removeChild(this.backgroundCanvas.getCanvas());
     this.el.removeChild(this.shadowCanvas.getCanvas());
   }
 
@@ -53,13 +57,32 @@ class ContourEditor {
     this.context.useDraw(getDrawStrategy(draw));
     this.context.useEraser(getEraseStrategy(eraser));
     this.context.useHotkey(useHotkey);
+    const { drawStrategy } = this.context;
+    this.context.useStrategy(drawStrategy);
     this.context.setUseSingleStrategy(false);
     this.context.execute();
   }
 
-  useStrategy(key) {
-    const strategy = getStrategy(key);
+  useStrategy(strategyString) {
+    const [type, key] = strategyString.split(".");
     this.context.setUseSingleStrategy(true);
+    let strategy = null;
+    switch (type) {
+      case "draw":
+        strategy = getDrawStrategy(key);
+        this.context.useDraw(strategy);
+        break;
+      case "erase":
+        strategy = getEraseStrategy(key);
+        this.context.useEraser(strategy);
+        break;
+      default:
+        break;
+    }
+
+    if (!strategy) {
+      return;
+    }
     this.context.useStrategy(strategy);
     this.context.execute();
   }
@@ -88,8 +111,6 @@ class ContourEditor {
     canvas.clear();
     const ctx = canvas.getContext();
     ctx.fillStyle = "red";
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
 
     this._draw(ctx, sourceContours);
     this._draw(ctx, newContours);
@@ -101,9 +122,13 @@ class ContourEditor {
     let tempContainer = document.querySelector("#temp");
     const c = canvas.getCanvas();
     c.style.position = "";
-    tempContainer?.appendChild(c);
+    tempContainer && tempContainer.appendChild(c);
 
-    return contours;
+    return {
+      contours,
+      contourCanvas: canvas.getCanvas(),
+      contourBoundRect: findBoundingRect(contours),
+    };
   }
 
   /**
@@ -127,25 +152,21 @@ class ContourEditor {
           Math.max(prev[3], rect[3]),
         ];
       },
-      [Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER]
+      [
+        Number.MAX_SAFE_INTEGER,
+        Number.MAX_SAFE_INTEGER,
+        -Number.MAX_SAFE_INTEGER,
+        -Number.MAX_SAFE_INTEGER,
+      ]
     );
 
     const { width = 512, height = 512, boundRect } = config;
-    const intersect = rectIntersect(newContourRect, boundRect);
-    if (!intersect) {
-      return sourceContours;
-    }
 
-    console.log("rect0 ", boundRect);
-    console.log("rect1", newContourRect);
-    console.log("是否相交", rectIntersect(newContourRect, boundRect));
     const canvas = new ShadowCanvas();
     canvas.resize(width, height);
     canvas.clear();
     const ctx = canvas.getContext();
     ctx.fillStyle = "red";
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
 
     this._draw(ctx, [sourceContours]);
     ctx.save();
@@ -153,6 +174,18 @@ class ContourEditor {
     this._draw(ctx, newContours);
     ctx.restore();
 
+    const intersect = rectIntersect(newContourRect, boundRect);
+    if (!intersect) {
+      return {
+        contours: sourceContours,
+        contourCanvas: canvas.getCanvas(),
+        contourBoundRect: findBoundingRect(sourceContours),
+      };
+    }
+
+    console.log("rect0 ", boundRect);
+    console.log("rect1", newContourRect);
+    console.log("是否相交", rectIntersect(newContourRect, boundRect));
     const buffer = canvas.getImageDataBuffer();
     const contourConfig = Object.assign({}, config, { thresholds: 0x20, smooth: true });
     const { coordinates: contours } = findContours(buffer, contourConfig);
@@ -160,9 +193,13 @@ class ContourEditor {
     let tempContainer = document.querySelector("#temp");
     const c = canvas.getCanvas();
     c.style.position = "";
-    tempContainer?.appendChild(c);
+    tempContainer && tempContainer.appendChild(c);
 
-    return contours;
+    return {
+      contours,
+      contourCanvas: canvas.getCanvas(),
+      contourBoundRect: findBoundingRect(contours),
+    };
   }
 
   _draw(ctx, data) {
@@ -185,6 +222,27 @@ class ContourEditor {
   _resizeShadowCanvas() {
     const { clientWidth: w, clientHeight: h } = this.el;
     this.shadowCanvas.resize(w, h);
+    this.backgroundCanvas.resize(w, h);
+  }
+
+  setDataAndKey(sliceKey, key) {
+    this.shadowCanvas.clear();
+    this.backgroundCanvas.clear();
+    const data = this.data[sliceKey] ?? new Map();
+    data.forEach((value) => {
+      const { key: contourKey, points, useCustomColourConfig, colour } = value;
+      let ctx =
+        contourKey === key ? this.shadowCanvas.getContext() : this.backgroundCanvas.getContext();
+      if (useCustomColourConfig) {
+        const { fillColor } = colour;
+        ctx.fillStyle = fillColor;
+      }
+      this._draw(ctx, [points]);
+    });
+  }
+
+  regOperateCallback(handler) {
+    this.shadowCanvas.mouseUpHandlerCallback = handler;
   }
 }
 
