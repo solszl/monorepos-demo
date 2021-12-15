@@ -15,7 +15,7 @@ export const postprocessor = async (image, task) => {
       tempImg.onload = (evt) => {
         img.columns = tempImg.width;
         img.rows = tempImg.height;
-        img.color = true;
+        img.color = "rgb";
         img.samplesPerPixel = 4;
         img.windowWidth = 255;
         img.windowCenter = 128;

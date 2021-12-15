@@ -22,6 +22,8 @@ export const getLut = (image, displayState) => {
   return lutCache[cacheKey];
 };
 
+export const getColorLut = (image, displayState, colormap) => {};
+
 const generateLut = (image, windowWidth, windowCenter, invert) => {
   const { minPixelValue, maxPixelValue } = image;
   const offset = Math.min(minPixelValue, 0);

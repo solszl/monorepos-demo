@@ -1,5 +1,6 @@
-import { getLut } from "./lut";
+import { getColorLut, getLut } from "./lut";
 import { renderColorImage } from "./render-color";
+import { renderColormapImage } from "./render-colormap";
 import { renderGrayImage } from "./render-gray";
 class CanvasRenderer {
   constructor() {
@@ -7,11 +8,19 @@ class CanvasRenderer {
     this.renderCanvas = document.createElement("canvas");
   }
 
-  async render(image, displayState) {
+  async render(image, displayState, extend = {}) {
     const { renderCanvas } = this;
-    const lut = getLut(image, displayState);
+    const { colormap } = extend;
+    // 如果设置颜色表
+    const lut = getColorLut(image, displayState, colormap) ?? getLut(image, displayState);
     const { color } = image;
-    let renderFn = ["rgb", "rgba", true].includes(color) ? renderColorImage : renderGrayImage;
+    let renderFn;
+    if (colormap) {
+      renderFn = renderColormapImage;
+    } else {
+      renderFn = ["rgb", "rgba"].includes(color) || colormap ? renderColorImage : renderGrayImage;
+    }
+
     renderFn(image, lut, renderCanvas);
   }
 

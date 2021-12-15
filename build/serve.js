@@ -14,17 +14,10 @@ const serve = {
   },
   proxy: {
     "/api": {
-      target: "http://192.168.111.115:13000",
+      target: "http://10.0.70.3:8000",
       changeOrigin: true,
       pathRewrite: {
-        "^/api": "",
-      },
-    },
-    "/ct_chest/api": {
-      target: "http://192.168.109.92:13000",
-      changeOrigin: true,
-      pathRewrite: {
-        "^/api": "",
+        // "^/api": "",
       },
     },
   },

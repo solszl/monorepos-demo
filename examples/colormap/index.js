@@ -1,6 +1,19 @@
 import { Resource } from "@pkg/loader/src";
+import Colormap from "./colormap";
 const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
 const fs = "http://10.0.70.3:8000";
+
+let colorConfig = {
+  0: "#000000",
+  25: "#FF0000",
+  50: "#00FF00",
+  75: "#0000FF",
+  100: "#FFFFFF",
+};
+
+let colormap = new Colormap();
+colormap.addColors(colorConfig);
+const lut = colormap.buildLut(min, max);
 
 const resource = new Resource();
 
