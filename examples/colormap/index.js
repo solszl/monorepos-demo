@@ -1,26 +1,36 @@
+import { TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
-import Colormap from "./colormap";
 const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
 const fs = "http://10.0.70.3:8000";
+let currentIndex = 100;
+const API_GRAY = "/api/v1/series/";
+const API_COLOR = "/api/v1/series/ssr/";
 
-let colorConfig = {
-  0: "#000000",
-  25: "#FF0000",
-  50: "#00FF00",
-  75: "#0000FF",
-  100: "#FFFFFF",
-};
+const vm = new ViewportManager();
+vm.resource = new Resource();
 
-let colormap = new Colormap();
-colormap.addColors(colorConfig);
-const lut = colormap.buildLut(min, max);
+const standard = vm.addViewport({
+  plane: "standard",
+  renderer: "canvas",
+  alias: "axial",
+  transferMode: "web",
+  el: document.querySelector("#root"),
+  colormap: {
+    percents: {
+      0: "#0000FF",
+      50: "#00FF00",
+      100: "#FF0000",
+    },
+    type: "rgb",
+  },
+  disableTools: [TOOL_TYPE.WWWC],
+});
 
-const resource = new Resource();
+window.viewport = standard;
 
 const fetchData = async (seriesId) => {
-  const url = `/api/v1/series/${seriesId}`;
+  const url = `${API_GRAY}${seriesId}`;
   const json = await (await fetch(url)).json();
-
   return json;
 };
 
@@ -29,14 +39,24 @@ fetchData(seriesId).then(async (json) => {
     return `${fs}/${i.storagePath}`;
   });
 
-  const mode = "web";
-  await resource.initTransfer([{ mode }]);
-  const transfer = resource.getTransfer(mode);
-  transfer.addItemUrls(seriesId, imageUrls, "axial");
+  const resource = vm.resource;
+  await resource.initTransfer([{ mode: "web" }]);
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  transfer.addItemUrls(seriesId, imageUrls, alias);
 
   setTimeout(async () => {
-    let cacheItem1 = await transfer.getImage(seriesId, 10, "axial");
+    const image = await transfer.getImage(seriesId, currentIndex, alias);
+    standard.imageView.showImage(image);
+  }, 0);
+});
 
-    console.log(cacheItem1.allTags);
-  }, 2000);
+document.addEventListener("wheel", async (e) => {
+  let offset = Math.sign(e.wheelDelta);
+  currentIndex += offset;
+  const { resource } = vm;
+  const { transferMode, alias } = standard.option;
+  const transfer = resource.getTransfer(transferMode);
+  const image = await transfer.getImage(seriesId, currentIndex, alias);
+  standard.imageView.showImage(image);
 });

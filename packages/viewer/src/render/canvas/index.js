@@ -14,14 +14,14 @@ class CanvasRenderer {
     // 如果设置颜色表
     const lut = getColorLut(image, displayState, colormap) ?? getLut(image, displayState);
     const { color } = image;
-    let renderFn;
-    if (colormap) {
-      renderFn = renderColormapImage;
-    } else {
-      renderFn = ["rgb", "rgba"].includes(color) || colormap ? renderColorImage : renderGrayImage;
-    }
 
-    renderFn(image, lut, renderCanvas);
+    if (displayState.colormap) {
+      const colors = displayState.colormap.build(256);
+      renderColormapImage(image, lut, renderCanvas, colors);
+    } else {
+      const renderFn = ["rgb", "rgba"].includes(color) ? renderColorImage : renderGrayImage;
+      renderFn(image, lut, renderCanvas);
+    }
   }
 
   get renderData() {
