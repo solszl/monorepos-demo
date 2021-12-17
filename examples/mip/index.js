@@ -1,10 +1,10 @@
 import { TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 import Mip from "@pkg/viewer/src/algo/mip/mip";
-const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
-const fs = "http://192.168.111.115:8000";
+const seriesId = "1.2.840.113704.7.32.07.5.1.4.76346.30000021052709540188000503559";
+const fs = "http://10.0.70.3:8000";
 let currentIndex = 0;
-let step = 20;
+let step = 40;
 const API = "/api/v1/series/";
 
 const mip = new Mip();
@@ -59,11 +59,7 @@ document.addEventListener("wheel", async (e) => {
 
   const { transferMode, alias } = standard.option;
   const transfer = resource.getTransfer(transferMode);
-  transfer.cacheItem(
-    seriesId,
-    { key: currentIndex, value: img },
-    `${alias}-mip`
-  );
+  transfer.cacheItem(seriesId, { key: currentIndex, value: img }, `${alias}-mip`);
   standard.imageView.showImage(img);
 
   console.log(currentIndex);

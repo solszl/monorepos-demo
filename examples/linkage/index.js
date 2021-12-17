@@ -21,8 +21,8 @@ toolbar.addBtn({
   },
 });
 
-const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403";
-const fs = "http://192.168.111.115:8000";
+const seriesId = "1.2.840.113704.7.32.07.5.1.4.76346.30000021052709540188000503559";
+const fs = "http://10.0.70.3:8000";
 let currentIndex = 0;
 
 const vm = new ViewportManager();
@@ -36,6 +36,10 @@ const standard1 = vm.addViewport({
   transferMode: "web",
   el: document.querySelector("#id1"),
   tools: [TOOL_TYPE.MOVE, TOOL_TYPE.ZOOM, TOOL_TYPE.STACK_SCROLL],
+  wwwc: {
+    ww: 1300,
+    wc: 500,
+  },
 });
 
 const standard2 = vm.addViewport({
