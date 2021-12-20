@@ -1,3 +1,4 @@
+import { TOOLVIEW_INTERNAL_EVENTS } from "@pkg/tools/src";
 import { randomId } from "./utils";
 export const LINK_PROPERTY = {
   WWWC: "wwwc",
@@ -11,6 +12,10 @@ export const LINK_PROPERTY = {
   POSITION: "position",
   // 通常再多序列的时候联动这个属性
   SLICE: "slice",
+};
+
+export const LINK_DATA_PROPERTY = {
+  ROI: "ellipse_roi",
 };
 
 const events = {};
@@ -39,13 +44,15 @@ class LinkageManager {
    *
    * @param { Array<string> } viewports 视窗集合
    * @param { Array<string> } properties 需要联动的属性集合
+   * @param { Array<string> } tools 需要联动的工具属性集合， 如长度工具、ROI等
    * @return { string } 返回一个关联id，以此来证明关联关系
    * @memberof LinkageManager
    */
-  link(viewports, properties) {
+  link(viewports, properties, tools = []) {
     const obj = {
       viewports,
       properties,
+      tools,
     };
 
     const { viewportMap } = this;
@@ -71,12 +78,53 @@ class LinkageManager {
         events[key] = fn;
         viewport.imageView.on(key, fn);
       });
+
+      // 如果同步了各种测量工具
+      if (tools.length) {
+        // 工具属性发生变更
+        viewport.toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_UPDATED, (data) => {
+          console.log("updated", data, viewport.data, viewport);
+          const { sliceKey, data: viewportData } = viewport;
+          // 找出来所有关心的tool类型data
+          const filterData = viewportData[sliceKey].filter((data, index) => {
+            if (tools.includes(data.type)) {
+              return true;
+            }
+          });
+
+          relatedViewports.forEach((viewport) => {
+            const { sliceKey, data: viewportData } = viewport;
+            filterData.forEach((d) => {
+              let map = viewportData[sliceKey] ?? new Map();
+              map.set(d.id, d);
+              viewportData[sliceKey] = map;
+            });
+
+            viewport.toolView.renderData(viewportData[sliceKey]);
+            viewport.toolView.resetData(viewportData[sliceKey]);
+          });
+        });
+
+        // 工具移除了
+        viewport.toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (data) => {
+          relatedViewports.forEach((viewport) => {
+            const { sliceKey, data: viewportData } = viewport;
+            viewportData[sliceKey]?.delete(data.id);
+
+            viewport.toolView.renderData(viewportData[sliceKey]);
+          });
+        });
+      }
     });
 
     const id = randomId();
     this.links.set(id, obj);
 
-    console.log(`[Linkage] 计划联动[${viewports.join(",")}], 属性[${properties.join(",")}]`);
+    console.log(
+      `[Linkage] 计划联动[${viewports.join(",")}], 属性[${properties.join(",")}], 工具[${tools.join(
+        ","
+      )}]`
+    );
     return id;
   }
 

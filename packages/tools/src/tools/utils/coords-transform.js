@@ -1,11 +1,16 @@
-import { transform as coord } from "../../area";
-const length = (data) => {
+const length = (data, transform) => {
   const obj = JSON.parse(JSON.stringify(data));
-  const position = coord.transformPoint(data.position.x, data.position.y);
-  const start = coord.transformPoint(data.position.x + data.start.x, data.position.y + data.start.y);
-  const end = coord.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
+  const position = transform.transformPoint(data.position.x, data.position.y);
+  const start = transform.transformPoint(
+    data.position.x + data.start.x,
+    data.position.y + data.start.y
+  );
+  const end = transform.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
 
-  const textPoint = coord.transformPoint(data.position.x + data.textBox.x, data.position.y + data.textBox.y);
+  const textPoint = transform.transformPoint(
+    data.position.x + data.textBox.x,
+    data.position.y + data.textBox.y
+  );
 
   obj.position.x = position[0];
   obj.position.y = position[1];
@@ -18,13 +23,22 @@ const length = (data) => {
   return obj;
 };
 
-const angle = (data) => {
+const angle = (data, transform) => {
   const obj = JSON.parse(JSON.stringify(data));
-  const position = coord.transformPoint(data.position.x, data.position.y);
-  const start = coord.transformPoint(data.position.x + data.start.x, data.position.y + data.start.y);
-  const middle = coord.transformPoint(data.position.x + data.middle.x, data.position.y + data.middle.y);
-  const end = coord.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
-  const text = coord.transformPoint(data.position.x + data.textBox.x, data.position.y + data.textBox.y);
+  const position = transform.transformPoint(data.position.x, data.position.y);
+  const start = transform.transformPoint(
+    data.position.x + data.start.x,
+    data.position.y + data.start.y
+  );
+  const middle = transform.transformPoint(
+    data.position.x + data.middle.x,
+    data.position.y + data.middle.y
+  );
+  const end = transform.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
+  const text = transform.transformPoint(
+    data.position.x + data.textBox.x,
+    data.position.y + data.textBox.y
+  );
 
   obj.position.x = position[0];
   obj.position.y = position[1];
@@ -39,12 +53,19 @@ const angle = (data) => {
   return obj;
 };
 
-const ellipse_roi = (data) => {
+const ellipse_roi = (data, transform) => {
   const obj = JSON.parse(JSON.stringify(data));
-  const position = coord.transformPoint(data.position.x, data.position.y);
-  const start = coord.transformPoint(data.position.x + data.start.x, data.position.y + data.start.y);
-  const end = coord.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
-  const text = coord.transformPoint(data.position.x + data.textBox.x, data.position.y + data.textBox.y);
+
+  const position = transform.transformPoint(data.position.x, data.position.y);
+  const start = transform.transformPoint(
+    data.position.x + data.start.x,
+    data.position.y + data.start.y
+  );
+  const end = transform.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
+  const text = transform.transformPoint(
+    data.position.x + data.textBox.x,
+    data.position.y + data.textBox.y
+  );
 
   obj.position.x = position[0];
   obj.position.y = position[1];
@@ -57,12 +78,12 @@ const ellipse_roi = (data) => {
   return obj;
 };
 
-const polygon = (data) => {
+const polygon = (data, transform) => {
   const obj = JSON.parse(JSON.stringify(data));
-  const position = coord.transformPoint(data.position.x, data.position.y);
+  const position = transform.transformPoint(data.position.x, data.position.y);
   const points = data.points.map((points) => {
     return points.map((point) => {
-      const p = coord.transformPoint(data.position.x + point[0], data.position.y + point[1]);
+      const p = transform.transformPoint(data.position.x + point[0], data.position.y + point[1]);
       // return { x: p[0] - position[0], y: p[1] - position[1] };
       return [p[0] - position[0], p[1] - position[1]];
     });
@@ -75,13 +96,13 @@ const polygon = (data) => {
 };
 
 const fnList = { length, angle, ellipse_roi, polygon };
-export const transform = (data) => {
+export const transform = (data, transform) => {
   const { type } = data;
-  return fnList?.[type](data);
+  return fnList?.[type](data, transform);
 };
 
 export const localToWorld = (x, y) => {
-  return coord.transformPoint(x, y);
+  return transform.transformPoint(x, y);
 };
 
 /**
@@ -91,5 +112,5 @@ export const localToWorld = (x, y) => {
  * @returns
  */
 export const worldToLocal = (x, y) => {
-  return coord.invertPoint(x, y);
+  return transform.invertPoint(x, y);
 };

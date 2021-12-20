@@ -8,7 +8,6 @@ import { setActionComplete } from "../../state/tool-state";
 import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId } from "../utils";
-import { worldToLocal } from "../utils/coords-transform";
 
 class AngleTool extends BaseAnnotationTool {
   constructor(config = {}) {
@@ -250,11 +249,12 @@ class AngleTool extends BaseAnnotationTool {
   _convertData() {
     // 转换成local
     const { start, middle, end, position, textBox } = this.data;
-    const localPosition = worldToLocal(position.x, position.y);
-    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
-    const localMiddle = worldToLocal(position.x + middle.x, position.y + middle.y);
-    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
-    const localText = worldToLocal(position.x + textBox.x, position.y + textBox.y);
+    const { $transform: transform } = this;
+    const localPosition = transform.invertPoint(position.x, position.y);
+    const localStart = transform.invertPoint(position.x + start.x, position.y + start.y);
+    const localMiddle = transform.invertPoint(position.x + middle.x, position.y + middle.y);
+    const localEnd = transform.invertPoint(position.x + end.x, position.y + end.y);
+    const localText = transform.invertPoint(position.x + textBox.x, position.y + textBox.y);
 
     const data = JSON.parse(JSON.stringify(this.data));
     data.position = { x: localPosition[0], y: localPosition[1] };

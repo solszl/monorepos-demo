@@ -1,25 +1,6 @@
 import { LINK_PROPERTY, Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
+import { LINK_DATA_PROPERTY } from "../../packages/entry/src/linkage-manager";
 import ToolBar from "../toolbar/toolBar";
-const toolbar = new ToolBar({ root: "toolBar" });
-toolbar.addBtn({
-  name: "缩放",
-  fun: () => {
-    standard1.useTool(TOOL_TYPE.SCALE, 1);
-    standard2.useTool(TOOL_TYPE.SCALE, 1);
-    standard3.useTool(TOOL_TYPE.SCALE, 1);
-    standard4.useTool(TOOL_TYPE.SCALE, 1);
-  },
-});
-
-toolbar.addBtn({
-  name: "调窗",
-  fun: () => {
-    standard1.useTool(TOOL_TYPE.WWWC, 1);
-    standard2.useTool(TOOL_TYPE.WWWC, 1);
-    standard3.useTool(TOOL_TYPE.WWWC, 1);
-    standard4.useTool(TOOL_TYPE.WWWC, 1);
-  },
-});
 
 const seriesId = "1.2.840.113704.7.32.07.5.1.4.76346.30000021052709540188000503559";
 const fs = "http://10.0.70.3:8000";
@@ -72,6 +53,11 @@ const standard4 = vm.addViewport({
 vm.linkManager.link([standard1.id, standard2.id], [LINK_PROPERTY.SCALE]);
 vm.linkManager.link([standard2.id, standard3.id], [LINK_PROPERTY.WWWC]);
 vm.linkManager.link([standard3.id, standard4.id], [LINK_PROPERTY.SCALE]);
+vm.linkManager.link(
+  [standard1.id, standard2.id, standard3.id, standard4.id],
+  [],
+  [LINK_DATA_PROPERTY.ROI]
+);
 
 const fetchData = async (seriesId) => {
   const url = `/api/v1/series/${seriesId}`;
@@ -92,10 +78,39 @@ fetchData(seriesId).then(async (json) => {
 
   setTimeout(async () => {
     await standard1.showImage(seriesId, currentIndex);
-    await standard2.showImage(seriesId, currentIndex + 30);
+    await standard2.showImage(seriesId, currentIndex);
     await standard3.showImage(seriesId, currentIndex);
-    await standard4.showImage(seriesId, currentIndex + 30);
+    await standard4.showImage(seriesId, currentIndex);
   }, 0);
 });
 
 console.log("fuse start.", vm);
+const toolbar = new ToolBar({ root: "toolBar" });
+const views = [standard1, standard2, standard3, standard4];
+toolbar.addBtn({
+  name: "缩放",
+  fun: () => {
+    views.forEach((view) => view.useTool(TOOL_TYPE.SCALE, 1));
+  },
+});
+
+toolbar.addBtn({
+  name: "调窗",
+  fun: () => {
+    views.forEach((view) => view.useTool(TOOL_TYPE.WWWC, 1));
+  },
+});
+
+toolbar.addBtn({
+  name: "ROI",
+  fun: () => {
+    views.forEach((view) => view.useTool(TOOL_TYPE.ELLIPSE_ROI, 1));
+  },
+});
+
+toolbar.addBtn({
+  name: "长度",
+  fun: () => {
+    views.forEach((view) => view.useTool(TOOL_TYPE.LENGTH, 1));
+  },
+});

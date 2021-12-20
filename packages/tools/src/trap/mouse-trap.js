@@ -87,15 +87,17 @@ const enable = (stage, toolState) => {
   toolState.$stage = stage;
   // remove old event listeners
   Reflect.ownKeys(ee).forEach((key) => {
-    stage.off(key, clones[key]);
-    delete clones[key];
+    const k = `${key}-${stage.id()}`;
+    stage.off(key, clones[k]);
+    delete clones[k];
   });
 
   Reflect.ownKeys(ee).forEach((key) => {
-    clones[key] = (evt) => {
+    const k = `${key}-${stage.id()}`;
+    clones[k] = (evt) => {
       ee[key](evt, toolState);
     };
-    stage.on(key, clones[key]);
+    stage.on(key, clones[k]);
   });
 
   // document

@@ -11,7 +11,6 @@ import { useImageState } from "../../state/image-state";
 import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId, toCT } from "../utils";
-import { worldToLocal } from "../utils/coords-transform";
 const MeasureUnit = {
   dicom: "mm",
   webImage: "px",
@@ -234,10 +233,11 @@ class EllipseTool extends BaseAnnotationTool {
   _convertData() {
     // 转换成local
     const { position, end, start, textBox } = this.data;
-    const localPosition = worldToLocal(position.x, position.y);
-    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
-    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
-    const localText = worldToLocal(position.x + textBox.x, position.y + textBox.y);
+    const { $transform: transform } = this;
+    const localPosition = transform.invertPoint(position.x, position.y);
+    const localStart = transform.invertPoint(position.x + start.x, position.y + start.y);
+    const localEnd = transform.invertPoint(position.x + end.x, position.y + end.y);
+    const localText = transform.invertPoint(position.x + textBox.x, position.y + textBox.y);
 
     const data = JSON.parse(JSON.stringify(this.data));
     data.position = { x: localPosition[0], y: localPosition[1] };
@@ -255,11 +255,12 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _getArea() {
+    const { $transform: transform } = this;
     // 计算面积
     const { position, start, end } = this.data;
     const { columnPixelSpacing = 0.625, rowPixelSpacing = 0.625 } = this.imageState;
-    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
-    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const localStart = transform.invertPoint(position.x + start.x, position.y + start.y);
+    const localEnd = transform.invertPoint(position.x + end.x, position.y + end.y);
     const a = Math.abs(localStart[0] - localEnd[0]) / 2;
     const b = Math.abs(localStart[1] - localEnd[1]) / 2;
     const area = Math.PI * (a * columnPixelSpacing) * (b * rowPixelSpacing);
@@ -267,11 +268,12 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _getPixelData() {
+    const { $transform: transform } = this;
     // 思路：根据绘制椭圆外层的矩形宽高、起始点，循环获取pixelData值，判断当前pixelData是否在椭圆中，在则取出。
     const { position, start, end } = this.data;
     const pixelData = this.imageState.pixelData;
-    const localStart = worldToLocal(position.x + start.x, position.y + start.y);
-    const localEnd = worldToLocal(position.x + end.x, position.y + end.y);
+    const localStart = transform.invertPoint(position.x + start.x, position.y + start.y);
+    const localEnd = transform.invertPoint(position.x + end.x, position.y + end.y);
     // 锚点绘制椭圆时，外层矩形的宽高
     const width = Math.abs(localStart[0] - localEnd[0]);
     const height = Math.abs(localStart[1] - localEnd[1]);
@@ -323,7 +325,9 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _inEllipse(a, b, x, y, center) {
-    return Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1;
+    return (
+      Math.pow(x - center[0], 2) / Math.pow(a, 2) + Math.pow(y - center[1], 2) / Math.pow(b, 2) <= 1
+    );
   }
 
   _updateTextBox() {

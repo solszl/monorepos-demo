@@ -20,6 +20,7 @@ class ToolState {
       4: null,
     };
     this.toolInstance = {};
+    this.$transform = null;
   }
 
   updateState(toolType, button = 1) {
@@ -45,6 +46,7 @@ class ToolState {
       if (needInitial) {
         this.toolInstance[button] = new TOOL_CONSTRUCTOR[toolType]();
         this.toolInstance[button].$stage = this.$stage;
+        this.toolInstance[button].$transform = this.$transform;
         completeState.button = button;
       }
 

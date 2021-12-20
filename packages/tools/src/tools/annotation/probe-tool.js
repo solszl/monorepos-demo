@@ -5,7 +5,6 @@ import { useImageState } from "../../state/image-state";
 import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { randomId, toCT } from "../utils";
-import { worldToLocal } from "../utils/coords-transform";
 class ProbeTool extends BaseAnnotationTool {
   constructor(config = {}) {
     super(Object.assign({}, config, { useDefaultMouseEffect: false }));
@@ -67,7 +66,9 @@ class ProbeTool extends BaseAnnotationTool {
       textfield.hide();
       return;
     }
-    const point = worldToLocal(position.x, position.y);
+
+    const { $transform: transform } = this;
+    const point = transform.invertPoint(position.x, position.y);
     textfield.show();
     const ctValue = this._getCT(Math.round(point[0]), Math.round(point[1]));
     textfield.text(`CT: ${ctValue}`);
@@ -76,7 +77,11 @@ class ProbeTool extends BaseAnnotationTool {
   _getCT(x, y) {
     const index = y * this.imageState.columns + x;
 
-    return toCT([this.imageState.pixelData[index]], this.imageState.slope, this.imageState.intercept);
+    return toCT(
+      [this.imageState.pixelData[index]],
+      this.imageState.slope,
+      this.imageState.intercept
+    );
   }
 }
 

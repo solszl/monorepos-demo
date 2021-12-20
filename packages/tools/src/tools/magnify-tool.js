@@ -1,10 +1,9 @@
-import { TOOL_TYPE } from "@pkg/entry/src";
 import { Circle } from "konva/lib/shapes/Circle";
+import { TOOL_TYPE } from "..";
 import { useImageState } from "../state/image-state";
 import { useViewportState } from "../state/viewport-state";
 import BaseTool from "./base/base-tool";
 import { cursor, randomId } from "./utils";
-import { worldToLocal } from "./utils/coords-transform";
 
 const tmpCanvas = document.createElement("canvas");
 class MagnifyTool extends BaseTool {
@@ -102,10 +101,8 @@ class MagnifyTool extends BaseTool {
     tmpCanvas.width = this.data.size * 2;
     tmpCanvas.height = this.data.size * 2;
     const ctx = canvas.getContext("2d");
-    const point = worldToLocal(
-      this.data.centerPoint.x,
-      this.data.centerPoint.y
-    );
+    const { $transform: transform } = this;
+    const point = transform.invertPoint(this.data.centerPoint.x, this.data.centerPoint.y);
 
     ctx.drawImage(
       this.imageState.imgCanvas,

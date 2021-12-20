@@ -2,22 +2,24 @@ import { Component } from "@pkg/core/src";
 import { DD } from "konva/lib/DragAndDrop";
 import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
-import Area from "./area";
 import { INTERNAL_EVENTS } from "./constants";
 import { TOOL_CONSTRUCTOR } from "./constructor";
 import { removeImageState, useImageState } from "./state/image-state";
 import ToolState from "./state/tool-state";
-import { removeViewportState } from "./state/viewport-state";
+import { removeViewportState, useViewportState } from "./state/viewport-state";
 import { transform as transformCoords } from "./tools/utils/coords-transform";
+import Transform from "./transform";
 import MouseTrap from "./trap/mouse-trap";
 
 class View extends Component {
   constructor(option = {}) {
     super(option);
 
-    this.toolState = new ToolState();
-    this.area = new Area();
+    // this.area = new Area();
     this.initContainer(option.el);
+    this.transform = new Transform();
+    this.toolState = new ToolState();
+    this.toolState.$transform = this.transform;
   }
 
   resize(width, height) {
@@ -46,7 +48,7 @@ class View extends Component {
       )
     );
     this.stage = stage;
-    this.area.stageId = stage.id();
+    // this.area.stageId = stage.id();
 
     stage.add(
       new Layer({
@@ -63,7 +65,10 @@ class View extends Component {
   }
 
   updateViewport(config = {}) {
-    this.area.update(config);
+    // this.area.update(config);
+    const [getState, setViewportState] = useViewportState(this.stage.id());
+    setViewportState(Object.assign({}, getState(), config, { stageId: this.stage.id() }));
+    this._applyTransform();
   }
 
   updateImageState(config = {}) {
@@ -96,7 +101,9 @@ class View extends Component {
       const { type, id } = obj;
       const item = new TOOL_CONSTRUCTOR[type]();
       item.$stage = layer.getStage();
-      item.data = transformCoords(obj);
+      item.$transform = this.transform;
+      // item.data = transformCoords(obj, this.area.transform);
+      item.data = transformCoords(obj, this.transform);
       item.name(id);
     });
     layer.batchDraw();
@@ -109,7 +116,8 @@ class View extends Component {
     }
     data.forEach((obj) => {
       const item = layer.findOne(`.${obj.id}`);
-      const data = transformCoords(obj);
+      // const data = transformCoords(obj, this.area.transform);
+      const data = transformCoords(obj, this.transform);
       item.setData(data);
       item.renderData();
     });
@@ -119,6 +127,40 @@ class View extends Component {
   _getRootSize(el) {
     let { clientWidth, clientHeight } = el;
     return { width: clientWidth, height: clientHeight };
+  }
+
+  _applyTransform() {
+    const stageId = this.stage.id();
+    const [viewportState] = useViewportState(stageId);
+    const { scale, rotate, flip, width, height, x, y, rootWidth, rootHeight } = viewportState();
+    const { transform } = this;
+
+    transform.reset();
+
+    if (x || y) {
+      transform.translate(x, y);
+    }
+
+    transform.translate(rootWidth / 2, rootHeight / 2);
+
+    if (flip) {
+      const { h = false, v = false } = flip;
+      const fv = v ? -1 : 1;
+      const fh = h ? -1 : 1;
+      transform.scale(fh, fv);
+    }
+
+    if (!!scale) {
+      transform.scale(scale, scale);
+    }
+
+    if (!!rotate) {
+      transform.rotate(rotate);
+    }
+
+    transform.translate(-width / 2, -height / 2);
+
+    return transform.m;
   }
 }
 
