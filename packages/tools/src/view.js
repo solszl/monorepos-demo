@@ -15,7 +15,6 @@ class View extends Component {
   constructor(option = {}) {
     super(option);
 
-    // this.area = new Area();
     this.initContainer(option.el);
     this.transform = new Transform();
     this.toolState = new ToolState();
@@ -48,7 +47,6 @@ class View extends Component {
       )
     );
     this.stage = stage;
-    // this.area.stageId = stage.id();
 
     stage.add(
       new Layer({
@@ -65,7 +63,6 @@ class View extends Component {
   }
 
   updateViewport(config = {}) {
-    // this.area.update(config);
     const [getState, setViewportState] = useViewportState(this.stage.id());
     setViewportState(Object.assign({}, getState(), config, { stageId: this.stage.id() }));
     this._applyTransform();
@@ -102,7 +99,6 @@ class View extends Component {
       const item = new TOOL_CONSTRUCTOR[type]();
       item.$stage = layer.getStage();
       item.$transform = this.transform;
-      // item.data = transformCoords(obj, this.area.transform);
       item.data = transformCoords(obj, this.transform);
       item.name(id);
     });
@@ -116,7 +112,6 @@ class View extends Component {
     }
     data.forEach((obj) => {
       const item = layer.findOne(`.${obj.id}`);
-      // const data = transformCoords(obj, this.area.transform);
       const data = transformCoords(obj, this.transform);
       item.setData(data);
       item.renderData();

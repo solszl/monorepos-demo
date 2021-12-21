@@ -2,7 +2,7 @@ import { TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
 const fs = "http://10.0.70.3:8000";
-let currentIndex = 100;
+let currentIndex = 0;
 const API_GRAY = "/api/v1/series/";
 const API_COLOR = "/api/v1/series/ssr/";
 
@@ -16,12 +16,8 @@ const standard = vm.addViewport({
   transferMode: "web",
   el: document.querySelector("#root"),
   colormap: {
-    percents: {
-      0: "#0000FF",
-      50: "#00FF00",
-      100: "#FF0000",
-    },
-    type: "rgb",
+    name: "RdYlBu",
+    reverse: false,
   },
   disableTools: [TOOL_TYPE.WWWC],
 });
@@ -35,9 +31,10 @@ const fetchData = async (seriesId) => {
 };
 
 fetchData(seriesId).then(async (json) => {
-  const imageUrls = json.data.images.map((i) => {
-    return `${fs}/${i.storagePath}`;
-  });
+  const imageUrls = ["http://10.0.80.32:8887/SE10.dcm"];
+  // const imageUrls = json.data.images.map((i) => {
+  //   return `${fs}/${i.storagePath}`;
+  // });
 
   const resource = vm.resource;
   await resource.initTransfer([{ mode: "web" }]);

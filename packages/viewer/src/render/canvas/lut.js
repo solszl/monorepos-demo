@@ -1,4 +1,5 @@
 let lutCache = {};
+let nshaders = 255;
 export const getLut = (image, displayState) => {
   const { wwwc, invert = false } = displayState;
   let { windowWidth, windowCenter } = image;
@@ -56,6 +57,6 @@ const linearModalityLut = (slope, intercept) => {
 
 const wwwcLut = (ww, wc) => {
   return (mlutValue) => {
-    return ((mlutValue - wc) / ww + 0.5) * 255.0;
+    return ((mlutValue - wc) / ww + 0.5) * 255;
   };
 };

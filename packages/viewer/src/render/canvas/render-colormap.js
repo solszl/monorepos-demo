@@ -1,17 +1,29 @@
+import { evaluate_cmap } from "../../algo/colormap/index";
 /**
  * @param { Image } image
  * @param { Array } lut
  * @param { HTMLCanvasElement } renderCanvas
  */
-export const renderColormapImage = (image, lut, renderCanvas, colors) => {
+export const renderColormapImage = (image, lut, renderCanvas, colormap) => {
   const { samplesPerPixel, pixelData } = image;
-  const { minPixelValue } = image;
+  const { minPixelValue, maxPixelValue } = image;
   const { width, height } = renderCanvas;
   const ctx = renderCanvas.getContext("2d");
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, width, height);
   ctx.imageSmoothingEnabled = false;
 
+  let j = 0;
+  let colors = [];
+
+  const { reverse = false, name = "RdYlBu" } = colormap;
+  // 提前计算好一次colormap 避免每次运算
+  while (j < maxPixelValue - minPixelValue) {
+    colors.push(evaluate_cmap(j / (maxPixelValue - minPixelValue), name, reverse));
+    j += 1;
+  }
+
+  colors.unshift([0, 0, 0, 0]);
   const renderCanvasData = ctx.getImageData(0, 0, width, height);
   let imageDataIndex = 0;
   let numPixels = width * height;

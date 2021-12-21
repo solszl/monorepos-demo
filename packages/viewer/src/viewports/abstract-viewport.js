@@ -1,5 +1,4 @@
 import { Component, RenderSchedule } from "@pkg/core/src";
-import Colormap from "../algo/colormap/index";
 import { VIEWER_INTERNAL_EVENTS } from "../constants";
 import { applyTransform } from "../transform/apply";
 import { validate } from "../validator";
@@ -21,9 +20,7 @@ class AbstractViewport extends Component {
     }
 
     if (option.colormap) {
-      const colormap = new Colormap();
-      colormap.setOption(option.colormap);
-      Object.assign(this.displayState, { colormap });
+      Object.assign(this.displayState, { colormap: option.colormap });
     }
     this.init();
   }
