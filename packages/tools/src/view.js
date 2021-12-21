@@ -31,16 +31,16 @@ class View extends Component {
   }
 
   initContainer(el) {
-    const toolContainer = document.createElement("div");
-    toolContainer.classList.add("tools-container");
-    toolContainer.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2;`;
-    el.appendChild(toolContainer);
+    const container = document.createElement("div");
+    container.classList.add("tools-container");
+    container.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2;`;
+    el.appendChild(container);
 
     const stage = new Stage(
       Object.assign(
         {},
         {
-          container: toolContainer,
+          container,
           id: this.id,
         },
         this._getRootSize(el)
