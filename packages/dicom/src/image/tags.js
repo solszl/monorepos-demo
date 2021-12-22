@@ -269,4 +269,11 @@ export const Tags = {
    * @memberof Tags
    */
   SeriesInstanceUID: makeTag(0x0020, 0x000e),
+
+  /**
+   * 该层面的物理位置
+   *
+   * @memberof Tags
+   */
+  SliceLocation: makeTag(0x0020, 0x1041),
 };

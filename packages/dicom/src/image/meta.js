@@ -70,8 +70,8 @@ export const getMetaData = (dataset) => {
     patientSex: dataset.string(Tags.PatientSex) || "",
     patientAge: dataset.string(Tags.PatientAge) || "",
     studyId: dataset.string(Tags.StudyInstanceUID),
-
     seriesId: dataset.string(Tags.SeriesInstanceUID),
+    sliceLocation: dataset.floatString(Tags.SliceLocation),
   };
 
   return metaData;
@@ -146,7 +146,11 @@ function readCodeList(byteArray, position, length) {
   return result;
 }
 
-const getCompressionState = ({ lossyImageCompression, lossyImageCompressionRatio, lossyImageCompressionMethod }) => {
+const getCompressionState = ({
+  lossyImageCompression,
+  lossyImageCompressionRatio,
+  lossyImageCompressionMethod,
+}) => {
   if (lossyImageCompression === "01" && lossyImageCompressionRatio !== "") {
     const compressionMethod = lossyImageCompressionMethod || "Lossy: ";
     const compressionRatio = parseFloat(lossyImageCompressionRatio).toFixed(2);
