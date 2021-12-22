@@ -83,21 +83,23 @@ class AbstractViewport extends Component {
     iframe.contentWindow.onresize = resizeHandler;
   }
 
-  showImage(image) {
+  showImage(image, dispatch = true) {
     this.image = image;
     const { width: rw, height: rh } = this.renderer.renderData;
     const { columns, rows } = image;
     if (rw !== rows || rh !== columns) {
       this.renderer.renderData.width = columns;
       this.renderer.renderData.height = rows;
+      this._calcSuitableSizeRatio();
     }
-    this._calcSuitableSizeRatio();
     this._displayChanged = true;
     this.renderSchedule.invalidate(this.render.bind(this), image);
-    this.emit(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, {
+    const data = {
       seriesId: image.seriesId,
       sliceId: image.instanceNumber,
-    });
+    };
+    this.emit(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, data);
+    this.tryDispatchInjectEvents("slice", data, dispatch);
   }
 
   async render(image) {

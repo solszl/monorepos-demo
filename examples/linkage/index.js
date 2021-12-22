@@ -55,7 +55,7 @@ vm.linkManager.link([standard2.id, standard3.id], [LINK_PROPERTY.WWWC]);
 vm.linkManager.link([standard3.id, standard4.id], [LINK_PROPERTY.SCALE]);
 vm.linkManager.link(
   [standard1.id, standard2.id, standard3.id, standard4.id],
-  [],
+  [LINK_PROPERTY.SLICE],
   [LINK_DATA_PROPERTY.ROI]
 );
 
@@ -112,5 +112,11 @@ toolbar.addBtn({
   name: "长度",
   fun: () => {
     views.forEach((view) => view.useTool(TOOL_TYPE.LENGTH, 1));
+  },
+});
+toolbar.addBtn({
+  name: "滚动",
+  fun: () => {
+    views.forEach((view) => view.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, 4));
   },
 });

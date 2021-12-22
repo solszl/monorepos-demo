@@ -123,6 +123,10 @@ class Viewport extends Component {
         const image = await transfer.getImage(seriesId, this.currentIndex, alias);
         imageView.showImage(image);
       });
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SLICE_CHANGE, async (info) => {
+        const { seriesId, sliceId, dispatch } = info;
+        this.showImage(seriesId, sliceId, dispatch);
+      });
     });
 
     this._toolView = toolView;
@@ -169,14 +173,14 @@ class Viewport extends Component {
    * @param { number } index 影像索引，0开始
    * @memberof Viewport
    */
-  async showImage(seriesId, index) {
+  async showImage(seriesId, index, dispatch = true) {
     const { resource, transferMode, alias } = this.option;
     const transfer = resource.getTransfer(transferMode);
 
     this.currentIndex = +index;
     this.currentIndex = transfer.getIllegalIndex(this.currentIndex, seriesId, alias);
     const image = await transfer.getImage(seriesId, this.currentIndex, alias);
-    this.imageView.showImage(image);
+    this.imageView.showImage(image, dispatch);
     return image;
   }
 

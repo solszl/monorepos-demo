@@ -63,4 +63,5 @@ export const INTERNAL_EVENTS = {
   TOOL_FLIPH: "tx_tool_flipH",
   TOOL_FLIPV: "tx_tool_flipV",
   TOOL_INVERT: "tx_tool_invert",
+  TOOL_SLICE_CHANGE: "tx_slice_change",
 };

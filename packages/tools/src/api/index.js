@@ -36,6 +36,11 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale, dispatch });
   }
 
+  slice_cmd(data, dispatch = true) {
+    const { seriesId, sliceId } = data;
+    this.emit(INTERNAL_EVENTS.TOOL_SLICE_CHANGE, { seriesId, sliceId, dispatch });
+  }
+
   polygon(params = []) {
     params.forEach((item) => {
       new TOOL_CONSTRUCTOR[TOOL_TYPE.RECT]({ stage: this.stage, ...item });
