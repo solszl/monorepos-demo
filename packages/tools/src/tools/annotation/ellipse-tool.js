@@ -1,8 +1,7 @@
-import { TOOL_TYPE } from "@pkg/entry/src";
 import { Group } from "konva/lib/Group";
 import { Ellipse } from "konva/lib/shapes/Ellipse";
 import { Rect } from "konva/lib/shapes/Rect";
-import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR } from "../../constants";
+import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextItem from "../../shape/parts/text-item";

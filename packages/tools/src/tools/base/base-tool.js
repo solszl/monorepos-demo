@@ -33,7 +33,11 @@ class BaseTool extends UIComponent {
     this.careStageEvent = false;
     if (!this.UIInitialed) {
       this.initialUI();
-      activeUtil.off(this);
+      // 如果使用了自定义配色。就不取消激活了
+      const { useCustomColourConfig = false } = val;
+      if (useCustomColourConfig === false) {
+        activeUtil.off(this);
+      }
     }
     this.renderData();
   }

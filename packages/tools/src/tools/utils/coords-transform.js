@@ -78,6 +78,25 @@ const ellipse_roi = (data, transform) => {
   return obj;
 };
 
+const roi = (data, transform) => {
+  const obj = JSON.parse(JSON.stringify(data));
+
+  const position = transform.transformPoint(data.position.x, data.position.y);
+  const start = transform.transformPoint(
+    data.position.x + data.start.x,
+    data.position.y + data.start.y
+  );
+  const end = transform.transformPoint(data.position.x + data.end.x, data.position.y + data.end.y);
+
+  obj.position.x = position[0];
+  obj.position.y = position[1];
+  obj.end.x = end[0] - position[0];
+  obj.end.y = end[1] - position[1];
+  obj.start.x = start[0] - position[0];
+  obj.start.y = start[1] - position[1];
+  return obj;
+};
+
 const polygon = (data, transform) => {
   const obj = JSON.parse(JSON.stringify(data));
   const position = transform.transformPoint(data.position.x, data.position.y);
@@ -95,7 +114,7 @@ const polygon = (data, transform) => {
   return obj;
 };
 
-const fnList = { length, angle, ellipse_roi, polygon };
+const fnList = { length, angle, ellipse_roi, polygon, roi };
 export const transform = (data, transform) => {
   const { type } = data;
   return fnList?.[type](data, transform);

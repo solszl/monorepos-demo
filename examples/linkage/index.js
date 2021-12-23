@@ -105,7 +105,7 @@ toolbar.addBtn({
 toolbar.addBtn({
   name: "ROI",
   fun: () => {
-    views.forEach((view) => view.useTool(TOOL_TYPE.ELLIPSE_ROI, 1));
+    views.forEach((view) => view.useTool(TOOL_TYPE.ROI, 1));
   },
 });
 

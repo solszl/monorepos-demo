@@ -34,6 +34,7 @@ export const TOOL_TYPE = {
   ANGLE: "angle",
   PROBE: "probe",
   ELLIPSE_ROI: "ellipse_roi",
+  ROI: "roi",
   POLYGON: "polygon",
   ROTATION: "rotation",
   SCALE: "scale",

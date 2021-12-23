@@ -83,6 +83,7 @@ class Viewport extends Component {
       const sliceData = this.data?.[sliceKey] ?? new Map();
       sliceData.set(data.id, data.data);
       this.data[sliceKey] = sliceData;
+      this.emit(EVENTS.TOOL_DATA_UPDATED, data);
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, (data) => {
@@ -90,6 +91,7 @@ class Viewport extends Component {
       const sliceData = this.data?.[sliceKey] ?? new Map();
       sliceData.delete(data.id);
       this.data[sliceKey] = sliceData;
+      this.emit(EVENTS.TOOL_DATA_REMOVED, data);
     });
 
     [api, toolView].map((obj) => {

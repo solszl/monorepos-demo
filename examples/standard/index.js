@@ -1,5 +1,6 @@
-import { ViewportManager } from "@pkg/entry/src";
+import { ToolsMisc, ViewportEvents, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
+const { roi } = ToolsMisc;
 const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
 const fs = "http://10.0.70.3:8000";
 let currentIndex = 50;
@@ -43,9 +44,22 @@ fetchData(seriesId).then(async (json) => {
 document.addEventListener("wheel", async (e) => {
   let offset = Math.sign(e.wheelDelta);
   currentIndex += offset;
-  const { resource } = vm;
-  const { transferMode, alias } = standard.option;
-  const transfer = resource.getTransfer(transferMode);
-  const image = await transfer.getImage(seriesId, currentIndex, alias);
-  standard.imageView.showImage(image);
+  // const { resource } = vm;
+  // const { transferMode, alias } = standard.option;
+  // const transfer = resource.getTransfer(transferMode);
+  // const image = await transfer.getImage(seriesId, currentIndex, alias);
+  // standard.imageView.showImage(image);
+  standard.showImage(seriesId, currentIndex);
 });
+
+// TODO: remove me
+standard.useTool("roi");
+
+standard.on(ViewportEvents.TOOL_DATA_UPDATED, (info) => {
+  const image = standard.imageView.image;
+  const { data } = info;
+  const result = roi(image, data);
+  console.log(result, standard);
+});
+
+standard.on();

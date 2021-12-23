@@ -16,7 +16,8 @@ class TextField extends Text {
     this.fontSize(15);
     this.align("center");
     this.name(TOOL_ITEM_SELECTOR.LABEL);
-    this.fill(TOOL_COLORS.NORMAL[`.${TOOL_ITEM_SELECTOR.LABEL}`]);
+    const { fontColor } = config;
+    this.fill(fontColor ?? TOOL_COLORS.NORMAL[`.${TOOL_ITEM_SELECTOR.LABEL}`]);
     this.draggable(true);
   }
 }

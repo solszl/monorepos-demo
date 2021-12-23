@@ -15,7 +15,7 @@ export const LINK_PROPERTY = {
 };
 
 export const LINK_DATA_PROPERTY = {
-  ROI: "ellipse_roi",
+  ROI: "roi",
 };
 
 const events = {};
