@@ -37,8 +37,8 @@ class API extends Component {
   }
 
   slice_cmd(data, dispatch = true) {
-    const { seriesId, sliceId } = data;
-    this.emit(INTERNAL_EVENTS.TOOL_SLICE_CHANGE, { seriesId, sliceId, dispatch });
+    const { seriesId, sliceId, currentIndex } = data;
+    this.emit(INTERNAL_EVENTS.TOOL_SLICE_CHANGE, { seriesId, sliceId, currentIndex, dispatch });
   }
 
   polygon(params = []) {

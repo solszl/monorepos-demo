@@ -1,4 +1,3 @@
-import { verify } from "../../area";
 import { INTERNAL_EVENTS, TOOL_TYPE } from "../../constants";
 import Polygon from "../../shape/parts/polygon";
 import TextField from "../../shape/parts/textfield";
@@ -51,7 +50,7 @@ class RectTool extends BaseAnnotationTool {
     });
     console.log(arr);
     // points.forEach((item, index) => arr.push([points[2 * index] + position.x, points[2 * index + 1] + position.y]));
-    return arr.every(([x, y]) => verify(x, y, width, height));
+    return arr.every(([x, y]) => this.verify(x, y, width, height));
   }
 
   initialUI() {

@@ -85,6 +85,14 @@ class WebTransfer {
         return;
       }
 
+      if (this.taskManager.taskIsLoading(task)) {
+        return;
+      }
+
+      if (this.taskManager.taskIsPending(task)) {
+        return;
+      }
+
       task.resolve = resolve;
       this.taskManager.addPendingTask(task);
 
@@ -94,7 +102,7 @@ class WebTransfer {
   }
 
   getIllegalIndex(index, seriesId, plane, loop) {
-    const { length } = this.taskManager.getTasks(seriesId, plane);
+    const { length } = this.taskManager.getTask(seriesId, plane);
     if (loop && index >= length) {
       return 0;
     }

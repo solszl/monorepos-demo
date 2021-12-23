@@ -1,5 +1,4 @@
 import { Line } from "konva/lib/shapes/Line";
-import { verify } from "../../area";
 import { INTERNAL_EVENTS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
@@ -156,7 +155,7 @@ class AngleTool extends BaseAnnotationTool {
       [end.x + position.x, end.y + position.y],
     ];
 
-    return points.every(([x, y]) => verify(x, y, width, height));
+    return points.every(([x, y]) => this.verify(x, y, width, height));
   }
 
   dragAnchor(evt) {

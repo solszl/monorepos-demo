@@ -2,7 +2,6 @@ import { TOOL_TYPE } from "@pkg/entry/src";
 import { Group } from "konva/lib/Group";
 import { Ellipse } from "konva/lib/shapes/Ellipse";
 import { Rect } from "konva/lib/shapes/Rect";
-import { verify } from "../../area";
 import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR } from "../../constants";
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
@@ -208,7 +207,7 @@ class EllipseTool extends BaseAnnotationTool {
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
     ];
-    return points.every(([x, y]) => verify(x, y, width, height));
+    return points.every(([x, y]) => this.verify(x, y, width, height));
   }
 
   _tryUpdateData() {

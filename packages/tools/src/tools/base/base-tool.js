@@ -45,6 +45,12 @@ class BaseTool extends UIComponent {
   setData(val) {
     this._data = val;
   }
+
+  verify(x, y, width, height) {
+    const { $transform: transform } = this;
+    const [ox, oy] = transform.invertPoint(x, y);
+    return ox >= 0 && ox <= width && oy >= 0 && oy <= height;
+  }
 }
 
 export default BaseTool;

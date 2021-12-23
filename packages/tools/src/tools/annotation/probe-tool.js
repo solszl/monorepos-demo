@@ -1,4 +1,3 @@
-import { verify } from "../../area";
 import { TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
 import TextField from "../../shape/parts/textfield";
 import { useImageState } from "../../state/image-state";
@@ -62,7 +61,7 @@ class ProbeTool extends BaseAnnotationTool {
     const { width, height } = this.viewportState;
     const textfield = this.findOne(`.${TOOL_ITEM_SELECTOR.LABEL}`);
     this.setPosition(position);
-    if (!verify(position.x, position.y, width, height)) {
+    if (!this.verify(position.x, position.y, width, height)) {
       textfield.hide();
       return;
     }

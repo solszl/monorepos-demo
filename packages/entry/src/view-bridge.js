@@ -120,12 +120,11 @@ class Viewport extends Component {
         const transfer = resource.getTransfer(transferMode);
         this.currentIndex += delta;
         this.currentIndex = transfer.getIllegalIndex(this.currentIndex, seriesId, alias, loop);
-        const image = await transfer.getImage(seriesId, this.currentIndex, alias);
-        imageView.showImage(image);
+        this.showImage(seriesId, this.currentIndex);
       });
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SLICE_CHANGE, async (info) => {
-        const { seriesId, sliceId, dispatch } = info;
-        this.showImage(seriesId, sliceId, dispatch);
+        const { seriesId, sliceId, currentIndex, dispatch } = info;
+        this.showImage(seriesId, currentIndex, dispatch);
       });
     });
 
@@ -180,6 +179,7 @@ class Viewport extends Component {
     this.currentIndex = +index;
     this.currentIndex = transfer.getIllegalIndex(this.currentIndex, seriesId, alias);
     const image = await transfer.getImage(seriesId, this.currentIndex, alias);
+    this.imageView.currentShowIndex = this.currentIndex;
     this.imageView.showImage(image, dispatch);
     return image;
   }

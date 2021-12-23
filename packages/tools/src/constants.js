@@ -51,6 +51,13 @@ export const TOOL_TYPE = {
   REMOVE_VIEWPORT_STATE_CMD: "remove_viewport_state_cmd",
 };
 
+export const MOUSE_BUTTON = {
+  LEFT: 1,
+  MIDDLE: 2,
+  RIGHT: 3,
+  WHEEL: 4,
+};
+
 export const INTERNAL_EVENTS = {
   DATA_CREATED: "tx_data_created",
   DATA_UPDATED: "tx_data_updated",

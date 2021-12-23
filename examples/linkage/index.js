@@ -1,5 +1,6 @@
 import { LINK_PROPERTY, Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 import { LINK_DATA_PROPERTY } from "../../packages/entry/src/linkage-manager";
+import { MOUSE_BUTTON } from "../../packages/tools/src/constants";
 import ToolBar from "../toolbar/toolBar";
 
 const seriesId = "1.2.840.113704.7.32.07.5.1.4.76346.30000021052709540188000503559";
@@ -117,6 +118,9 @@ toolbar.addBtn({
 toolbar.addBtn({
   name: "滚动",
   fun: () => {
-    views.forEach((view) => view.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, 4));
+    views.forEach((view) => {
+      view.useTool(TOOL_TYPE.STACK_SCROLL, MOUSE_BUTTON.RIGHT);
+      view.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+    });
   },
 });

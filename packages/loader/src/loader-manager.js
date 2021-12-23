@@ -16,19 +16,15 @@ class LoaderManager {
 
   initLoader() {
     // 非xp留出一个加载线程供其他请求
-    const workerCount = isXP
-      ? 2
-      : Math.min(navigator.hardwareConcurrency - 1, 5);
+    const workerCount = isXP ? 2 : Math.min(navigator.hardwareConcurrency - 1, 5);
 
-    this.workers = Array.from(new Array(workerCount), (_, i) => i + 1).map(
-      (i) => {
-        const worker = new LoaderWorker();
-        const promiseWorker = new PromiseWorker(worker);
-        promiseWorker.id = i;
-        promiseWorker.working = false;
-        return promiseWorker;
-      }
-    );
+    this.workers = Array.from(new Array(workerCount), (_, i) => i + 1).map((i) => {
+      const worker = new LoaderWorker();
+      const promiseWorker = new PromiseWorker(worker);
+      promiseWorker.id = i;
+      promiseWorker.working = false;
+      return promiseWorker;
+    });
 
     console.log(this.workers);
   }
@@ -55,18 +51,17 @@ class LoaderManager {
       return;
     }
 
+    this.taskManager.addLoadingTask(task);
     const worker = this.workers.shift();
     worker.working = true;
     const { resolve } = task;
     delete task.resolve;
-    const data = await worker.postMessage(task);
-    worker.working = false;
-    this.workers.push(worker);
-
-    const { seriesId, plane, index, image } = data;
+    const { seriesId, plane, index, image } = await worker.postMessage(task);
     let img = await postprocessor(image, task);
     this.cacheManager.cacheItem(seriesId, { key: index, value: img }, plane);
-
+    worker.working = false;
+    this.workers.push(worker);
+    this.taskManager.removeLoadingTask(task);
     resolve?.(img);
     await this.delay(0); // 减压、涓流
     this._startCheck(); // 可能有更好的办法？？？

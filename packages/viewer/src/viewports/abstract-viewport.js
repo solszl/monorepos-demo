@@ -12,6 +12,7 @@ class AbstractViewport extends Component {
     this.renderer = null;
     this.el = option.el;
     this.canvas = null;
+    this.currentShowIndex = -1;
 
     this.resetDisplayState();
 
@@ -97,6 +98,7 @@ class AbstractViewport extends Component {
     const data = {
       seriesId: image.seriesId,
       sliceId: image.instanceNumber,
+      currentIndex: this.currentShowIndex,
     };
     this.emit(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, data);
     this.tryDispatchInjectEvents("slice", data, dispatch);
