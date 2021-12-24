@@ -29,6 +29,11 @@ class ToolState {
       return;
     }
 
+    if (toolType === "") {
+      this.state[button] = null;
+      return;
+    }
+
     this.state[button] = toolType;
   }
 
