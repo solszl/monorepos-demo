@@ -3,6 +3,7 @@ import { API, TOOLVIEW_INTERNAL_EVENTS, View } from "@pkg/tools/src";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@pkg/viewer/src";
 import { EVENTS } from "./constants";
 import { appendIFrame } from "./utils";
+import { snapshotMode1, snapshotMode2 } from "./utils/snapshot";
 class Viewport extends Component {
   constructor(option) {
     super();
@@ -196,6 +197,40 @@ class Viewport extends Component {
     this.toolView.destroy();
     this.imageView.destroy();
     this.data = {};
+  }
+
+  /**
+   * 截图功能，根据配置截图
+   * 配置可以有，所见即所得模式，固定模式（根据原图走）
+   *
+   * @param { Object } config
+   * @returns { HTMLCanvasElement } ret
+   * @memberof Viewport
+   */
+  async snapshot(config = {}) {
+    let ret = null;
+    const { el } = this.option;
+    // mode 1: 所见即所得模式， 2：标准影像大小模式
+    const { mode = 1, showTypes = [] } = config;
+    switch (mode) {
+      case 1:
+        ret = snapshotMode1(el);
+        break;
+      case 2:
+        const cfg = {
+          imageView: this.imageView,
+          toolView: this.toolView,
+          sliceKey: this.sliceKey,
+          data: this.data,
+          showTypes,
+        };
+        ret = snapshotMode2(cfg);
+      default:
+        ret = snapshotMode1(el);
+        break;
+    }
+
+    return ret;
   }
 }
 

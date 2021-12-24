@@ -113,10 +113,17 @@ class View extends Component {
     data.forEach((obj) => {
       const item = layer.findOne(`.${obj.id}`);
       const data = transformCoords(obj, this.transform);
-      item.setData(data);
-      item.renderData();
+      item?.setData(data);
+      item?.renderData();
     });
     layer.batchDraw();
+  }
+
+  getCanvas({ width, height }) {
+    let cloneStage = this.stage.clone();
+    let cloneScene = cloneStage._toKonvaCanvas({ width, height });
+    let canvas = cloneScene._canvas;
+    return canvas;
   }
 
   _getRootSize(el) {
