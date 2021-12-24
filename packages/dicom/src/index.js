@@ -55,13 +55,16 @@ const getMinMaxValues = (pixelData) => {
   const len = pixelData.length;
   let i = 0;
   let pixel;
+  let key = new Map();
   while (i < len) {
     pixel = pixelData[i];
+    key.set(pixel, (key.get(pixel) ?? 0) + 1);
     min = Math.min(min, pixel);
     max = Math.max(max, pixel);
     i += 1;
   }
 
+  console.log(key);
   return { min, max };
 };
 

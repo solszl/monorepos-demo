@@ -16,10 +16,6 @@ class CanvasRenderer {
     const { color } = image;
 
     if (displayState.colormap) {
-      // FIXME: 解决特殊图像
-      image.windowWidth = 255;
-      image.windowCenter = 127;
-      image.intercept = 0;
       renderColormapImage(image, lut, renderCanvas, displayState.colormap);
     } else {
       const renderFn = ["rgb", "rgba"].includes(color) ? renderColorImage : renderGrayImage;

@@ -46,6 +46,8 @@ class RoiTool extends BaseAnnotationTool {
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
+    // TODO: modify factor
+    this.data.factor = 1;
 
     this.renderData();
     this.isDown = true;
@@ -142,6 +144,10 @@ class RoiTool extends BaseAnnotationTool {
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
     ];
+
+    if (points[0][0] === points[1][0] && points[0][1] === points[1][1]) {
+      return false;
+    }
     return points.every(([x, y]) => this.verify(x, y, width, height));
   }
 

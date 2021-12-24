@@ -1,7 +1,7 @@
 // 小数保留精度
 const PRECISION = 2;
 export const roi = (image, roiData) => {
-  const { start, end, position } = roiData;
+  const { start, end, position, factor } = roiData;
   const width = Math.abs(start.x + position.x - (end.x + position.x));
   const height = Math.abs(start.y + position.y - (end.y + position.y));
   const x = Math.round(Math.min(start.x + position.x, end.x + position.x));
@@ -9,7 +9,7 @@ export const roi = (image, roiData) => {
   const a = Math.abs(start.x - end.x) / 2;
   const b = Math.abs(start.y - end.y) / 2;
   const center = [(start.x + end.x) / 2 + position.x, (start.y + end.y) / 2 + position.y];
-  const ellipsePixels = getEllipsePixels(image, { width, height, x, y, a, b, center });
+  const ellipsePixels = getEllipsePixels(image, { width, height, x, y, a, b, center, factor });
 
   const area = getArea(a, b, image);
   const others = getOthers(ellipsePixels);
@@ -21,7 +21,7 @@ export const roi = (image, roiData) => {
 };
 
 const getEllipsePixels = (image, opt) => {
-  const { width, height, x, y, a, b, center } = opt;
+  const { width, height, x, y, a, b, center, factor = 1 } = opt;
   const { columns, pixelData, slope, intercept } = image;
   let ellipsePixels = [];
   let index = 0;
@@ -31,7 +31,8 @@ const getEllipsePixels = (image, opt) => {
       if (isInEllipse(a, b, column + x, row + y, center)) {
         const pixelDataIndex = (row + y) * columns + (column + x);
         const ct = toHU(pixelData[pixelDataIndex], slope, intercept);
-        ellipsePixels[index++] = ct;
+
+        ellipsePixels[index++] = ~~(ct / factor);
       }
     }
   }
