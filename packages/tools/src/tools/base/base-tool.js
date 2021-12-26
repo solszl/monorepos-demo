@@ -6,6 +6,8 @@ class BaseTool extends UIComponent {
     super(config);
     this._data = null;
     this.UIInitialed = false;
+    // 是否是内部组件
+    this.$txComponent = true;
   }
 
   initialUI() {}

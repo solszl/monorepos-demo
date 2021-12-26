@@ -95,7 +95,16 @@ class Viewport extends Component {
       this.emit(EVENTS.TOOL_DATA_REMOVED, data);
     });
 
-    [api, toolView].map((obj) => {
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_CONTEXTMENU_CLICK, (data) => {
+      // console.log(data);
+      this.emit(EVENTS.TOOL_DATA_CONTEXTMENU_CLICK, {
+        toolId: data.id,
+        viewportId: this.id,
+        position: data.position,
+      });
+    });
+
+    [(api, toolView)].map((obj) => {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) =>
         imageView.setRotation(info.rotate, info.dispatch)
       );

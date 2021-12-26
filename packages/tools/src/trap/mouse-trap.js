@@ -1,3 +1,4 @@
+import { INTERNAL_EVENTS } from "../constants";
 const ee = {
   mouseenter: (e, toolState) => {
     const { evt } = e;
@@ -49,7 +50,27 @@ const ee = {
   },
   contextmenu: (e, toolState) => {
     e.evt.preventDefault();
-    const { evt } = e;
+
+    const { evt, target } = e;
+
+    let temp = target;
+    while (temp) {
+      if (temp?.$txComponent) {
+        const {
+          $stage: stage,
+          data: { id },
+        } = temp;
+        stage.fire(INTERNAL_EVENTS.TOOL_CONTEXTMENU_CLICK, {
+          id,
+          position: {
+            x: evt.layerX,
+            y: evt.layerY,
+          },
+        });
+        break;
+      }
+      temp = temp.parent;
+    }
     const { which } = evt;
     toolState.getToolInstance(which)?.mouseRightClick(e);
   },

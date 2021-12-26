@@ -72,4 +72,5 @@ export const INTERNAL_EVENTS = {
   TOOL_FLIPV: "tx_tool_flipV",
   TOOL_INVERT: "tx_tool_invert",
   TOOL_SLICE_CHANGE: "tx_slice_change",
+  TOOL_CONTEXTMENU_CLICK: "tx_tool_contextmenu_click",
 };
