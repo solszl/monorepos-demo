@@ -30,10 +30,10 @@ class LengthTool extends BaseAnnotationTool {
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
     const stageId = this.$stage.id();
-    const [imageState] = useImageState(stageId);
-    const [viewportState] = useViewportState(stageId);
-    this.viewportState = viewportState();
-    this.imageState = imageState();
+    const [getImageState] = useImageState(stageId);
+    const [getViewportState] = useViewportState(stageId);
+    this.viewportState = getViewportState();
+    this.imageState = getImageState();
   }
 
   mouseMove(evt) {

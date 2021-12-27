@@ -53,7 +53,7 @@ document.addEventListener("wheel", async (e) => {
 });
 
 // TODO: remove me
-standard.useTool("roi");
+standard.useTool("length");
 
 standard.on(ViewportEvents.TOOL_DATA_UPDATED, (info) => {
   const image = standard.imageView.image;
@@ -61,5 +61,3 @@ standard.on(ViewportEvents.TOOL_DATA_UPDATED, (info) => {
   const result = roi(image, data);
   console.log(result, standard);
 });
-
-standard.on();
