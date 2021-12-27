@@ -87,7 +87,7 @@ class TaskManager {
 
   removeLoadingTask(task, img) {
     const resolves = this.loadingTask[task.imageUrl];
-    resolves.forEach((resolve) => resolve?.(img));
+    resolves?.forEach((resolve) => resolve?.(img));
     delete this.loadingTask[task.imageUrl];
   }
 
