@@ -104,7 +104,7 @@ class Viewport extends Component {
       });
     });
 
-    [(api, toolView)].map((obj) => {
+    [api, toolView].map((obj) => {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) =>
         imageView.setRotation(info.rotate, info.dispatch)
       );
