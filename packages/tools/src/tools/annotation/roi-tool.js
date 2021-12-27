@@ -1,8 +1,6 @@
 import { Ellipse } from "konva/lib/shapes/Ellipse";
 import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
 import TextField from "../../shape/parts/textfield";
-import { useImageState } from "../../state/image-state";
-import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { randomId } from "../utils";
 
@@ -36,13 +34,6 @@ class RoiTool extends BaseAnnotationTool {
 
   mouseDown(e) {
     super.mouseDown(e);
-
-    const stageId = this.$stage.id();
-    const [getImageState] = useImageState(stageId);
-    const [getViewportState] = useViewportState(stageId);
-
-    this.imageState = getImageState();
-    this.viewportState = getViewportState();
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
@@ -138,8 +129,7 @@ class RoiTool extends BaseAnnotationTool {
 
   verifyDataLegal() {
     const { start, end, position } = this.data;
-    const [getViewportState] = useViewportState(this.$stage.id());
-    const { width, height } = getViewportState();
+    const { width, height } = this.viewportState;
     const points = [
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],

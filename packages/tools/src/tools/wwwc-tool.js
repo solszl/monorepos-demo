@@ -1,5 +1,4 @@
 import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
-import { useImageState } from "../state/image-state";
 import BaseTool from "./base/base-tool";
 import { randomId } from "./utils";
 class WWWCTool extends BaseTool {
@@ -18,9 +17,6 @@ class WWWCTool extends BaseTool {
   }
   mouseDown(e) {
     super.mouseDown(e);
-
-    const [imageState] = useImageState(this.$stage.id());
-    this.imageState = imageState();
 
     const { screenX, screenY } = e.evt;
     this.isDown = true;

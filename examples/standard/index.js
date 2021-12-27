@@ -61,3 +61,5 @@ standard.on(ViewportEvents.TOOL_DATA_UPDATED, (info) => {
   const result = roi(image, data);
   console.log(result, standard);
 });
+
+window.viewport = standard;

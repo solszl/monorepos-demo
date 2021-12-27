@@ -1,7 +1,5 @@
 import { Circle } from "konva/lib/shapes/Circle";
 import { TOOL_TYPE } from "..";
-import { useImageState } from "../state/image-state";
-import { useViewportState } from "../state/viewport-state";
 import BaseTool from "./base/base-tool";
 import { cursor, randomId } from "./utils";
 
@@ -24,12 +22,6 @@ class MagnifyTool extends BaseTool {
 
   mouseDown(e) {
     super.mouseDown(e);
-
-    const stageId = this.$stage.id();
-    const [imageState] = useImageState(stageId);
-    const [viewportState] = useViewportState(stageId);
-    this.viewportState = viewportState();
-    this.imageState = imageState();
 
     this.initialUI();
     this.findOne("#circle").visible(true);

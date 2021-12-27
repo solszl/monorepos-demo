@@ -83,7 +83,6 @@ class LinkageManager {
       if (tools.length) {
         // 工具属性发生变更
         viewport.toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_UPDATED, (data) => {
-          console.log("updated", data, viewport.data, viewport);
           const { sliceKey, data: viewportData } = viewport;
           // 找出来所有关心的tool类型data
           const filterData = viewportData[sliceKey].filter((data, index) => {

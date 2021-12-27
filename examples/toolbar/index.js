@@ -1,8 +1,8 @@
 import { TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 import ToolBar from "./toolBar";
-const seriesId = "1.3.46.670589.33.1.63758067581447369900002.4616848034254364611";
-const fs = "http://192.168.111.115:8000";
+const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
+const fs = "http://10.0.70.3:8000";
 let currentIndex = 0;
 let rotate = 0;
 let invert = false;

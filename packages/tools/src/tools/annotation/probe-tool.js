@@ -1,7 +1,5 @@
 import { TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
 import TextField from "../../shape/parts/textfield";
-import { useImageState } from "../../state/image-state";
-import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { randomId, toCT } from "../utils";
 class ProbeTool extends BaseAnnotationTool {
@@ -19,12 +17,6 @@ class ProbeTool extends BaseAnnotationTool {
 
   mouseDown(e) {
     super.mouseDown(e);
-
-    const stageId = this.$stage.id();
-    const [imageState] = useImageState(stageId);
-    const [viewportState] = useViewportState(stageId);
-    this.imageState = imageState();
-    this.viewportState = viewportState();
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();

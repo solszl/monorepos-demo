@@ -39,9 +39,6 @@ class AngleTool extends BaseAnnotationTool {
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
     this.pointCount += 1;
-
-    const [viewportState] = useViewportState(this.$stage.id());
-    this.viewportState = viewportState();
   }
 
   mouseMove(evt) {

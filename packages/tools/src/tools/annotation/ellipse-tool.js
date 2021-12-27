@@ -5,7 +5,6 @@ import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextItem from "../../shape/parts/text-item";
-import { useImageState } from "../../state/image-state";
 import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId, toCT } from "../utils";
@@ -32,12 +31,6 @@ class EllipseTool extends BaseAnnotationTool {
   }
   mouseDown(e) {
     super.mouseDown(e);
-
-    const stageId = this.$stage.id();
-    const [imageState] = useImageState(stageId);
-    const [viewportState] = useViewportState(stageId);
-    this.imageState = imageState();
-    this.viewportState = viewportState();
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
@@ -329,8 +322,6 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _updateTextBox() {
-    const [imageState] = useImageState(this.$stage.id());
-    this.imageState = imageState();
     const pixelData = this._getPixelData();
     const data = this._getInfo(pixelData);
     this.data.textBox.suffix = MeasureUnit[this.imageState.imageType] ?? "mm";

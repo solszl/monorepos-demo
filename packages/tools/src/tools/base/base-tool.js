@@ -1,6 +1,8 @@
+import { DD } from "konva/lib/DragAndDrop";
 import UIComponent from "../../shape/parts/ui-component";
+import { useImageState } from "../../state/image-state";
+import { useViewportState } from "../../state/viewport-state";
 import { activeUtil } from "../utils";
-
 class BaseTool extends UIComponent {
   constructor(config = {}) {
     super(config);
@@ -21,7 +23,13 @@ class BaseTool extends UIComponent {
   mouseOut(e) {}
   mouseMove(e) {}
   mouseDown(e) {}
-  mouseUp(e) {}
+  mouseUp(e) {
+    // konva 的bug,内部dragAndDrop(DD) 导出为一个对象。在多实例的情况下可能引发结束拖拽不派发dragEnd事件，再这里强制触发一次
+    if (DD.justDragged || DD.isDragging) {
+      DD._endDragBefore(e);
+      DD._endDragAfter(e);
+    }
+  }
   mouseClick(e) {}
   mouseRightClick(e) {}
   mouseDoubleClick(e) {}
@@ -56,6 +64,26 @@ class BaseTool extends UIComponent {
     const { $transform: transform } = this;
     const [ox, oy] = transform.invertPoint(x, y);
     return ox >= 0 && ox <= width && oy >= 0 && oy <= height;
+  }
+
+  get imageState() {
+    if (!this._imageState) {
+      const stageId = this.$stage.id();
+      const [getImageState] = useImageState(stageId);
+      this._imageState = getImageState();
+    }
+
+    return this._imageState;
+  }
+
+  get viewportState() {
+    if (!this._viewportState) {
+      const stageId = this.$stage.id();
+      const [getViewportState] = useViewportState(stageId);
+      this._viewportState = getViewportState();
+    }
+
+    return this._viewportState;
   }
 }
 

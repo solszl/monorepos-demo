@@ -3,8 +3,6 @@ import { INTERNAL_EVENTS, TOOL_CONSTANTS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextField from "../../shape/parts/textfield";
-import { useImageState } from "../../state/image-state";
-import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId } from "../utils";
 
@@ -29,11 +27,6 @@ class LengthTool extends BaseAnnotationTool {
     super.mouseDown(evt);
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
-    const stageId = this.$stage.id();
-    const [getImageState] = useImageState(stageId);
-    const [getViewportState] = useViewportState(stageId);
-    this.viewportState = getViewportState();
-    this.imageState = getImageState();
   }
 
   mouseMove(evt) {
@@ -52,15 +45,13 @@ class LengthTool extends BaseAnnotationTool {
   mouseUp(evt) {
     super.mouseUp(evt);
     this.careStageEvent = false;
-
     // 验证数据合法。派发事件，添加数据。 否则丢弃
     this._tryUpdateData();
   }
 
   verifyDataLegal() {
     const { start, end, position } = this.data;
-    const [getViewportState] = useViewportState(this.$stage.id());
-    const { width, height } = getViewportState();
+    const { width, height } = this.viewportState;
     const points = [
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
