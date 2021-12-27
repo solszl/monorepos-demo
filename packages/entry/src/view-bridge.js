@@ -234,6 +234,7 @@ class Viewport extends Component {
           showTypes,
         };
         ret = snapshotMode2(cfg);
+        break;
       default:
         ret = snapshotMode1(el);
         break;

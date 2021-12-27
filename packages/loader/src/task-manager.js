@@ -77,11 +77,17 @@ class TaskManager {
     this.sort(this.pendingTask);
   }
 
-  addLoadingTask(task) {
-    this.loadingTask[task.imageUrl] = task;
+  addLoadingTask(task, resolve) {
+    if (!this.loadingTask[task.imageUrl]) {
+      this.loadingTask[task.imageUrl] = [];
+    }
+
+    this.loadingTask[task.imageUrl].push(task.resolve ?? resolve);
   }
 
-  removeLoadingTask(task) {
+  removeLoadingTask(task, img) {
+    const resolves = this.loadingTask[task.imageUrl];
+    resolves.forEach((resolve) => resolve?.(img));
     delete this.loadingTask[task.imageUrl];
   }
 

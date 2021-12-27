@@ -85,7 +85,9 @@ class WebTransfer {
         return;
       }
 
+      // 如果这个url的图片正在加载中，把这个promise 添加进去。等图片加载完后一并resolve
       if (this.taskManager.taskIsLoading(task)) {
+        this.taskManager.addLoadingTask(task, resolve);
         return;
       }
 

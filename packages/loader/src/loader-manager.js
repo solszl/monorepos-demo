@@ -61,9 +61,10 @@ class LoaderManager {
     this.cacheManager.cacheItem(seriesId, { key: index, value: img }, plane);
     worker.working = false;
     this.workers.push(worker);
-    this.taskManager.removeLoadingTask(task);
-    resolve?.(img);
-    await this.delay(0); // 减压、涓流
+    this.taskManager.removeLoadingTask(task, img);
+
+    // resolve?.(img);
+    await this.delay(5); // 减压、涓流
     this._startCheck(); // 可能有更好的办法？？？
   }
 
