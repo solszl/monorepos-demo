@@ -27,8 +27,8 @@ class Viewport extends Component {
 
     imageView.on(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, (info) => {
       toolView.updateViewport(info);
-      // 更新视图， 根据传来的seriesId, sliceId。
-      const sliceKey = `${info.seriesId}-${info.sliceId}`;
+      // 更新视图， 根据传来的seriesId, currentIndex
+      const sliceKey = `${info.seriesId}-${info.currentIndex}`;
       const sliceData = this.data?.[sliceKey] ?? new Map();
       toolView.resetData(sliceData);
       this.emit(EVENTS.MATRIX_CHANGED, {
@@ -47,9 +47,9 @@ class Viewport extends Component {
     // 记录上次刷新toolview数据时间，如果时间间隔过短，就不再刷新。从而提升性能
     let lastRenderDataElapsed = Date.now();
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {
-      // 更新视图， 根据传来的seriesId, sliceId。
+      // 更新视图， 根据传来的seriesId, currentIndex。
       this.option.seriesId = info.seriesId;
-      const sliceKey = `${info.seriesId}-${info.sliceId}`;
+      const sliceKey = `${info.seriesId}-${info.currentIndex}`;
       this.sliceKey = sliceKey;
       this.emit(EVENTS.SLICE_CHANGED, {
         seriesId: info.seriesId,
@@ -137,6 +137,31 @@ class Viewport extends Component {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SLICE_CHANGE, async (info) => {
         const { seriesId, sliceId, currentIndex, dispatch } = info;
         this.showImage(seriesId, currentIndex, dispatch);
+      });
+
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CUSTOM_OPERATE, (info) => {
+        const { type, seriesId, data } = info;
+
+        data.forEach((d) => {
+          const { currentIndex } = d;
+          const sliceKey = `${seriesId}-${currentIndex}`;
+          const sliceData = this.data?.[sliceKey] ?? new Map();
+          switch (type) {
+            case "add":
+              sliceData.set(d.id, d);
+              break;
+            case "remove":
+              const removeData = sliceData.get(d.id);
+              removeData.remove = true;
+              sliceData.set(d.id, removeData);
+              break;
+          }
+          this.data[sliceKey] = sliceData;
+        });
+
+        const sliceKey = `${seriesId}-${this.currentIndex}`;
+        const sliceData = this.data?.[sliceKey] ?? new Map();
+        toolView.renderData(sliceData);
       });
     });
 

@@ -160,6 +160,7 @@ class AbstractViewport extends Component {
         offset: offset || [0, 0],
         seriesId: this.image?.seriesId,
         sliceId: this.image?.instanceNumber,
+        currentIndex: this.currentShowIndex,
         position,
         flip: this.displayState.flip,
       });
@@ -189,11 +190,13 @@ class AbstractViewport extends Component {
         pixelData: this.image.pixelData,
         seriesId: this.image.seriesId,
         sliceId: this.image.instanceNumber,
+        currentIndex: this.currentShowIndex,
         columnPixelSpacing: this.image.columnPixelSpacing,
         rowPixelSpacing: this.image.rowPixelSpacing,
         slope: this.image.slope,
         intercept: this.image.intercept,
         imageType: this.image.imageType ?? "dicom",
+        factor: this.displayState?.colormap?.factor ?? 1,
       });
       needDraw = false;
     }

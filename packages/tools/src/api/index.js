@@ -47,6 +47,11 @@ class API extends Component {
     });
   }
 
+  data_cmd(params, dispatch = true) {
+    const { type, data, seriesId } = params;
+    this.emit(INTERNAL_EVENTS.DATA_CUSTOM_OPERATE, { type, data, seriesId, dispatch });
+  }
+
   reset_cmd(useViewportState = true) {
     const [initialState] = useViewportInitialState(this.stageId);
     const [initialImageState] = useImageInitialState(this.stageId);

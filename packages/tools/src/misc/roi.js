@@ -32,7 +32,7 @@ const getEllipsePixels = (image, opt) => {
         const pixelDataIndex = (row + y) * columns + (column + x);
         const ct = toHU(pixelData[pixelDataIndex], slope, intercept);
 
-        ellipsePixels[index++] = ~~(ct / factor);
+        ellipsePixels[index++] = ct / factor;
       }
     }
   }

@@ -1,5 +1,6 @@
-import { ViewportManager } from "@pkg/entry/src";
+import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
+const { roi } = ToolsMisc;
 const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
 const fs = "http://172.16.3.20:8000";
 let currentIndex = 9;
@@ -21,6 +22,7 @@ const standard = vm.addViewport({
   },
   colormap: {
     name: "turbo",
+    factor: 200,
   },
   // disableTools: [TOOL_TYPE.WWWC],
 });
@@ -96,4 +98,13 @@ document.addEventListener("wheel", async (e) => {
   const transfer = resource.getTransfer(transferMode);
   const image = await transfer.getImage(seriesId, currentIndex, alias);
   standard.imageView.showImage(image);
+});
+standard.useTool("roi");
+standard.on("tool_data_updated", (data) => {
+  console.log(data);
+  const img = standard.imageView.image;
+  const d = data.data;
+
+  const result = roi(img, d);
+  console.log(result);
 });

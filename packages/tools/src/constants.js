@@ -50,6 +50,7 @@ export const TOOL_TYPE = {
   PLAY_CMD: "play_cmd",
   STOP_CMD: "stop_cmd",
   REMOVE_VIEWPORT_STATE_CMD: "remove_viewport_state_cmd",
+  DATA_CMD: "data_cmd",
 };
 
 export const MOUSE_BUTTON = {
@@ -73,4 +74,5 @@ export const INTERNAL_EVENTS = {
   TOOL_INVERT: "tx_tool_invert",
   TOOL_SLICE_CHANGE: "tx_slice_change",
   TOOL_CONTEXTMENU_CLICK: "tx_tool_contextmenu_click",
+  DATA_CUSTOM_OPERATE: "tx_data_custom_operate",
 };

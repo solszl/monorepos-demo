@@ -37,8 +37,7 @@ class RoiTool extends BaseAnnotationTool {
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
-    // TODO: modify factor
-    this.data.factor = 1;
+    this.data.factor = this.imageState.factor ?? 1;
 
     this.renderData();
     this.isDown = true;
@@ -89,7 +88,11 @@ class RoiTool extends BaseAnnotationTool {
 
   renderData() {
     super.renderData();
-    const { position, start, end, index } = this.data;
+    const { position, start, end, index, remove } = this.data;
+    if (remove) {
+      this._tryUpdateData();
+      return;
+    }
     this.setPosition(position);
     this.findOne("#ellipse").setPosition(start);
     this.findOne("#ellipse").offset({
@@ -109,7 +112,7 @@ class RoiTool extends BaseAnnotationTool {
   }
 
   _tryUpdateData() {
-    if (!this.verifyDataLegal() && this.getStage()) {
+    if ((!this.verifyDataLegal() && this.getStage()) || this.data.remove) {
       this.getStage().fire(INTERNAL_EVENTS.DATA_REMOVED, { id: this.data.id });
       this.remove();
       return;
