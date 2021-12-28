@@ -16,7 +16,6 @@ const imageState = {
   intercept: null,
   imgCanvas: null,
   canvas: null,
-  factor: 1,
 };
 
 let stateDictionary = {};

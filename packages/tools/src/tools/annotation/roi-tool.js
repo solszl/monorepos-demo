@@ -37,7 +37,6 @@ class RoiTool extends BaseAnnotationTool {
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
-    this.data.factor = this.imageState.factor ?? 1;
 
     this.renderData();
     this.isDown = true;

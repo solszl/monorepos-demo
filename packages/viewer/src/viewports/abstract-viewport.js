@@ -196,7 +196,6 @@ class AbstractViewport extends Component {
         slope: this.image.slope,
         intercept: this.image.intercept,
         imageType: this.image.imageType ?? "dicom",
-        factor: this.displayState?.colormap?.factor ?? 1,
       });
       needDraw = false;
     }

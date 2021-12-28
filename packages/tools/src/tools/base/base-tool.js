@@ -39,6 +39,10 @@ class BaseTool extends UIComponent {
   documentMouseUp(e) {}
 
   set data(val) {
+    if (val?.remove) {
+      return;
+    }
+
     this._data = val;
     this.careStageEvent = false;
     if (!this.UIInitialed) {

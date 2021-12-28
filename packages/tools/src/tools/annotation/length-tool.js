@@ -183,7 +183,7 @@ class LengthTool extends BaseAnnotationTool {
   }
 
   _tryUpdateData() {
-    if (!this.verifyDataLegal() && this.getStage()) {
+    if ((!this.verifyDataLegal() && this.getStage()) || this.data.remove) {
       this.getStage().fire(INTERNAL_EVENTS.DATA_REMOVED, { id: this.data.id });
       this.remove();
       return;

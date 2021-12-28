@@ -25,7 +25,6 @@ class EllipseTool extends BaseAnnotationTool {
       position: { x: 0, y: 0 },
       start: { x: 0, y: 0 },
       end: { x: 0, y: 0 },
-      factor: 1,
       textBox: {
         dragged: false,
         x: 0,
@@ -46,7 +45,6 @@ class EllipseTool extends BaseAnnotationTool {
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
-    this.data.factor = this.imageState.factor ?? 1;
     this._updateTextBox();
     this.renderData();
     this.isDown = true;

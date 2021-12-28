@@ -9,15 +9,16 @@ export const renderColormapImage = (image, lut, renderCanvas, colormap) => {
   const { minPixelValue, maxPixelValue } = image;
   const { width, height } = renderCanvas;
   const ctx = renderCanvas.getContext("2d");
-  ctx.fillStyle = "white";
+  ctx.fillStyle = "black";
   ctx.fillRect(0, 0, width, height);
   ctx.imageSmoothingEnabled = false;
 
   let j = 0;
   let colors = [];
 
-  const { reverse = false, name = "turbo", factor = 1 } = colormap;
-  const steps = maxPixelValue - minPixelValue;
+  const { reverse = false, name = "jet" } = colormap;
+  // const steps = maxPixelValue - minPixelValue;
+  const steps = 255;
   // 提前计算好一次colormap 避免每次运算
   while (j < steps) {
     const color = evaluate_cmap(j / steps, name, reverse);
@@ -32,7 +33,8 @@ export const renderColormapImage = (image, lut, renderCanvas, colormap) => {
   let i = 0;
   while (i < numPixels) {
     const index = lut[pixelData[i++] + -minPixelValue];
-    const rgb = colors[index] ?? [0, 0, 0];
+    const rgb = index === lut[0] ? [0, 0, 0] : colors[index] ?? [0, 0, 0];
+    // const rgb = colors[index] ?? [0, 0, 0];
     renderCanvasData.data[imageDataIndex++] = rgb[0]; // Red
     renderCanvasData.data[imageDataIndex++] = rgb[1]; // Green
     renderCanvasData.data[imageDataIndex++] = rgb[2]; // Blue
