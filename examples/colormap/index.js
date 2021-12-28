@@ -99,12 +99,12 @@ document.addEventListener("wheel", async (e) => {
   const image = await transfer.getImage(seriesId, currentIndex, alias);
   standard.imageView.showImage(image);
 });
-standard.useTool("roi");
-standard.on("tool_data_updated", (data) => {
-  console.log(data);
-  const img = standard.imageView.image;
-  const d = data.data;
+standard.useTool("ellipse_roi");
+// standard.on("tool_data_updated", (data) => {
+//   console.log(data);
+//   const img = standard.imageView.image;
+//   const d = data.data;
 
-  const result = roi(img, d);
-  console.log(result);
-});
+//   const result = roi(img, d);
+//   console.log(result);
+// });

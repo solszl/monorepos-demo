@@ -31,6 +31,10 @@ export const snapshotMode2 = async (config) => {
   canvas.width = columns;
   canvas.height = rows;
   const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, columns, rows);
+  ctx.imageSmoothingEnabled = true;
+
   if (renderer?.renderData) {
     ctx.drawImage(renderer.renderData, 0, 0);
   }
@@ -47,5 +51,11 @@ export const snapshotMode2 = async (config) => {
   await delay(5);
   toolView.renderData(sliceData);
   // document.body.append(canvas);
+
+  const base64 = canvas.toDataURL("image/png");
+  const a = document.createElement("a");
+  a.href = base64;
+  a.setAttribute("download", "aaa");
+  a.click();
   return canvas;
 };

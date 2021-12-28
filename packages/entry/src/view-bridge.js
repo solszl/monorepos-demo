@@ -58,7 +58,7 @@ class Viewport extends Component {
       });
       const sliceData = this.data?.[sliceKey] ?? new Map();
       const now = Date.now();
-      if (now - lastRenderDataElapsed < 100) {
+      if (now - lastRenderDataElapsed < 50) {
         // 层切换时间间隔太短，不进行数据刷新，避免浪费
         return;
       }
@@ -151,9 +151,9 @@ class Viewport extends Component {
               sliceData.set(d.id, d);
               break;
             case "remove":
-              const removeData = sliceData.get(d.id);
-              removeData.remove = true;
-              sliceData.set(d.id, removeData);
+              let removeData = sliceData.get(d.id);
+              // removeData.remove = true;
+              sliceData.set(d.id, { ...removeData, remove: true });
               break;
           }
           this.data[sliceKey] = sliceData;

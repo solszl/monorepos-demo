@@ -30,7 +30,7 @@ const getEllipsePixels = (image, opt) => {
     for (let column = 0; column < width; column += 1) {
       if (isInEllipse(a, b, column + x, row + y, center)) {
         const pixelDataIndex = (row + y) * columns + (column + x);
-        const ct = toHU(pixelData[pixelDataIndex], slope, intercept);
+        const ct = toHU(pixelData[pixelDataIndex] ?? pixelData[0] ?? 0, slope, intercept);
 
         ellipsePixels[index++] = ct / factor;
       }
@@ -72,6 +72,7 @@ const getOthers = (pixelData) => {
 
   // 方差
   const variance = +Math.sqrt(s / pixelData.length).toFixed(PRECISION);
+
   return {
     min,
     max,

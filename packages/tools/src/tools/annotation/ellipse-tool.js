@@ -2,6 +2,7 @@ import { Group } from "konva/lib/Group";
 import { Ellipse } from "konva/lib/shapes/Ellipse";
 import { Rect } from "konva/lib/shapes/Rect";
 import { INTERNAL_EVENTS, TOOL_COLORS, TOOL_ITEM_SELECTOR, TOOL_TYPE } from "../../constants";
+import { roi } from "../../misc/roi";
 import Anchor from "../../shape/parts/anchor";
 import DashLine from "../../shape/parts/dashline";
 import TextItem from "../../shape/parts/text-item";
@@ -24,7 +25,18 @@ class EllipseTool extends BaseAnnotationTool {
       position: { x: 0, y: 0 },
       start: { x: 0, y: 0 },
       end: { x: 0, y: 0 },
-      textBox: { dragged: false, x: 0, y: 0, suffix: "mm" },
+      factor: 1,
+      textBox: {
+        dragged: false,
+        x: 0,
+        y: 0,
+        area: 0,
+        variance: 0,
+        avg: 0,
+        min: 0,
+        max: 0,
+        suffix: "mm",
+      },
     };
 
     this.isDown = false;
@@ -34,6 +46,7 @@ class EllipseTool extends BaseAnnotationTool {
 
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
+    this.data.factor = this.imageState.factor ?? 1;
     this._updateTextBox();
     this.renderData();
     this.isDown = true;
@@ -322,10 +335,10 @@ class EllipseTool extends BaseAnnotationTool {
   }
 
   _updateTextBox() {
-    const pixelData = this._getPixelData();
-    const data = this._getInfo(pixelData);
     this.data.textBox.suffix = MeasureUnit[this.imageState.imageType] ?? "mm";
-    this.data.textBox = Object.assign({}, this.data.textBox, data);
+
+    const result = roi(this.imageState, this.data);
+    this.data.textBox = Object.assign({}, this.data.textBox, result);
   }
 }
 
