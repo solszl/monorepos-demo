@@ -1,4 +1,4 @@
-import { ToolsMisc, ViewportEvents, ViewportManager } from "@pkg/entry/src";
+import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 const { roi } = ToolsMisc;
 const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
@@ -52,14 +52,13 @@ document.addEventListener("wheel", async (e) => {
   standard.showImage(seriesId, currentIndex);
 });
 
-// TODO: remove me
-standard.useTool("length");
+// standard.useTool("length");
 
-standard.on(ViewportEvents.TOOL_DATA_UPDATED, (info) => {
-  const image = standard.imageView.image;
-  const { data } = info;
-  const result = roi(image, data);
-  console.log(result, standard);
-});
+// standard.on(ViewportEvents.TOOL_DATA_UPDATED, (info) => {
+//   const image = standard.imageView.image;
+//   const { data } = info;
+//   const result = roi(image, data);
+//   console.log(result, standard);
+// });
 
 window.viewport = standard;

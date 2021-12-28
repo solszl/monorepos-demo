@@ -143,17 +143,16 @@ class Viewport extends Component {
         const { type, seriesId, data } = info;
 
         data.forEach((d) => {
-          const { currentIndex } = d;
+          const { currentIndex, id } = d;
           const sliceKey = `${seriesId}-${currentIndex}`;
           const sliceData = this.data?.[sliceKey] ?? new Map();
           switch (type) {
             case "add":
-              sliceData.set(d.id, d);
+              sliceData.set(id, d);
               break;
             case "remove":
-              let removeData = sliceData.get(d.id);
-              // removeData.remove = true;
-              sliceData.set(d.id, { ...removeData, remove: true });
+              sliceData.delete(id);
+              toolView.emit(TOOLVIEW_INTERNAL_EVENTS.DATA_REMOVED, { id });
               break;
           }
           this.data[sliceKey] = sliceData;

@@ -95,7 +95,10 @@ class View extends Component {
     DD?._dragElements.clear();
     layer.removeChildren();
     data.forEach((obj) => {
-      const { type, id } = obj;
+      const { type, id, remove = false } = obj;
+      if (remove) {
+        return;
+      }
       const item = new TOOL_CONSTRUCTOR[type]();
       item.$stage = layer.getStage();
       item.$transform = this.transform;
