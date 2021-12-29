@@ -62,7 +62,8 @@ class ProbeTool extends BaseAnnotationTool {
     const point = transform.invertPoint(position.x, position.y);
     textfield.show();
     const ctValue = this._getCT(Math.round(point[0]), Math.round(point[1]));
-    textfield.text(`点值: ${ctValue}`);
+    const { ctText } = this.globalConfig["ct"];
+    textfield.text(`${ctText}: ${ctValue}`);
   }
 
   _getCT(x, y) {

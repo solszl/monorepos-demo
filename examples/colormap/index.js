@@ -1,8 +1,8 @@
 import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 const { roi } = ToolsMisc;
-const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
-const fs = "http://10.0.80.32:8887/";
+const seriesId = "1.2.840.113619.2.416.194118337377523644320055354740023651573";
+const fs = "http://172.16.3.20:8000/";
 let currentIndex = 9;
 const API_GRAY = "/api/v1/series/";
 const API_COLOR = "/api/v1/series/ssr/";
@@ -17,12 +17,29 @@ const standard = vm.addViewport({
   transferMode: "web",
   el: document.querySelector("#root"),
   wwwc: {
-    ww: 95,
-    wc: 50,
+    ww: 90,
+    wc: 45,
   },
   colormap: {
-    name: "turbo",
+    name: "jet",
   },
+  // config: {
+  //   tools: {
+  //     length: {
+  //       suffixText: "aaa",
+  //     },
+  //     ellipse_roi: {
+  //       minText: "哈哈哈",
+  //     },
+  //     ct: {
+  //       ctText: "你猜猜",
+  //     },
+  //     wwwc: {
+  //       wwStep: 0.1,
+  //       wcStep: 0.1,
+  //     },
+  //   },
+  // },
   // disableTools: [TOOL_TYPE.WWWC],
 });
 
@@ -38,38 +55,38 @@ fetchData(seriesId).then(async (json) => {
   // const imageUrls = ["http://10.0.80.32:8887/SE10.dcm"];
 
   const imageUrls = [
-    "TTP/TTP001.dcm",
-    "TTP/TTP002.dcm",
-    "TTP/TTP003.dcm",
-    "TTP/TTP004.dcm",
-    "TTP/TTP005.dcm",
-    "TTP/TTP006.dcm",
-    "TTP/TTP007.dcm",
-    "TTP/TTP008.dcm",
-    "TTP/TTP009.dcm",
-    "TTP/TTP010.dcm",
-    "TTP/TTP011.dcm",
-    "TTP/TTP012.dcm",
-    "TTP/TTP013.dcm",
-    "TTP/TTP014.dcm",
-    "TTP/TTP015.dcm",
-    "TTP/TTP016.dcm",
-    "TTP/TTP017.dcm",
-    "TTP/TTP018.dcm",
-    "TTP/TTP019.dcm",
-    "TTP/TTP020.dcm",
-    "TTP/TTP021.dcm",
-    "TTP/TTP022.dcm",
-    "TTP/TTP023.dcm",
-    "TTP/TTP024.dcm",
-    "TTP/TTP025.dcm",
-    "TTP/TTP026.dcm",
-    "TTP/TTP027.dcm",
-    "TTP/TTP028.dcm",
-    "TTP/TTP029.dcm",
-    "TTP/TTP030.dcm",
-    "TTP/TTP031.dcm",
-    "TTP/TTP032.dcm",
+    "RESULT/5/TMAX/TMAX001.dcm",
+    "RESULT/5/TMAX/TMAX002.dcm",
+    "RESULT/5/TMAX/TMAX003.dcm",
+    "RESULT/5/TMAX/TMAX004.dcm",
+    "RESULT/5/TMAX/TMAX005.dcm",
+    "RESULT/5/TMAX/TMAX006.dcm",
+    "RESULT/5/TMAX/TMAX007.dcm",
+    "RESULT/5/TMAX/TMAX008.dcm",
+    "RESULT/5/TMAX/TMAX009.dcm",
+    "RESULT/5/TMAX/TMAX010.dcm",
+    "RESULT/5/TMAX/TMAX011.dcm",
+    "RESULT/5/TMAX/TMAX012.dcm",
+    "RESULT/5/TMAX/TMAX013.dcm",
+    "RESULT/5/TMAX/TMAX014.dcm",
+    "RESULT/5/TMAX/TMAX015.dcm",
+    "RESULT/5/TMAX/TMAX016.dcm",
+    "RESULT/5/TMAX/TMAX017.dcm",
+    "RESULT/5/TMAX/TMAX018.dcm",
+    "RESULT/5/TMAX/TMAX019.dcm",
+    "RESULT/5/TMAX/TMAX020.dcm",
+    "RESULT/5/TMAX/TMAX021.dcm",
+    "RESULT/5/TMAX/TMAX022.dcm",
+    "RESULT/5/TMAX/TMAX023.dcm",
+    "RESULT/5/TMAX/TMAX024.dcm",
+    "RESULT/5/TMAX/TMAX025.dcm",
+    "RESULT/5/TMAX/TMAX026.dcm",
+    "RESULT/5/TMAX/TMAX027.dcm",
+    "RESULT/5/TMAX/TMAX028.dcm",
+    "RESULT/5/TMAX/TMAX029.dcm",
+    "RESULT/5/TMAX/TMAX030.dcm",
+    "RESULT/5/TMAX/TMAX031.dcm",
+    "RESULT/5/TMAX/TMAX032.dcm",
   ].map((i) => {
     return `${fs}/${i}`;
   });
@@ -84,20 +101,26 @@ fetchData(seriesId).then(async (json) => {
   transfer.addItemUrls(seriesId, imageUrls, alias);
 
   setTimeout(async () => {
-    const image = await transfer.getImage(seriesId, currentIndex, alias);
-    standard.imageView.showImage(image);
+    // const image = await transfer.getImage(seriesId, currentIndex, alias);
+    // standard.imageView.showImage(image);
+
+    standard.showImage(seriesId, currentIndex);
   }, 0);
 });
 
-document.addEventListener("wheel", async (e) => {
-  let offset = Math.sign(e.wheelDelta);
-  currentIndex += offset;
-  const { resource } = vm;
-  const { transferMode, alias } = standard.option;
-  const transfer = resource.getTransfer(transferMode);
-  const image = await transfer.getImage(seriesId, currentIndex, alias);
-  standard.imageView.showImage(image);
-});
+// document.addEventListener("wheel", async (e) => {
+//   let offset = Math.sign(e.wheelDelta);
+//   currentIndex += offset;
+//   const { resource } = vm;
+//   const { transferMode, alias } = standard.option;
+//   const transfer = resource.getTransfer(transferMode);
+//   const image = await transfer.getImage(seriesId, currentIndex, alias);
+//   standard.imageView.showImage(image);
+// });
+
+standard.useTool("stack_wheel_scroll", 4);
+standard.useTool("roi");
+
 // standard.useTool("ellipse_roi");
 // standard.on("tool_data_updated", (data) => {
 //   console.log(data);

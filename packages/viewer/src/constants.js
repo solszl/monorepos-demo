@@ -17,3 +17,5 @@ export const VIEWER_INTERNAL_EVENTS = {
   /** 图像矩阵发生变化 */
   MATRIX_CHANGED: `${PREFIX}matrix_rendered`,
 };
+
+export const VIEWPORT_CONFIG = {};

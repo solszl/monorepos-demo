@@ -87,11 +87,8 @@ class RoiTool extends BaseAnnotationTool {
 
   renderData() {
     super.renderData();
-    const { position, start, end, index, remove } = this.data;
-    if (remove) {
-      this._tryUpdateData();
-      return;
-    }
+    const { position, start, end, index } = this.data;
+
     this.setPosition(position);
     this.findOne("#ellipse").setPosition(start);
     this.findOne("#ellipse").offset({

@@ -22,6 +22,10 @@ class WWWCTool extends BaseTool {
     this.isDown = true;
     this.oldOffset = [screenX, screenY];
     this.step = { ww: this.imageState.wwwc.ww, wc: this.imageState.wwwc.wc };
+    // 读取配置
+    const { wwStep, wcStep } = this.globalConfig["wwwc"];
+    this.wwStep = wwStep;
+    this.wcStep = wcStep;
   }
 
   documentMouseMove(e) {
@@ -30,8 +34,8 @@ class WWWCTool extends BaseTool {
       return;
     }
     const wwwc = {
-      ww: e.screenX - this.oldOffset[0] + this.step.ww,
-      wc: e.screenY - this.oldOffset[1] + this.step.wc,
+      ww: (e.screenX - this.oldOffset[0]) * this.wwStep + this.step.ww,
+      wc: (e.screenY - this.oldOffset[1]) * this.wcStep + this.step.wc,
     };
     this.data.wwwc = wwwc;
     this.$stage.fire(INTERNAL_EVENTS.TOOL_WWWC, { wwwc });

@@ -88,7 +88,8 @@ class LengthTool extends BaseAnnotationTool {
       connectTextNode(textfield, from, dashLine);
     }
 
-    textfield.text(`${textBox.text}mm`);
+    const suffixText = this.globalConfig["length"]?.suffixText ?? "mm";
+    textfield.text(`${textBox.text}${suffixText}`);
   }
 
   initialUI() {

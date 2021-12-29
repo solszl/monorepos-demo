@@ -30,6 +30,7 @@ export const snapshotMode2 = async (config) => {
   const canvas = document.createElement("canvas");
   canvas.width = columns;
   canvas.height = rows;
+  canvas.id = "temporary";
   const ctx = canvas.getContext("2d");
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, columns, rows);
@@ -44,18 +45,35 @@ export const snapshotMode2 = async (config) => {
     return showTypes.includes(data.type);
   });
   toolView.renderData(filteredData);
-  let c2 = toolView.getCanvas({ width: columns, height: rows });
-  ctx.drawImage(c2, 0, 0);
+
+  // 要重绘的区域
+  let c2 = toolView.getCanvas();
+  let offsetX = 0;
+  let offsetY = 0;
+  const { width, height } = c2;
+  let minSize = Math.min(width, height);
+  if (width > height) {
+    offsetX = (width - height) / 2;
+  } else if (height > width) {
+    offsetY = (height - width) / 2;
+  }
+  ctx.drawImage(c2, offsetX, offsetY, minSize, minSize, 0, 0, columns, rows);
 
   // 等一会
-  await delay(5);
+  await delay(10);
   toolView.renderData(sliceData);
+
+  // TODO: remove me
+  // let el = document.body.querySelector("#temporary");
+  // if (el) {
+  //   el.parentNode.removeChild(el);
+  // }
   // document.body.append(canvas);
 
-  const base64 = canvas.toDataURL("image/png");
-  const a = document.createElement("a");
-  a.href = base64;
-  a.setAttribute("download", "aaa");
-  a.click();
+  // const base64 = canvas.toDataURL("image/png");
+  // const a = document.createElement("a");
+  // a.href = base64;
+  // a.setAttribute("download", "aaa");
+  // a.click();
   return canvas;
 };

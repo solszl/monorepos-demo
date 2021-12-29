@@ -4,6 +4,7 @@ import { Layer } from "konva/lib/Layer";
 import { Stage } from "konva/lib/Stage";
 import { INTERNAL_EVENTS } from "./constants";
 import { TOOL_CONSTRUCTOR } from "./constructor";
+import { useGlobalConfig } from "./state/global-config";
 import { removeImageState, useImageState } from "./state/image-state";
 import ToolState from "./state/tool-state";
 import { removeViewportState, useViewportState } from "./state/viewport-state";
@@ -19,6 +20,9 @@ class View extends Component {
     this.transform = new Transform();
     this.toolState = new ToolState();
     this.toolState.$transform = this.transform;
+
+    const [, setGlobalConfig] = useGlobalConfig(this.stage.id());
+    setGlobalConfig(option?.config?.tools ?? {});
   }
 
   resize(width, height) {
@@ -95,10 +99,7 @@ class View extends Component {
     DD?._dragElements.clear();
     layer.removeChildren();
     data.forEach((obj) => {
-      const { type, id, remove = false } = obj;
-      if (remove) {
-        return;
-      }
+      const { type, id } = obj;
       const item = new TOOL_CONSTRUCTOR[type]();
       item.$stage = layer.getStage();
       item.$transform = this.transform;
@@ -122,11 +123,8 @@ class View extends Component {
     layer.batchDraw();
   }
 
-  getCanvas({ width, height }) {
-    let cloneStage = this.stage.clone();
-    let cloneScene = cloneStage._toKonvaCanvas({ width, height });
-    let canvas = cloneScene._canvas;
-    return canvas;
+  getCanvas() {
+    return this.stage.toCanvas();
   }
 
   _getRootSize(el) {

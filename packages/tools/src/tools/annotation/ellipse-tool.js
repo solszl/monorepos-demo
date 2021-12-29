@@ -132,13 +132,14 @@ class EllipseTool extends BaseAnnotationTool {
       height: end.y - start.y,
     });
 
+    const { areaText, varianceText, avgText, maxText, minText } = this.globalConfig["ellipse_roi"];
     const group = this.findOne("#textGroup");
     const { textBox: data } = this.data;
-    group.findOne("#area")?.setText("面积：", `${+data.area.toFixed(2)}${data.suffix}²`);
-    group.findOne("#variance")?.setText("方差：", +data.variance.toFixed(2));
-    group.findOne("#avg")?.setText("平均值：", +data.avg.toFixed(2));
-    group.findOne("#max")?.setText("最大值：", data.max);
-    group.findOne("#min")?.setText("最小值：", data.min);
+    group.findOne("#area")?.setText(`${areaText}：`, `${+data.area.toFixed(2)}${data.suffix}²`);
+    group.findOne("#variance")?.setText(`${varianceText}：`, +data.variance.toFixed(2));
+    group.findOne("#avg")?.setText(`${avgText}：`, +data.avg.toFixed(2));
+    group.findOne("#max")?.setText(`${maxText}：`, data.max);
+    group.findOne("#min")?.setText(`${minText}：`, data.min);
 
     if (data.dragged) {
       const dashline = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);

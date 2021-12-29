@@ -1,5 +1,6 @@
 import { DD } from "konva/lib/DragAndDrop";
 import UIComponent from "../../shape/parts/ui-component";
+import { useGlobalConfig } from "../../state/global-config";
 import { useImageState } from "../../state/image-state";
 import { useViewportState } from "../../state/viewport-state";
 import { activeUtil } from "../utils";
@@ -84,6 +85,16 @@ class BaseTool extends UIComponent {
     }
 
     return this._viewportState;
+  }
+
+  get globalConfig() {
+    if (!this._globalConfig) {
+      const stageId = this.$stage.id();
+      const [getGlobalConfig] = useGlobalConfig(stageId);
+      this._globalConfig = getGlobalConfig();
+    }
+
+    return this._globalConfig;
   }
 }
 

@@ -43,6 +43,18 @@ class MagnifyTool extends BaseTool {
     this.remove();
   }
 
+  mouseLeave(e) {
+    super.mouseLeave(e);
+    cursor(this, "auto");
+    this.remove();
+  }
+
+  mouseOut(e) {
+    super.mouseOut(e);
+    cursor(this, "auto");
+    this.remove();
+  }
+
   renderData() {
     super.renderData();
     const { centerPoint, originalRadius, scale } = this.data;
