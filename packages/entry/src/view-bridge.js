@@ -162,6 +162,26 @@ class Viewport extends Component {
         const sliceData = this.data?.[sliceKey] ?? new Map();
         toolView.renderData(sliceData);
       });
+
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.REMOVE_SPECIFIED_DATA, (info) => {
+        const { types } = info;
+        Object.keys(this.data).forEach((key) => {
+          const sliceData = this.data[key];
+          sliceData.forEach((data, key, currentSliceData) => {
+            if (!types.includes(data.type)) {
+              currentSliceData.delete(key);
+            }
+          });
+
+          if (sliceData.size === 0) {
+            delete this.data[key];
+          }
+        });
+
+        const sliceKey = `${this.option.seriesId}-${this.currentIndex}`;
+        const sliceData = this.data?.[sliceKey] ?? new Map();
+        toolView.renderData(sliceData);
+      });
     });
 
     this._toolView = toolView;

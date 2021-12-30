@@ -17,7 +17,7 @@ class AbstractViewport extends Component {
     this.resetDisplayState();
 
     if (option.wwwc) {
-      Object.assign(this.displayState, { wwwc: option.wwwc });
+      Object.assign(this.displayState, { wwwc: option.wwwc, initialWWWC: option.wwwc });
     }
 
     if (option.colormap) {
@@ -184,6 +184,11 @@ class AbstractViewport extends Component {
         wwwc: {
           ww: this.displayState?.wwwc?.ww ?? this.image?.windowWidth,
           wc: this.displayState?.wwwc?.wc ?? this.image?.windowCenter,
+        },
+        initialWWWC: this.displayState.initialWWWC,
+        imageOriginWWWC: {
+          ww: this.image?.windowWidth,
+          wc: this.image?.windowCenter,
         },
         columns: this.image.columns,
         rows: this.image.rows,

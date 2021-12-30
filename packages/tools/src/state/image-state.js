@@ -1,5 +1,16 @@
 const imageState = {
+  // 即时视窗的窗宽窗位
   wwwc: {
+    ww: 0,
+    wc: 0,
+  },
+  // addViewport时设置的窗宽窗位
+  initialWWWC: {
+    ww: 0,
+    wc: 0,
+  },
+  // dicom影像标签上的窗宽窗位
+  imageOriginWWWC: {
     ww: 0,
     wc: 0,
   },
@@ -14,8 +25,6 @@ const imageState = {
   rowPixelSpacing: null,
   slope: null,
   intercept: null,
-  imgCanvas: null,
-  canvas: null,
 };
 
 let stateDictionary = {};

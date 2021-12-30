@@ -75,4 +75,5 @@ export const INTERNAL_EVENTS = {
   TOOL_SLICE_CHANGE: "tx_slice_change",
   TOOL_CONTEXTMENU_CLICK: "tx_tool_contextmenu_click",
   DATA_CUSTOM_OPERATE: "tx_data_custom_operate",
+  REMOVE_SPECIFIED_DATA: "tx_remove_specified_data",
 };

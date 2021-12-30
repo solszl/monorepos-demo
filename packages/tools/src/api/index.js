@@ -1,7 +1,7 @@
 import { Component } from "@pkg/core/src";
 import { INTERNAL_EVENTS, TOOL_TYPE } from "../constants";
 import { TOOL_CONSTRUCTOR } from "../constructor";
-import { useImageInitialState } from "../state/image-state";
+import { useImageInitialState, useImageState } from "../state/image-state";
 import { removeViewportState, useViewportInitialState } from "../state/viewport-state";
 
 class API extends Component {
@@ -52,18 +52,50 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.DATA_CUSTOM_OPERATE, { type, data, seriesId, dispatch });
   }
 
-  reset_cmd(useViewportState = true) {
+  reset_cmd(params, dispatch = true) {
+    const { viewportProperties, toolProperties = [] } = params;
     const [initialState] = useViewportInitialState(this.stageId);
     const [initialImageState] = useImageInitialState(this.stageId);
     const { rotate, offset, scale } = initialState;
-    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate });
-    this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset });
-    this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale });
-    // 如果不适用viewport 的默认属性。则从图里读取
-    this.emit(INTERNAL_EVENTS.TOOL_WWWC, useViewportState ?? { wwwc: initialImageState.wwwc });
-    this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: false });
-    this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: false });
-    this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: false });
+
+    const {
+      rotate: v_rotate,
+      offset: v_offset,
+      scale: v_scale,
+      wwwc: v_wwwc,
+      h: v_h,
+      v: v_v,
+      invert: v_invert,
+    } = viewportProperties;
+
+    this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate: v_rotate ? v_rotate?.value : rotate });
+    this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset: v_offset ? v_offset?.value : offset });
+    this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale: v_scale ? v_scale?.value : scale });
+    const getWWWC = (val) => {
+      const [getImageState] = useImageState(this.stageId);
+      const { initialWWWC, wwwc, imageOriginWWWC } = getImageState();
+      // 1 现在正在呈现的，2，dicom标签上的 3，addViewport时设置的
+      switch (val) {
+        case 1:
+          return wwwc;
+        case 2:
+          return imageOriginWWWC;
+        case 3:
+          return initialWWWC ?? wwwc;
+        default:
+          return imageOriginWWWC;
+      }
+    };
+    this.emit(INTERNAL_EVENTS.TOOL_WWWC, {
+      wwwc: v_wwwc ? getWWWC(v_wwwc?.value) : initialImageState.wwwc,
+    });
+
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h: v_h ? v_h?.value : false });
+    this.emit(INTERNAL_EVENTS.TOOL_FLIPV, { v: v_v ? v_v?.value : false });
+    this.emit(INTERNAL_EVENTS.TOOL_INVERT, { invert: v_invert ? v_invert?.value : false });
+
+    // toolProperties = ['roi', 'length'] 保留这些类型数据
+    this.emit(INTERNAL_EVENTS.REMOVE_SPECIFIED_DATA, { types: toolProperties });
   }
 
   remove_viewport_state_cmd() {
