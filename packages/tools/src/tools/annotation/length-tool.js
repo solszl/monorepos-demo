@@ -57,6 +57,11 @@ class LengthTool extends BaseAnnotationTool {
       [end.x + position.x, end.y + position.y],
     ];
 
+    // 如果起始点和终止点的距离小于2 认为不合法
+    if (((end.x - start.x) ** 2 + (end.y - start.y) ** 2) ** 0.5 < 2) {
+      return false;
+    }
+
     return points.every(([x, y]) => this.verify(x, y, width, height));
   }
 

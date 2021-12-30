@@ -34,8 +34,8 @@ class WWWCTool extends BaseTool {
       return;
     }
     const wwwc = {
-      ww: (e.screenX - this.oldOffset[0]) * this.wwStep + this.step.ww,
-      wc: (e.screenY - this.oldOffset[1]) * this.wcStep + this.step.wc,
+      ww: +((e.screenX - this.oldOffset[0]) * this.wwStep + this.step.ww).toFixed(2),
+      wc: +((e.screenY - this.oldOffset[1]) * this.wcStep + this.step.wc).toFixed(2),
     };
     this.data.wwwc = wwwc;
     this.$stage.fire(INTERNAL_EVENTS.TOOL_WWWC, { wwwc });
