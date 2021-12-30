@@ -18,7 +18,7 @@ class CanvasRenderer {
     if (displayState.colormap) {
       renderColormapImage(image, lut, renderCanvas, displayState.colormap);
     } else {
-      const renderFn = ["rgb", "rgba"].includes(color) ? renderColorImage : renderGrayImage;
+      const renderFn = ["rgb", "rgba", true].includes(color) ? renderColorImage : renderGrayImage;
       renderFn(image, lut, renderCanvas);
     }
   }
