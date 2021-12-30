@@ -112,7 +112,6 @@ class AbstractViewport extends Component {
     let needDraw = false;
 
     if (this._displayChanged) {
-      console.log("hello");
       const { displayState } = this;
       await this.renderer.render(image, displayState);
       this._displayChanged = false;

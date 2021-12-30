@@ -276,4 +276,11 @@ export const Tags = {
    * @memberof Tags
    */
   SliceLocation: makeTag(0x0020, 0x1041),
+
+  /**
+   * 序列检查时间
+   *
+   * @memberof Tags
+   */
+  SeriesDate: makeTag(0x0008, 0x0021),
 };

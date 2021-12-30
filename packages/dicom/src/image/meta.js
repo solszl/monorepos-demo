@@ -62,6 +62,7 @@ export const getMetaData = (dataset) => {
       lossyImageCompressionMethod: dataset.string(Tags.LossyImageCompressionMethod) || "",
     }),
     studyDate: dataset.string(Tags.StudyDate),
+    seriesDate: dataset.string(Tags.SeriesDate),
     studyTime: dataset.string(Tags.StudyTime),
     seriesNum: dataset.string(Tags.SeriesNumber),
     accessionNumber: dataset.string(Tags.AccessionNumber),
