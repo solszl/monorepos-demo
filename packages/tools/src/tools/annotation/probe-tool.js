@@ -63,7 +63,7 @@ class ProbeTool extends BaseAnnotationTool {
     textfield.show();
     const ctValue = this._getCT(Math.round(point[0]), Math.round(point[1]));
     const { ctText } = this.globalConfig["ct"];
-    textfield.text(`${ctText}: ${ctValue}`);
+    textfield.text(`${ctText}: ${+ctValue.toFixed(2)}`);
   }
 
   _getCT(x, y) {
@@ -73,7 +73,7 @@ class ProbeTool extends BaseAnnotationTool {
       [this.imageState.pixelData[index]],
       this.imageState.slope,
       this.imageState.intercept
-    );
+    )[0];
   }
 }
 

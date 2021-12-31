@@ -138,8 +138,8 @@ class EllipseTool extends BaseAnnotationTool {
     group.findOne("#area")?.setText(`${areaText}：`, `${+data.area.toFixed(2)}${data.suffix}²`);
     group.findOne("#variance")?.setText(`${varianceText}：`, +data.variance.toFixed(2));
     group.findOne("#avg")?.setText(`${avgText}：`, +data.avg.toFixed(2));
-    group.findOne("#max")?.setText(`${maxText}：`, data.max);
-    group.findOne("#min")?.setText(`${minText}：`, data.min);
+    group.findOne("#max")?.setText(`${maxText}：`, +data.max.toFixed(2));
+    group.findOne("#min")?.setText(`${minText}：`, +data.min.toFixed(2));
 
     if (data.dragged) {
       const dashline = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);
