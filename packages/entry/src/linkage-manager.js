@@ -48,12 +48,37 @@ class LinkageManager {
    * @return { string } 返回一个关联id，以此来证明关联关系
    * @memberof LinkageManager
    */
-  link(viewports, properties, tools = []) {
+  link(viewports, properties = [], tools = []) {
     const obj = {
       viewports,
       properties,
       tools,
     };
+
+    // 根据已联动属性找出联动属性的一个key
+    const makeKey = (obj) => {
+      const { viewports = [], properties = [], tools = [] } = obj;
+      const vKeys = viewports.sort().join("-");
+      const pKeys = properties.sort().join("-");
+      const tKeys = tools.sort().join("-");
+
+      return `${vKeys},${pKeys},${tKeys}`;
+    };
+
+    const mapKey = makeKey(obj);
+    let findLinkedId = "";
+    this.links.forEach((value, key) => {
+      // 先找一下，对应的viewport 有没有相同的联动属性
+      if (mapKey === makeKey(value)) {
+        findLinkedId = key;
+        return key;
+      }
+    });
+
+    // 如果已经联动过对应的属性。返回联动id
+    if (findLinkedId) {
+      return findLinkedId;
+    }
 
     const { viewportMap } = this;
     viewports.forEach((id) => {
