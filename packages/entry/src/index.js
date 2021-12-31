@@ -23,6 +23,7 @@ export default {
   TOOL_TYPE,
   Resource,
   LINK_PROPERTY,
+  LINK_DATA_PROPERTY,
   ParaViewClient,
   MOUSE_BUTTON,
   ToolsMisc,
