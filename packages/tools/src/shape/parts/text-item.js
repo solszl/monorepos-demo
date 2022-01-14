@@ -12,10 +12,10 @@ class TextItem extends Group {
     this.textfiled1.draggable(false);
     this.textfield2 = new TextField({
       height: 20,
-      x: 70,
+      x: 60,
       width: 100,
     });
-    this.textfield2.align("right");
+    this.textfield2.align("left");
     this.textfield2.draggable(false);
     this.add(this.textfiled1, this.textfield2);
   }
