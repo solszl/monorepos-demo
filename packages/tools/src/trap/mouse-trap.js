@@ -59,6 +59,7 @@ const ee = {
         const {
           $stage: stage,
           data: { id },
+          type,
         } = temp;
         stage.fire(INTERNAL_EVENTS.TOOL_CONTEXTMENU_CLICK, {
           id,
@@ -66,6 +67,7 @@ const ee = {
             x: evt.layerX,
             y: evt.layerY,
           },
+          toolType: type,
         });
         break;
       }

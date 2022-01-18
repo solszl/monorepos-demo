@@ -101,6 +101,7 @@ class Viewport extends Component {
         toolId: data.id,
         viewportId: this.id,
         position: data.position,
+        type: data.toolType,
       });
     });
 
