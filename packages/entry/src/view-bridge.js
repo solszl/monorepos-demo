@@ -68,6 +68,8 @@ class Viewport extends Component {
         imgCanvas: renderer.renderData,
         canvas,
       });
+
+      toolView.autofit();
       toolView.renderData(sliceData);
       lastRenderDataElapsed = now;
     });

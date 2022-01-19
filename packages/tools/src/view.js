@@ -25,6 +25,13 @@ class View extends Component {
     setGlobalConfig(option?.config?.tools ?? {});
   }
 
+  autofit() {
+    // 适配容器大小，因为初始化的时候，业务通常使用了flex布局获取元素名称后浏览器并未进行元素宽高等计算，此时宽高传入为0.导致toolView的初始尺寸为(0,0)。
+    // 兼容此问题解决方案为，sliceChanged的时候，使用autofit进行宽高适配
+    const container = this.stage.getAttr("container");
+    this.stage.setSize(this._getRootSize(container));
+  }
+
   resize(width, height) {
     this.stage.setSize({ width, height });
   }
