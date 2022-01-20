@@ -3,6 +3,7 @@ class TaskManager {
     this.tasks = [];
     this.pendingTask = [];
     this.loadingTask = {};
+    this.pendingTaskResolves = {};
   }
 
   getTasks() {
@@ -77,6 +78,19 @@ class TaskManager {
     this.sort(this.pendingTask);
   }
 
+  /**
+   * 如果某个任务已经出于pending状态，需要将其resolve函数缓存起来。 待load完毕后。逐一resolve
+   *
+   * @param { Task } task
+   * @param {*} resolve
+   * @memberof TaskManager
+   */
+  addResolveToPendingTask(task, resolve) {
+    const resolves = this.pendingTaskResolves[task.imageUrl] ?? [];
+    resolves.push(resolve);
+    this.pendingTaskResolves[task.imageUrl] = resolves;
+  }
+
   addLoadingTask(task, resolve) {
     if (!this.loadingTask[task.imageUrl]) {
       this.loadingTask[task.imageUrl] = [];
@@ -89,6 +103,10 @@ class TaskManager {
     const resolves = this.loadingTask[task.imageUrl];
     resolves?.forEach((resolve) => resolve?.(img));
     delete this.loadingTask[task.imageUrl];
+
+    const resoves2 = this.pendingTaskResolves[task.imageUrl];
+    resoves2?.forEach((resolve) => resolve?.(img));
+    delete this.pendingTaskResolves[task.imageUrl];
   }
 
   taskIsLoading(task) {

@@ -92,6 +92,7 @@ class WebTransfer {
       }
 
       if (this.taskManager.taskIsPending(task)) {
+        this.taskManager.addResolveToPendingTask(task, resolve);
         return;
       }
 
