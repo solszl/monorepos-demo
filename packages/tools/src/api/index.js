@@ -20,6 +20,10 @@ class API extends Component {
     this.emit(INTERNAL_EVENTS.TOOL_WWWC, { wwwc, dispatch });
   }
 
+  translate_cmd(offset, dispatch = true) {
+    this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset, dispatch });
+  }
+
   flip_h_cmd(h, dispatch = true) {
     this.emit(INTERNAL_EVENTS.TOOL_FLIPH, { h, dispatch });
   }

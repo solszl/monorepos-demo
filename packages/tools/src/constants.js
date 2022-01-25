@@ -49,6 +49,7 @@ export const TOOL_TYPE = {
   SCALE_CMD: "scale_cmd",
   PLAY_CMD: "play_cmd",
   STOP_CMD: "stop_cmd",
+  TRANSLATE_CMD: "translate_cmd",
   REMOVE_VIEWPORT_STATE_CMD: "remove_viewport_state_cmd",
   DATA_CMD: "data_cmd",
 };
