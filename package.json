@@ -83,6 +83,7 @@
     "paraviewweb": "^3.2.21",
     "promise-worker": "^2.0.1",
     "simplify-js": "^1.2.4",
-    "wslink": "^1.0.7"
+    "wslink": "^1.0.7",
+    "resize-observer-polyfill": "^1.5.1"
   }
 }

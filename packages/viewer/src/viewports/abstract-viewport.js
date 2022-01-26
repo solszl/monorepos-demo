@@ -29,7 +29,6 @@ class AbstractViewport extends Component {
   init() {
     this.initContainer();
     this.initCanvas();
-    // this.initResize();
   }
 
   initContainer() {
@@ -55,33 +54,6 @@ class AbstractViewport extends Component {
     this.canvas.className = "__tx-dicom";
     this.canvas.id = this.id;
     this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
-  }
-
-  initResize() {
-    const className = "tx-resizer";
-    const tempIframe = this.el.querySelector(`.${className}`);
-    if (tempIframe) {
-      return;
-    }
-
-    let lastEmitResize = -1;
-    const resizeHandler = (e) => {
-      if (Date.now() - lastEmitResize <= 100) {
-        return;
-      }
-      lastEmitResize = Date.now();
-      this._sizeChanged = true;
-      this._calcSuitableSizeRatio();
-      this.renderSchedule.invalidate(this.render.bind(this), this.image);
-      this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, this._getRootSize());
-    };
-    const iframe = document.createElement("iframe");
-    iframe.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; pointer-events:none;`;
-    iframe.classList.add(className);
-    this.el.style.position = "relative";
-    this.el.style.overflow = "hidden";
-    this.viewerContainer.insertBefore(iframe, this.viewerContainer.firstChild);
-    iframe.contentWindow.onresize = resizeHandler;
   }
 
   showImage(image, dispatch = true) {
@@ -146,23 +118,25 @@ class AbstractViewport extends Component {
       this._sizeChanged = false;
 
       const { width: rootWidth, height: rootHeight } = this._getRootSize();
-      const { scale, rotate, offset = { x: 0, y: 0 } } = this.displayState;
+      const { scale, rotate, offset } = this.displayState;
       const position = [
         (rootWidth - renderData.width * scale) / 2,
         (rootHeight - renderData.height * scale) / 2,
       ];
+      this.displayState.position = position;
+      this.displayState.offset = offset;
       this.emit(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, {
         width: renderData.width,
         height: renderData.height,
-        scale: scale || 1,
-        rootSize: this._getRootSize(),
-        rotate: rotate || 0,
-        offset: offset || [0, 0],
+        scale,
+        rotate,
+        offset,
+        position,
         seriesId: this.image?.seriesId,
         sliceId: this.image?.instanceNumber,
         currentIndex: this.currentShowIndex,
-        position,
         flip: this.displayState.flip,
+        rootSize: this._getRootSize(),
       });
       needDraw = true;
     }
@@ -331,6 +305,8 @@ class AbstractViewport extends Component {
       flip: { h: false, v: false },
       scale: 1,
       currentTransform: null,
+      rotate: 0,
+      offset: { x: 0, y: 0 },
     };
   }
 

@@ -1,8 +1,8 @@
 import { Component } from "@pkg/core/src";
 import { API, TOOLVIEW_INTERNAL_EVENTS, View } from "@pkg/tools/src";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@pkg/viewer/src";
+import ResizeObserver from "resize-observer-polyfill";
 import { EVENTS } from "./constants";
-import { appendIFrame } from "./utils";
 import { snapshotMode1, snapshotMode2 } from "./utils/snapshot";
 class Viewport extends Component {
   constructor(option) {
@@ -10,6 +10,8 @@ class Viewport extends Component {
     this.init(option);
     this.data = {};
     this.currentIndex = 0;
+
+    this.resizeObserver;
   }
 
   async init(option) {
@@ -17,12 +19,16 @@ class Viewport extends Component {
     this.option = opt;
     const toolView = new View(opt);
     const api = new API(toolView.stage);
-    appendIFrame(opt.el, (parent) => {
-      // 父容器尺寸发生变化
-      const { clientWidth: width, clientHeight: height } = parent;
+
+    // 使用一个polyfill, 去除操作dom 添加iframe而引发的性能降低
+    this.resizeObserver = new ResizeObserver(() => {
+      const { clientWidth: width, clientHeight: height } = opt.el;
       imageView?.resize(width, height);
       toolView?.resize(width, height);
     });
+
+    this.resizeObserver.observe(option.el);
+
     const imageView = ViewFactory(opt);
 
     imageView.on(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, (info) => {
@@ -253,6 +259,7 @@ class Viewport extends Component {
     this.toolView.destroy();
     this.imageView.destroy();
     this.data = {};
+    this?.resizeObserver.disconnect();
   }
 
   /**
