@@ -11,6 +11,16 @@ export const roi = (image, roiData) => {
   const center = [(start.x + end.x) / 2 + position.x, (start.y + end.y) / 2 + position.y];
   const ellipsePixels = getEllipsePixels(image, { width, height, x, y, a, b, center });
 
+  if (ellipsePixels.length === 0) {
+    return {
+      area: 0,
+      min: "-",
+      max: "-",
+      avg: "-",
+      variance: "-",
+    };
+  }
+
   const area = getArea(a, b, image);
   const others = getOthers(ellipsePixels);
 

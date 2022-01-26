@@ -135,11 +135,18 @@ class EllipseTool extends BaseAnnotationTool {
     const { areaText, varianceText, avgText, maxText, minText } = this.globalConfig["ellipse_roi"];
     const group = this.findOne("#textGroup");
     const { textBox: data } = this.data;
-    group.findOne("#area")?.setText(`${areaText}：`, `${+data.area.toFixed(2)}${data.suffix}²`);
-    group.findOne("#variance")?.setText(`${varianceText}：`, +data.variance.toFixed(2));
-    group.findOne("#avg")?.setText(`${avgText}：`, +data.avg.toFixed(2));
-    group.findOne("#max")?.setText(`${maxText}：`, +data.max.toFixed(2));
-    group.findOne("#min")?.setText(`${minText}：`, +data.min.toFixed(2));
+    const toFixed = (value, len = 2) => {
+      if (isNaN(+value)) {
+        return "";
+      }
+
+      return +(+value).toFixed(len);
+    };
+    group.findOne("#area")?.setText(`${areaText}：`, `${toFixed(data.area)}${data.suffix}²`);
+    group.findOne("#variance")?.setText(`${varianceText}：`, toFixed(data.variance));
+    group.findOne("#avg")?.setText(`${avgText}：`, toFixed(data.avg));
+    group.findOne("#max")?.setText(`${maxText}：`, toFixed(data.max));
+    group.findOne("#min")?.setText(`${minText}：`, toFixed(data.min));
 
     if (data.dragged) {
       const dashline = this.findOne(`.${TOOL_ITEM_SELECTOR.DASHLINE}`);
@@ -254,6 +261,7 @@ class EllipseTool extends BaseAnnotationTool {
     };
     data.textBox.x = localText[0] - localPosition[0];
     data.textBox.y = localText[1] - localPosition[1];
+
     return data;
   }
 
@@ -336,7 +344,24 @@ class EllipseTool extends BaseAnnotationTool {
   _updateTextBox() {
     this.data.textBox.suffix = MeasureUnit[this.imageState.imageType] ?? "mm";
 
-    const result = roi(this.imageState, this.data);
+    const { start, end, position } = this.data;
+    const { $transform: transform } = this;
+
+    const localPosition = transform.invertPoint(position.x, position.y);
+    const localStart = transform.invertPoint(position.x + start.x, position.y + start.y);
+    const localEnd = transform.invertPoint(position.x + end.x, position.y + end.y);
+
+    const result = roi(this.imageState, {
+      position: { x: localPosition[0], y: localPosition[1] },
+      start: {
+        x: localStart[0] - localPosition[0],
+        y: localStart[1] - localPosition[1],
+      },
+      end: {
+        x: localEnd[0] - localPosition[0],
+        y: localEnd[1] - localPosition[1],
+      },
+    });
     this.data.textBox = Object.assign({}, this.data.textBox, result);
   }
 }
