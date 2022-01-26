@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPR</title>
+    <style>
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+      }
+
+      .wrapper {
+        width: 100%;
+        height: 100%;
+        background-color: rgb(179, 28, 28);
+        box-sizing: border-box;
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        flex-direction: column;
+      }
+
+      .toolBarContainer {
+        width: 100%;
+        height: 60px;
+      }
+
+      .container {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        box-sizing: border-box;
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        flex-direction: column;
+      }
+
+      .viewport {
+        width: 50%;
+        height: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div id="toolBarContainer">
+        <!-- <div>
+          <label><input name="Fruit" type="checkbox" value="" />tag </label>
+          <label><input name="Fruit" type="checkbox" value="" />探针 </label>
+          <label><input name="Fruit" type="checkbox" value="" />中线 </label>
+        </div> -->
+        <div id="toolBar"></div>
+      </div>
+      <div class="container">
+        <div id="id1" class="viewport"></div>
+        <div id="id2" class="viewport"></div>
+        <div id="id3" class="viewport"></div>
+        <div id="id4" class="viewport"></div>
+      </div>
+    </div>
+  </body>
+</html>

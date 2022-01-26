@@ -1,6 +1,6 @@
-import AbstractViewport from "./abstract-viewport";
+import ImageViewport from "./image-viewport";
 
-class VideoViewport extends AbstractViewport {
+class VideoViewport extends ImageViewport {
   constructor(option = {}) {
     super(option);
   }

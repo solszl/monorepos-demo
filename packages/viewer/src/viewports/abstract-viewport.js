@@ -60,9 +60,10 @@ class AbstractViewport extends Component {
     this.image = image;
     const { width: rw, height: rh } = this.renderer.renderData;
     const { columns, rows } = image;
-    if (rw !== rows || rh !== columns) {
+    if (rw !== columns || rh !== rows) {
       this.renderer.renderData.width = columns;
       this.renderer.renderData.height = rows;
+      console.log("123123", rw, columns, rh, rows);
       this._calcSuitableSizeRatio();
     }
     this._displayChanged = true;
@@ -84,6 +85,7 @@ class AbstractViewport extends Component {
     let needDraw = false;
 
     if (this._displayChanged) {
+      console.log(Date.now());
       const { displayState } = this;
       await this.renderer.render(image, displayState);
       this._displayChanged = false;
