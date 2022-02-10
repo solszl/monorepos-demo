@@ -138,7 +138,8 @@ class AbstractViewport extends Component {
         sliceId: this.image?.instanceNumber,
         currentIndex: this.currentShowIndex,
         flip: this.displayState.flip,
-        rootSize: this._getRootSize(),
+        rootWidth,
+        rootHeight,
       });
       needDraw = true;
     }

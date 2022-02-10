@@ -7,7 +7,11 @@ import { TOOL_CONSTRUCTOR } from "./constructor";
 import { useGlobalConfig } from "./state/global-config";
 import { removeImageState, useImageState } from "./state/image-state";
 import ToolState from "./state/tool-state";
-import { removeViewportState, useViewportState } from "./state/viewport-state";
+import {
+  manualOverwriteInitialState,
+  removeViewportState,
+  useViewportState,
+} from "./state/viewport-state";
 import { transform as transformCoords } from "./tools/utils/coords-transform";
 import Transform from "./transform";
 import MouseTrap from "./trap/mouse-trap";
@@ -87,6 +91,10 @@ class View extends Component {
   updateImageState(config = {}) {
     const [, setImageState] = useImageState(this.stage.id());
     setImageState(config);
+  }
+
+  manualOverwriteViewportInitialState(properties) {
+    manualOverwriteInitialState(this.stage.id(), properties);
   }
 
   destroy() {

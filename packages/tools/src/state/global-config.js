@@ -20,6 +20,10 @@ export const TOOL_CONFIG = {
   length: {
     suffixText: "mm",
   },
+  magnify: {
+    // circle | square
+    mode: "square",
+  },
 };
 
 let configDictionary = {};

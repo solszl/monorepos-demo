@@ -60,7 +60,7 @@ class API extends Component {
     const { viewportProperties, toolProperties = [] } = params;
     const [initialState] = useViewportInitialState(this.stageId);
     const [initialImageState] = useImageInitialState(this.stageId);
-    const { rotate, offset, scale } = initialState;
+    const { rotate, offset, scale, rootWidth, rootHeight } = initialState;
 
     const {
       rotate: v_rotate,
@@ -74,7 +74,17 @@ class API extends Component {
 
     this.emit(INTERNAL_EVENTS.TOOL_ROTATION, { rotate: v_rotate ? v_rotate?.value : rotate });
     this.emit(INTERNAL_EVENTS.TOOL_TRANSLATE, { offset: v_offset ? v_offset?.value : offset });
-    this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale: v_scale ? v_scale?.value : scale });
+    if (v_scale) {
+      this.emit(INTERNAL_EVENTS.TOOL_SCALE, { scale: v_scale ? v_scale?.value : scale });
+    } else {
+      const rootWidth = this.stage.width();
+      const rootHeight = this.stage.height();
+      this.emit(INTERNAL_EVENTS.TOOL_SCALE_FIT, {
+        rootWidth,
+        rootHeight,
+      });
+    }
+
     const getWWWC = (val) => {
       const [getImageState] = useImageState(this.stageId);
       const { initialWWWC, wwwc, imageOriginWWWC } = getImageState();

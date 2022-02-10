@@ -15,10 +15,23 @@ let stateInitialDictionary = {};
 let stateDictionary = {};
 export const useViewportState = (stageId) => {
   const setViewportState = (newState) => {
-    const { rootSize, scale, rotate, width, height, position = [0, 0], offset, flip, id, stageId } = newState;
+    const {
+      // rootSize,
+      rootWidth,
+      rootHeight,
+      scale,
+      rotate,
+      width,
+      height,
+      position = [0, 0],
+      offset,
+      flip,
+      id,
+      stageId,
+    } = newState;
     const state = stateDictionary?.[stageId] ?? { ...initialState };
     // 设置视窗
-    Object.assign(state, { rootWidth: rootSize?.width, rootHeight: rootSize?.height } ?? {});
+    Object.assign(state, { rootWidth, rootHeight } ?? {});
     Object.assign(state, { x: offset.x, y: offset.y } ?? {});
     Object.assign(state, { scale } ?? {});
     Object.assign(state, { rotate } ?? {});
@@ -51,6 +64,15 @@ export const useViewportInitialState = (stageId) => {
   };
 
   return [state, setInitialViewportState];
+};
+
+export const manualOverwriteInitialState = (stageId, properties) => {
+  const [state] = useViewportInitialState(stageId);
+  Object.keys(properties).forEach((prop) => {
+    state[prop] = properties[prop];
+  });
+
+  stateInitialDictionary[stageId] = state;
 };
 
 export const removeViewportState = (stageId) => {

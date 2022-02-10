@@ -3,7 +3,7 @@ import { Resource } from "@pkg/loader/src";
 import ToolBar from "./toolBar";
 const seriesId = "1.2.392.200036.9116.2.1796265406.1637200042.8.1201900001.2";
 const fs = "http://10.0.70.3:8000";
-let currentIndex = 0;
+let currentIndex = 30;
 let rotate = 0;
 let invert = false;
 let flipH = false;
@@ -125,5 +125,8 @@ toolBar.addBtn({
 });
 toolBar.addBtn({
   name: "重置",
-  fun: () => standard.useCmd(TOOL_TYPE.RESET_CMD),
+  fun: () =>
+    standard.useCmd(TOOL_TYPE.RESET_CMD, {
+      viewportProperties: {},
+    }),
 });

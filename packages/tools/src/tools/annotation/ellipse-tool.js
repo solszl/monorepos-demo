@@ -9,10 +9,13 @@ import TextItem from "../../shape/parts/text-item";
 import { useViewportState } from "../../state/viewport-state";
 import BaseAnnotationTool from "../base/base-annotation-tool";
 import { connectTextNode, randomId, toCT } from "../utils";
+import { cursor } from "../utils/index";
 const MeasureUnit = {
   dicom: "mm",
   webImage: "px",
 };
+
+const PRECISION = 0.1;
 class EllipseTool extends BaseAnnotationTool {
   constructor(config = {}) {
     super(config);
@@ -46,7 +49,6 @@ class EllipseTool extends BaseAnnotationTool {
     this.initialUI();
     this.data.position = this.$stage.getPointerPosition();
     this._updateTextBox();
-    this.renderData();
     this.isDown = true;
   }
   mouseMove(e) {
@@ -218,11 +220,20 @@ class EllipseTool extends BaseAnnotationTool {
       [start.x + position.x, start.y + position.y],
       [end.x + position.x, end.y + position.y],
     ];
+
+    if (
+      Math.abs(points[0][0] - points[1][0]) <= PRECISION ||
+      Math.abs(points[0][1] - points[1][1]) <= PRECISION
+    ) {
+      return false;
+    }
+
     return points.every(([x, y]) => this.verify(x, y, width, height));
   }
 
   _tryUpdateData() {
     if (!this.verifyDataLegal() && this.getStage()) {
+      cursor(this.getStage(), "auto");
       this.getStage().fire(INTERNAL_EVENTS.DATA_REMOVED, { id: this.data.id });
       this.remove();
       return;

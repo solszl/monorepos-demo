@@ -129,9 +129,15 @@ class Viewport extends Component {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_INVERT, (info) =>
         imageView.setInvert(info.invert, info.dispatch)
       );
-      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) =>
-        imageView.setScale(info.scale, info.dispatch)
-      );
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE, (info) => {
+        imageView.setScale(info.scale, info.dispatch);
+      });
+      obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_SCALE_FIT, (info) => {
+        const { rootWidth, rootHeight } = info;
+        imageView.resize(rootWidth, rootHeight);
+        // 当舞台尺寸发生变化的时候， 要手动更新一下舞台大小
+        toolView.manualOverwriteViewportInitialState({ rootWidth, rootHeight });
+      });
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_TRANSLATE, (info) =>
         imageView.setOffset(info.offset, info.dispatch)
       );
