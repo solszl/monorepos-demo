@@ -17,7 +17,7 @@ export const roi = (image, roiData) => {
       min: "-",
       max: "-",
       avg: "-",
-      variance: "-",
+      variance: "0",
     };
   }
 
