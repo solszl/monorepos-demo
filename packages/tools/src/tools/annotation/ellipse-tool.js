@@ -56,6 +56,16 @@ class EllipseTool extends BaseAnnotationTool {
     if (!this.isDown) {
       return;
     }
+
+    // konva bug
+    const { x: endX, y: endY } = this.getRelativePointerPosition();
+    const { m } = this.getAbsoluteTransform();
+    if (m[4] === 0 || m[5] === 0) {
+      m[4] = endX;
+      m[5] = endY;
+    }
+    this._setTransform(m);
+
     this.data.end = this.getRelativePointerPosition();
     this._updateTextBox();
     this.renderData();
@@ -142,7 +152,7 @@ class EllipseTool extends BaseAnnotationTool {
         return "";
       }
 
-      return +(+value).toFixed(len);
+      return (+value).toFixed(len);
     };
     group.findOne("#area")?.setText(`${areaText}：`, `${toFixed(data.area)}${data.suffix}²`);
     group.findOne("#variance")?.setText(`${varianceText}：`, toFixed(data.variance));
