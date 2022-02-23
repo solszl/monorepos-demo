@@ -14,7 +14,7 @@ const serve = {
   },
   proxy: {
     "/api": {
-      target: "http://10.0.70.3:8000",
+      target: "http://172.16.6.14:8000",
       changeOrigin: true,
       pathRewrite: {
         // "^/api": "",

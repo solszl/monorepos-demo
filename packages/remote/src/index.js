@@ -1,5 +1,12 @@
 import { createImage } from "./image";
-import ParaViewClient from "./paraview-client";
-import SocketTransfer from "./remote-client";
+import SocketTransfer from "./socket-transfer";
+import RemoteMIPViewport from "./viewports/remote-mip";
+// import RemoteCPRViewport from "./viewports/remoteCPRViewport";
+// import RemoteLumenViewport from "./viewports/remoteLumenViewport";
+// import RemoteProbeViewport from "./viewports/remoteProbeViewport";
+import RemoteVRViewport from "./viewports/remote-vr";
+
 export { createImage, SocketTransfer };
-export { ParaViewClient };
+// export { RemoteCPRViewport, RemoteLumenViewport, RemoteProbeViewport, RemoteVRViewport };
+export { RemoteVRViewport };
+export { RemoteMIPViewport };

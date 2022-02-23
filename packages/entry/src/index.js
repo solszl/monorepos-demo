@@ -1,5 +1,4 @@
 import { Resource } from "@pkg/loader/src";
-import { ParaViewClient } from "@pkg/remote/src";
 import { Misc as ToolsMisc, MOUSE_BUTTON, TOOL_CONFIG, TOOL_TYPE } from "@pkg/tools/src";
 import { VIEWPORT_CONFIG } from "@pkg/viewer/src";
 import { EVENTS as ViewportEvents } from "./constants";
@@ -14,7 +13,6 @@ const GLOBAL_CONFIG = {
 
 export { ViewportManager, TOOL_TYPE, ViewportEvents, Resource, MOUSE_BUTTON, ToolsMisc };
 export { LINK_PROPERTY, LINK_DATA_PROPERTY };
-export { ParaViewClient };
 export { GLOBAL_CONFIG };
 
 export default {
@@ -24,7 +22,6 @@ export default {
   Resource,
   LINK_PROPERTY,
   LINK_DATA_PROPERTY,
-  ParaViewClient,
   MOUSE_BUTTON,
   ToolsMisc,
   GLOBAL_CONFIG,

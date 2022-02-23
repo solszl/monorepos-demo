@@ -7,29 +7,32 @@ import { snapshotMode1, snapshotMode2 } from "./utils/snapshot";
 class Viewport extends Component {
   constructor(option) {
     super();
-    this.init(option);
+    this.option = option;
     this.data = {};
     this.currentIndex = 0;
 
     this.resizeObserver;
+
+    this.init();
   }
 
-  async init(option) {
+  async init() {
+    const { option } = this;
     let opt = Object.assign({}, option, { id: this.id });
     this.option = opt;
     const toolView = new View(opt);
     const api = new API(toolView.stage);
+    const imageView = ViewFactory(opt);
 
+    const { el } = opt;
     // 使用一个polyfill, 去除操作dom 添加iframe而引发的性能降低
     this.resizeObserver = new ResizeObserver(() => {
-      const { clientWidth: width, clientHeight: height } = opt.el;
+      const { clientWidth: width, clientHeight: height } = el;
       imageView?.resize(width, height);
       toolView?.resize(width, height);
     });
 
-    this.resizeObserver.observe(option.el);
-
-    const imageView = ViewFactory(opt);
+    this.resizeObserver.observe(el);
 
     imageView.on(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, (info) => {
       toolView.updateViewport(info);
@@ -57,9 +60,10 @@ class Viewport extends Component {
       this.option.seriesId = info.seriesId;
       const sliceKey = `${info.seriesId}-${info.currentIndex}`;
       this.sliceKey = sliceKey;
+      this.currentIndex = info.currentIndex;
       this.emit(EVENTS.SLICE_CHANGED, {
         seriesId: info.seriesId,
-        currentIndex: this.currentIndex,
+        currentIndex: info.currentIndex,
         viewportId: this.id,
       });
       const sliceData = this.data?.[sliceKey] ?? new Map();
@@ -249,9 +253,18 @@ class Viewport extends Component {
 
     this.currentIndex = +index;
     this.currentIndex = transfer.getIllegalIndex(this.currentIndex, seriesId, alias);
-    const image = await transfer.getImage(seriesId, this.currentIndex, alias);
     this.imageView.currentShowIndex = this.currentIndex;
-    this.imageView.showImage(image, dispatch);
+
+    let image;
+    // 如果是多种transfer情况下，分别处理
+    if (transferMode === "web") {
+      image = await transfer.getImage(seriesId, this.currentIndex, alias);
+      this.imageView.showImage(image, dispatch);
+    } else if (transferMode === "socket") {
+      // get && show
+      this.imageView.getImage(index);
+    } else {
+    }
     return image;
   }
 

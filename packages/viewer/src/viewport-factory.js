@@ -1,3 +1,4 @@
+import { RemoteMIPViewport, RemoteVRViewport } from "@pkg/remote/src";
 import CanvasRenderer from "./render/canvas";
 import WebglRenderer from "./render/webgl";
 import { webglSupported } from "./render/webgl/utils";
@@ -22,6 +23,18 @@ export const factory = (option) => {
       break;
     case "video":
       viewport = VideoViewport.create(option);
+      break;
+    case "remote_stream":
+      viewport = RemoteVRViewport.create(option);
+      break;
+    case "remote_mip":
+      viewport = RemoteMIPViewport.create(option);
+      break;
+    case "remote_cpr":
+      break;
+    case "remote_lumen":
+      break;
+    case "remote_probe":
       break;
   }
 

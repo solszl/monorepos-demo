@@ -1,5 +1,4 @@
-import { ParaViewClient, Resource, ViewportManager } from "@pkg/entry/src";
-console.log("hello");
+import { Resource, ViewportManager } from "@pkg/entry/src";
 
 let tags = null;
 
@@ -13,9 +12,12 @@ let planeEls = document.querySelectorAll(".plane");
 let horizonEl = document.querySelector(".horizon");
 let portraitEl = document.querySelector(".portrait");
 
-const SERIES_ID = "1.3.12.2.1107.5.1.4.74356.30000019031800002060400067195";
-const STUDY_ID = "1.2.840.20210326.121032504593";
+const PATIENT_ID = "CN010002-13696724";
+const STUDY_ID = "1.2.840.113619.2.416.10634142502611409964348085056782520111";
+const SERIES_ID = "1.2.840.113619.2.416.77348009424380358976506205963520437809";
+const PREDICT_TYPE = "ct_cerebral";
 
+/** @type { ViewportManager } */
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
@@ -23,8 +25,10 @@ const HOST = "10.0.50.6";
 const HTTP_PORT = "19570";
 let WS_PORT = "-1";
 
+const useProxy = false;
+
 const HTTP_API = {
-  create: "create",
+  create: useProxy ? "api/wsApi/create" : "create",
   ports: "/coronary/ports",
   destroy: "coronary/destroy/",
   destroyall: "coronary/destroyall",
@@ -40,11 +44,18 @@ const fetchWSPort = async () => {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        series_iuid: "1.2.392.200036.9116.2.2059767860.1617004309.8.1241300001.2",
-        predict_type: "ct_heart",
-        vr: {},
+        patient_id: PATIENT_ID,
+        study_iuid: STUDY_ID,
+        series_iuid: SERIES_ID,
+        predict_type: PREDICT_TYPE,
+        render: { add_text: false, default: "neckBloodVesselInverseVMIP" },
         mip: {},
-        vr_tree: {},
+        // vr: { add_text: true },
+        // mip: { add_text: true },
+        // vr_tree: { add_text: true },
+        // cpr: {},
+        // lumen: {},
+        // cpr_lumen: {},
       }),
     })
   ).json();
@@ -52,41 +63,54 @@ const fetchWSPort = async () => {
   WS_PORT = data.port;
 };
 
-const sleep = async (ms) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
-};
-
-const getMinMaxValues = (pixelData) => {
-  let min = Number.MAX_SAFE_INTEGER;
-  let max = Number.MIN_SAFE_INTEGER;
-  const len = pixelData.length;
-  let i = 0;
-  let pixel;
-  while (i < len) {
-    pixel = pixelData[i];
-    min = Math.min(min, pixel);
-    max = Math.max(max, pixel);
-    i += 1;
-  }
-
-  return { minPixelValue: min, maxPixelValue: max };
-};
-
 const main = async () => {
   await fetchWSPort();
   const resource = vm.resource;
-  await resource.initTransfer([{ mode: "socket", host: HOST, port: WS_PORT, route: "vr" }]);
-  // const axialViewport = vm.addViewport({
-  //   plane: "pixel",
-  //   renderer: "canvas",
-  //   el: axialEl,
-  //   transferMode: "socket",
-  //   alias: "axial",
-  // });
+  await resource.initTransfer([
+    {
+      mode: "socket",
+      host: HOST,
+      port: WS_PORT,
+      routes: [
+        // `vtkserver/${SERIES_ID}/vr`,
+        // `vtkserver/${SERIES_ID}/cpr_lumen`,
+        `vtkserver/${SERIES_ID}/mip`,
+        `vtkserver/${SERIES_ID}/render`,
+      ],
+    },
+  ]);
+
+  // const conn = resource.getTransfer("socket").getConnection(`vtkserver/${SERIES_ID}/vr`);
+  // console.log(conn);
+
+  const vrViewport = vm.addViewport({
+    plane: "remote_stream",
+    renderer: "canvas",
+    el: vrEl,
+    transferMode: "socket",
+    alias: "render",
+    route: "render",
+  });
+  await vrViewport.imageView.initialAsyncWorkflow();
+
+  window.viewport = vrViewport;
+  console.log(viewport);
+  console.log(viewport.imageView);
+  console.log(viewport.imageView.setShowType);
+  // vrViewport.imageView.setShowType?.("skull_Inverse_vmip");
+
+  const axialViewport = vm.addViewport({
+    plane: "remote_mip",
+    renderer: "canvas",
+    el: axialEl,
+    transferMode: "socket",
+    alias: "axial",
+    route: "mip",
+    httpServer: "http://10.0.50.6:8000",
+  });
+
+  await axialViewport.imageView.initialAsyncWorkflow();
+  window.mipViewport = axialViewport;
 
   // const { transferMode, alias: alias0 } = axialViewport.option;
   // let transfer = resource.getTransfer(transferMode);
@@ -119,11 +143,11 @@ const main = async () => {
   // const img2 = await transfer.getImage(SERIES_ID, 100, alias2);
   // sagittalViewport.imageView.showImage(img2);
 
-  const connection = resource.getTransfer("socket")?.connection;
-  const viewport = new ParaViewClient({
-    connection,
-    el: vrEl,
-  });
+  // const connection = resource.getTransfer("socket")?.connection;
+  // const viewport = new ParaViewClient({
+  //   connection,
+  //   el: vrEl,
+  // });
 
   // axialViewport.useTool(TOOL_TYPE.WWWC);
   // axialViewport.useTool(TOOL_TYPE.TRANSLATE, 2);

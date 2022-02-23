@@ -63,13 +63,6 @@ export const snapshotMode2 = async (config) => {
   await delay(10);
   toolView.renderData(sliceData);
 
-  // TODO: remove me
-  // let el = document.body.querySelector("#temporary");
-  // if (el) {
-  //   el.parentNode.removeChild(el);
-  // }
-  // document.body.append(canvas);
-
   // const base64 = canvas.toDataURL("image/png");
   // const a = document.createElement("a");
   // a.href = base64;

@@ -61,7 +61,6 @@ class RoiTool extends BaseAnnotationTool {
 
   mouseRightClick(e) {
     super.mouseRightClick(e);
-    console.log("hello world");
   }
 
   initialUI() {
