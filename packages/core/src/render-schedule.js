@@ -17,12 +17,15 @@ class RenderSchedule {
   /**
    * 将待更新函数放入延迟渲染队列
    *
-   * @param {*} fn
-   * @param {*} args
+   * @param { Function } fn 需要延迟执行的函数
+   * @param { object } ctx 函数上下文
+   * @param { any } args 函数参数
    * @memberof RenderSchedule
    */
-  invalidate(fn, ...args) {
-    this.deferredQueue.set(fn, args);
+  invalidate(fn, ctx, ...args) {
+    // 因为函数bind 会返回新的函数， 将旧函数作为闭包包进新函数内。导致map set的时候无法覆盖同一个key
+    this.deferredQueue.set(`${ctx.id ?? ""}-${fn.name}`, { fn, ctx, args });
+    console.log(this.deferredQueue.size, fn.name, ctx.id);
     this.stage.startRender();
   }
 
@@ -48,9 +51,11 @@ class RenderSchedule {
       return;
     }
 
-    for (const [fn, values] of this.deferredQueue?.entries()) {
-      fn?.(...values);
-      this.deferredQueue.delete(fn);
+    console.log("call exec.");
+    for (const [key, values] of this.deferredQueue?.entries()) {
+      const { fn, ctx, args } = values;
+      fn?.apply(ctx, args);
+      this.deferredQueue.delete(key);
     }
 
     // 渲染过程中，又来了新的

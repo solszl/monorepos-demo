@@ -15,7 +15,6 @@ class RemoteVRViewport extends AbstractRemoteStreamViewport {
 
     // 动态引入函数列表 进行mixin操作
     const { METHODS } = await import(`./../msg/method-${route}`);
-    console.log("bbb");
     Object.entries(METHODS).forEach(([key, value]) => {
       Reflect.set(this, key, value.bind(this));
     });

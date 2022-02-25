@@ -50,12 +50,10 @@ const fetchWSPort = async () => {
         predict_type: PREDICT_TYPE,
         render: { add_text: false, default: "neckBloodVesselInverseVMIP" },
         mip: {},
+        cpr: {},
         // vr: { add_text: true },
         // mip: { add_text: true },
         // vr_tree: { add_text: true },
-        // cpr: {},
-        // lumen: {},
-        // cpr_lumen: {},
       }),
     })
   ).json();
@@ -73,7 +71,7 @@ const main = async () => {
       port: WS_PORT,
       routes: [
         // `vtkserver/${SERIES_ID}/vr`,
-        // `vtkserver/${SERIES_ID}/cpr_lumen`,
+        `vtkserver/${SERIES_ID}/cpr`,
         `vtkserver/${SERIES_ID}/mip`,
         `vtkserver/${SERIES_ID}/render`,
       ],
@@ -92,12 +90,7 @@ const main = async () => {
     route: "render",
   });
   await vrViewport.imageView.initialAsyncWorkflow();
-
   window.viewport = vrViewport;
-  console.log(viewport);
-  console.log(viewport.imageView);
-  console.log(viewport.imageView.setShowType);
-  // vrViewport.imageView.setShowType?.("skull_Inverse_vmip");
 
   const axialViewport = vm.addViewport({
     plane: "remote_mip",
@@ -111,6 +104,58 @@ const main = async () => {
 
   await axialViewport.imageView.initialAsyncWorkflow();
   window.mipViewport = axialViewport;
+  axialViewport.imageView.getImage(100, "axial", 10, true);
+
+  const lumenViewport = vm.addViewport({
+    plane: "remote_lumen",
+    renderer: "canvas",
+    el: portraitEl,
+    transferMode: "socket",
+    alias: "cpr",
+    route: "cpr",
+    direction: "portrait",
+    httpServer: "http://10.0.50.6:8000",
+    vesselName: "vessel11",
+  });
+  await lumenViewport.imageView.initialAsyncWorkflow();
+  lumenViewport.imageView.setVesselName("vessel11");
+  lumenViewport.imageView.setAngle(35);
+  window.lumenViewport = lumenViewport;
+
+  const cprViewport = vm.addViewport({
+    plane: "remote_cpr",
+    renderer: "canvas",
+    el: cprEl,
+    transferMode: "socket",
+    alias: "cpr",
+    route: "cpr",
+    httpServer: "http://10.0.50.6:8000",
+    vesselName: "vessel11",
+  });
+  await cprViewport.imageView.initialAsyncWorkflow();
+  // for verify render schedule validate function.
+  cprViewport.imageView.setVesselName("vessel11");
+  cprViewport.imageView.setVesselName("vessel12");
+  cprViewport.imageView.setVesselName("vessel13");
+  cprViewport.imageView.setTheta(35);
+  window.cprViewport = cprViewport;
+
+  let index = (Math.random() * 100) >> 0;
+  for await (const el of planeEls) {
+    const probeViewport = vm.addViewport({
+      plane: "remote_probe",
+      renderer: "canvas",
+      el,
+      transferMode: "socket",
+      alias: "probe",
+      route: "cpr",
+      httpServer: "http://10.0.50.6:8000",
+    });
+
+    await probeViewport.imageView.initialAsyncWorkflow();
+    probeViewport.imageView.setVesselName("vessel11");
+    probeViewport.imageView.setIndex(index++);
+  }
 
   // const { transferMode, alias: alias0 } = axialViewport.option;
   // let transfer = resource.getTransfer(transferMode);

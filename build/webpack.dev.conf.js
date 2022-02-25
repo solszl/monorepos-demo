@@ -13,17 +13,6 @@ const devConfig = {
   },
   module: {
     rules: [
-      // {
-      //   test: /\.js$/,
-      //   use: {
-      //     loader: "eslint-loader",
-      //     options: {
-      //       formatter: require("eslint-friendly-formatter"),
-      //     },
-      //   },
-      //   include: [resolve("packages"), resolve("examples")],
-      //   enforce: "pre",
-      // },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],

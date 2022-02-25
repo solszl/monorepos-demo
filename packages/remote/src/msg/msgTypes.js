@@ -1,14 +1,14 @@
 export const MsgTypes = {
   /** 获取拉直中线 */
-  LUMEN_CENTERLINE: "cpr_lumen|>lumen.lines",
+  LUMEN_CENTERLINE: "cpr|>lumen.lines",
   /** 获取轴位图的影像资源 */
-  AXIAL_DCM: "cpr_lumen|>axial.dcm",
+  AXIAL_DCM: "cpr|>axial.dcm",
   /** 获取探针截图列表 */
-  PROBE_DCM: "cpr_lumen|>probe.dcm",
+  PROBE_DCM: "cpr|>probe.dcm",
   /** 获取拉直图影像资源 */
-  LUMEN_DCM: "cpr_lumen|>lumen.dcm",
+  LUMEN_DCM: "cpr|>lumen.dcm",
   /** 获取拉伸图像影像资源 */
-  CPR_DCM: "cpr_lumen|>cpr.dcm",
+  CPR_DCM: "cpr|>cpr.dcm",
   /** 体渲染控制血管名称显隐 */
   VR_VESSEL_TEXT: "vr|>vessel.text",
   /** VMIP控制血管名称显隐 */

@@ -42,6 +42,8 @@ class AbstractRemoteDicomViewport extends ImageViewport {
     return image;
   }
 
+  async propertyChanged() {}
+
   destroy() {
     super.destroy();
     this.loader.destroy();

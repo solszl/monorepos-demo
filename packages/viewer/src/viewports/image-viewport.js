@@ -52,7 +52,6 @@ class ImageViewport extends AbstractViewport {
     canvas.width = width;
     canvas.height = height;
     this.canvas = canvas;
-    this.canvas.className = "__tx-dicom";
     this.canvas.id = this.id;
     this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
   }
@@ -67,7 +66,7 @@ class ImageViewport extends AbstractViewport {
       this._calcSuitableSizeRatio();
     }
     this._displayChanged = true;
-    this.renderSchedule.invalidate(this.render.bind(this), image);
+    this.renderSchedule.invalidate(this.render, this, image);
     const data = {
       seriesId: image.seriesId,
       sliceId: image.instanceNumber,
@@ -187,7 +186,7 @@ class ImageViewport extends AbstractViewport {
     super.resize(width, height);
     this._sizeChanged = true;
     this._calcSuitableSizeRatio();
-    this.renderSchedule.invalidate(this.render.bind(this), this.image);
+    this.renderSchedule.invalidate(this.render, this, this.image);
     this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, { width, height });
   }
 
@@ -258,7 +257,7 @@ class ImageViewport extends AbstractViewport {
     }
 
     this[effectProperty] = true;
-    this.renderSchedule.invalidate(this.render.bind(this), this.image);
+    this.renderSchedule.invalidate(this.render, this, this.image);
     return true;
   }
 

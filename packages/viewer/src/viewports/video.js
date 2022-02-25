@@ -18,7 +18,6 @@ class VideoViewport extends ImageViewport {
     video.width = width;
     video.height = height;
     this.video = video;
-    this.video.className = "__tx-dicom";
     this.video.controls = true;
     this.video.id = this.id;
     this.viewerContainer.insertBefore(this.video, this.viewerContainer.firstChild);
