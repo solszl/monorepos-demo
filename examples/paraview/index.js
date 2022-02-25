@@ -1,4 +1,4 @@
-import { Resource, ViewportManager } from "@pkg/entry/src";
+import { Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 
 let tags = null;
 
@@ -120,6 +120,7 @@ const main = async () => {
   await lumenViewport.imageView.initialAsyncWorkflow();
   lumenViewport.imageView.setVesselName("vessel11");
   lumenViewport.imageView.setAngle(35);
+  lumenViewport.useTool(TOOL_TYPE.STACK_SCROLL);
   window.lumenViewport = lumenViewport;
 
   const cprViewport = vm.addViewport({
@@ -138,6 +139,8 @@ const main = async () => {
   cprViewport.imageView.setVesselName("vessel12");
   cprViewport.imageView.setVesselName("vessel13");
   cprViewport.imageView.setTheta(35);
+  // 这里使用滚轮工具， 调整角度
+  cprViewport.useTool(TOOL_TYPE.STACK_SCROLL);
   window.cprViewport = cprViewport;
 
   let index = (Math.random() * 100) >> 0;

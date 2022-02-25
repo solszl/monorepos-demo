@@ -23,6 +23,10 @@ class AbstractRemoteDicomViewport extends ImageViewport {
 
   async mixinMethods(route) {}
 
+  getImage(index) {
+    // 子类实现是旋转角度还是跳转指定层。
+  }
+
   _splitMessageType(messageType) {
     return messageType.split("|>");
   }
