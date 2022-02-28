@@ -23,7 +23,7 @@ export const METHODS = {
    * @param { number } count 层数（多少层合一层）
    * @param { boolean } bone 是否带骨
    */
-  getImage: async function (index, azimuth, count, bone) {
+  getMipImage: async function (index, azimuth, count, bone) {
     this.azimuth = azimuth;
     this.withBone = bone;
     this.count = count;

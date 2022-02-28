@@ -53,6 +53,11 @@ class Viewport extends Component {
       });
     });
 
+    imageView.on(VIEWER_INTERNAL_EVENTS.RENDER_COMPLETED, (info) => {
+      // 不建议监听该事件， 正常来讲，matrix_changed 和 image_rendered 各司其职， 但是业务端同时监听后，无法快速往redux里写数据
+      this.emit(EVENTS.RENDER_COMPLETED, info);
+    });
+
     // 记录上次刷新toolview数据时间，如果时间间隔过短，就不再刷新。从而提升性能
     let lastRenderDataElapsed = Date.now();
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {

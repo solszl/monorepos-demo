@@ -25,7 +25,7 @@ class RenderSchedule {
   invalidate(fn, ctx, ...args) {
     // 因为函数bind 会返回新的函数， 将旧函数作为闭包包进新函数内。导致map set的时候无法覆盖同一个key
     this.deferredQueue.set(`${ctx.id ?? ""}-${fn.name}`, { fn, ctx, args });
-    console.log(this.deferredQueue.size, fn.name, ctx.id);
+    // console.log(this.deferredQueue.size, fn.name, ctx.id);
     this.stage.startRender();
   }
 
@@ -51,7 +51,7 @@ class RenderSchedule {
       return;
     }
 
-    console.log("call exec.");
+    // console.log("call exec.");
     for (const [key, values] of this.deferredQueue?.entries()) {
       const { fn, ctx, args } = values;
       fn?.apply(ctx, args);

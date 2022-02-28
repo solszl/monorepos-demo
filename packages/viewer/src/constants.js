@@ -16,6 +16,8 @@ export const VIEWER_INTERNAL_EVENTS = {
   IMAGE_RENDERED: `${PREFIX}image_rendered`,
   /** 图像矩阵发生变化 */
   MATRIX_CHANGED: `${PREFIX}matrix_rendered`,
+  /** 视图渲染完成后事件派发 */
+  RENDER_COMPLETED: `${PREFIX}render_completed`,
 };
 
 export const VIEWPORT_CONFIG = {};

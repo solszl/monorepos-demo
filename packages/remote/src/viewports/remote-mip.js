@@ -20,6 +20,60 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
     });
   }
 
+  setAzimuth(val) {
+    if (!val || val === this.azimuth) {
+      return;
+    }
+
+    this.azimuth = val;
+    this._propertyChanged = true;
+    this.renderSchedule.invalidate(this.propertyChanged, this);
+  }
+
+  setWithBone(val) {
+    if (this.withBone === val) {
+      return;
+    }
+
+    this.withBone = val;
+    this._propertyChanged = true;
+    this.renderSchedule.invalidate(this.propertyChanged, this);
+  }
+
+  setCount(val) {
+    if (this.count === val || val < 0) {
+      return;
+    }
+
+    this.count = val;
+    this._propertyChanged = true;
+    this.renderSchedule.invalidate(this.propertyChanged, this);
+  }
+
+  setIndex(val) {
+    if (this.index === val || !val) {
+      return;
+    }
+
+    this.index = val;
+    this._propertyChanged = true;
+    this.renderSchedule.invalidate(this.propertyChanged, this);
+  }
+
+  async propertyChanged() {
+    await super.propertyChanged();
+
+    if (this._propertyChanged) {
+      const { withBone, azimuth, index, count } = this;
+      await this.getMipImage(index, azimuth, count, withBone);
+      this._propertyChanged = false;
+    }
+  }
+
+  getImage(index) {
+    this.setIndex(index);
+  }
+
   static create(option) {
     return new RemoteMIPViewport(option);
   }

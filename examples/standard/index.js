@@ -1,6 +1,7 @@
 import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 import Centerline2D from "../../packages/bizz/tools/centerline/centerline-2d";
+import Segment from "../../packages/bizz/tools/segments/segment";
 import Tag from "../../packages/bizz/tools/tag/tag";
 import Vernier from "../../packages/bizz/tools/vernier/vernier";
 const { roi } = ToolsMisc;
@@ -93,6 +94,18 @@ fetchData(seriesId).then(async (json) => {
         y: 122.93,
       });
       layer.add(tag);
+
+      const segData = [
+        { label: "helloaaaaaaaaaaaaaaaaaa", points: [[], [], [], []] },
+        { label: "work123123", points: [[], [], [], [], [], [], [], []] },
+        { label: "vanilla", points: [[], [], [], [], [], []] },
+      ];
+      let segment = new Segment();
+      segment.width(400);
+      segment.setData(segData);
+      segment.setPosition({ y: 100 });
+      segment.setDirection("landscape1");
+      layer.add(segment);
 
       let i = 0;
       setInterval(() => {

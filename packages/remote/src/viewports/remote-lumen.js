@@ -6,7 +6,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     super(option);
 
     // 默认属性
-    const { vesselName = "", angle = 0, direction = "portrait", angleStep = 5 } = option;
+    const { vesselName = "", angle = -1, direction = "portrait", angleStep = 1 } = option;
     this.vesselName = vesselName;
     this.angle = angle;
     this.direction = direction;
@@ -76,11 +76,11 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     await super.propertyChanged();
     if (this.directionChanged || this.vesselNameChanged) {
       const { vesselName, direction } = this;
+      // TODO: 处理中线问题
       const lines = await this?.getLines(vesselName, direction);
-      this.vesselNameChanged = false;
     }
 
-    if (this.directionChanged || this.angleChanged) {
+    if (this.directionChanged || this.angleChanged || this.vesselNameChanged) {
       const { vesselName, angle, direction } = this;
       const uri = await this?.getLumenImage(vesselName, angle, direction);
       const { httpServer } = this.option;
@@ -88,6 +88,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       this.angleChanged = false;
     }
 
+    this.vesselNameChanged = false;
     this.directionChanged = false;
   }
 

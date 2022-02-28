@@ -8,11 +8,11 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
   constructor(option = {}) {
     super(option);
 
-    const { vesselName = "", theta = 0, phi = 0, angleStep = 5 } = option;
+    const { vesselName = "", theta = -1, phi = -1, angleStep = 1 } = option;
     this.vesselName = vesselName;
     this.theta = theta;
     this.phi = phi;
-    this.angleStep = 5;
+    this.angleStep = angleStep;
   }
 
   async initialAsyncWorkflow() {
@@ -40,6 +40,11 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     this.renderSchedule.invalidate(this.propertyChanged, this);
   }
 
+  /** alias for theta */
+  setAngle(val) {
+    this.setTheta(val);
+  }
+
   setTheta(theta) {
     theta = (theta + 360) % 360;
     if (this.theta === theta) {
@@ -47,6 +52,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     }
 
     this.theta = theta;
+    this.angle = theta;
     this.angleChanged = true;
     this.renderSchedule.invalidate(this.propertyChanged, this);
   }

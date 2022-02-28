@@ -104,7 +104,6 @@ class ImageViewport extends AbstractViewport {
       this._scaleChanged ||
       this._sizeChanged
     ) {
-      const { renderData } = this.renderer;
       this.displayState.currentTransform = applyTransform(
         this.displayState,
         this.canvas,
@@ -118,28 +117,7 @@ class ImageViewport extends AbstractViewport {
       this._scaleChanged = false;
       this._sizeChanged = false;
 
-      const { width: rootWidth, height: rootHeight } = this.getRootSize();
-      const { scale, rotate, offset } = this.displayState;
-      const position = [
-        (rootWidth - renderData.width * scale) / 2,
-        (rootHeight - renderData.height * scale) / 2,
-      ];
-      this.displayState.position = position;
-      this.displayState.offset = offset;
-      this.emit(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, {
-        width: renderData.width,
-        height: renderData.height,
-        scale,
-        rotate,
-        offset,
-        position,
-        seriesId: this.image?.seriesId,
-        sliceId: this.image?.instanceNumber,
-        currentIndex: this.currentShowIndex,
-        flip: this.displayState.flip,
-        rootWidth,
-        rootHeight,
-      });
+      this.emit(VIEWER_INTERNAL_EVENTS.MATRIX_CHANGED, this._getMatrixObj());
       needDraw = true;
     }
 
@@ -156,30 +134,16 @@ class ImageViewport extends AbstractViewport {
       }
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
-      this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, {
-        wwwc: {
-          ww: this.displayState?.wwwc?.ww ?? this.image?.windowWidth,
-          wc: this.displayState?.wwwc?.wc ?? this.image?.windowCenter,
-        },
-        initialWWWC: this.displayState.initialWWWC,
-        imageOriginWWWC: {
-          ww: this.image?.windowWidth,
-          wc: this.image?.windowCenter,
-        },
-        columns: this.image.columns,
-        rows: this.image.rows,
-        pixelData: this.image.pixelData,
-        seriesId: this.image.seriesId,
-        sliceId: this.image.instanceNumber,
-        currentIndex: this.currentShowIndex,
-        columnPixelSpacing: this.image.columnPixelSpacing,
-        rowPixelSpacing: this.image.rowPixelSpacing,
-        slope: this.image.slope,
-        intercept: this.image.intercept,
-        imageType: this.image.imageType ?? "dicom",
-      });
-      needDraw = false;
+      this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, this._getImageObj());
     }
+
+    if (needDraw) {
+      this.emit(
+        VIEWER_INTERNAL_EVENTS.RENDER_COMPLETED,
+        Object.assign({}, this._getMatrixObj(), this._getImageObj())
+      );
+    }
+    needDraw = false;
   }
 
   resize(width, height) {
@@ -283,6 +247,57 @@ class ImageViewport extends AbstractViewport {
     }
 
     this.setScale(scaleResult);
+  }
+
+  _getMatrixObj() {
+    const { renderData } = this.renderer;
+    const { width: rootWidth, height: rootHeight } = this.getRootSize();
+    const { scale, rotate, offset } = this.displayState;
+    const position = [
+      (rootWidth - renderData.width * scale) / 2,
+      (rootHeight - renderData.height * scale) / 2,
+    ];
+    this.displayState.position = position;
+    this.displayState.offset = offset;
+    return {
+      width: renderData.width,
+      height: renderData.height,
+      scale,
+      rotate,
+      offset,
+      position,
+      seriesId: this.image?.seriesId,
+      sliceId: this.image?.instanceNumber,
+      currentIndex: this.currentShowIndex,
+      flip: this.displayState.flip,
+      rootWidth,
+      rootHeight,
+    };
+  }
+
+  _getImageObj() {
+    return {
+      wwwc: {
+        ww: this.displayState?.wwwc?.ww ?? this.image?.windowWidth,
+        wc: this.displayState?.wwwc?.wc ?? this.image?.windowCenter,
+      },
+      initialWWWC: this.displayState.initialWWWC,
+      imageOriginWWWC: {
+        ww: this.image?.windowWidth,
+        wc: this.image?.windowCenter,
+      },
+      columns: this.image.columns,
+      rows: this.image.rows,
+      pixelData: this.image.pixelData,
+      seriesId: this.image.seriesId,
+      sliceId: this.image.instanceNumber,
+      currentIndex: this.currentShowIndex,
+      columnPixelSpacing: this.image.columnPixelSpacing,
+      rowPixelSpacing: this.image.rowPixelSpacing,
+      slope: this.image.slope,
+      intercept: this.image.intercept,
+      imageType: this.image.imageType ?? "dicom",
+    };
   }
 }
 

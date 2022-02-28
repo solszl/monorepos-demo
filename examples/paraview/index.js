@@ -1,4 +1,4 @@
-import { Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
+import { MOUSE_BUTTON, Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
 
 let tags = null;
 
@@ -105,6 +105,8 @@ const main = async () => {
   await axialViewport.imageView.initialAsyncWorkflow();
   window.mipViewport = axialViewport;
   axialViewport.imageView.getImage(100, "axial", 10, true);
+  axialViewport.useTool(TOOL_TYPE.STACK_SCROLL);
+  axialViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
 
   const lumenViewport = vm.addViewport({
     plane: "remote_lumen",
@@ -120,7 +122,8 @@ const main = async () => {
   await lumenViewport.imageView.initialAsyncWorkflow();
   lumenViewport.imageView.setVesselName("vessel11");
   lumenViewport.imageView.setAngle(35);
-  lumenViewport.useTool(TOOL_TYPE.STACK_SCROLL);
+  lumenViewport.useTool(TOOL_TYPE.STACK_SCROLL, MOUSE_BUTTON.LEFT);
+  lumenViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
   window.lumenViewport = lumenViewport;
 
   const cprViewport = vm.addViewport({
@@ -136,8 +139,6 @@ const main = async () => {
   await cprViewport.imageView.initialAsyncWorkflow();
   // for verify render schedule validate function.
   cprViewport.imageView.setVesselName("vessel11");
-  cprViewport.imageView.setVesselName("vessel12");
-  cprViewport.imageView.setVesselName("vessel13");
   cprViewport.imageView.setTheta(35);
   // 这里使用滚轮工具， 调整角度
   cprViewport.useTool(TOOL_TYPE.STACK_SCROLL);
