@@ -32,6 +32,10 @@ class Tag extends Group {
     const aim = this.findOne("#aim");
     aim.visible(!aim.visible());
   }
+
+  setData(data) {}
+
+  renderData() {}
 }
 
 export default Tag;

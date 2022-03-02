@@ -1,3 +1,4 @@
+import { VIEWER_INTERNAL_EVENTS_EXTENDS } from "./constants";
 import { createImage } from "./image";
 import SocketTransfer from "./socket-transfer";
 import RemoteCPRViewport from "./viewports/remote-cpr";
@@ -10,3 +11,4 @@ export { createImage, SocketTransfer };
 export { RemoteVRViewport };
 export { RemoteMIPViewport };
 export { RemoteCPRViewport, RemoteLumenViewport, RemoteProbeViewport };
+export { VIEWER_INTERNAL_EVENTS_EXTENDS };

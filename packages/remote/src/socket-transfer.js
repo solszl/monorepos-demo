@@ -8,11 +8,11 @@ class SocketTransfer {
   }
 
   async init() {
-    const { host, port, routes } = this.config;
+    const { host, routes } = this.config;
 
     for await (const route of routes) {
       const config = {
-        sessionURL: `ws://${host}:${port}/${route}`,
+        sessionURL: `${host}/${route}`,
       };
 
       const sc = SmartConnect.newInstance({ config });

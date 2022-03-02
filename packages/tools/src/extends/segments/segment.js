@@ -12,26 +12,63 @@ class Segment extends Group {
    * @param { string } val 方向， 'landscape' | 'portrait'
    */
   setDirection(val) {
+    this.direction = val;
     const rotateAngle = val === "landscape" ? 0 : 90;
-    this.rotate(rotateAngle);
+    this.rotation(rotateAngle);
     // 偏移lineHeight
-    const offsetX = rotateAngle === 0 ? 0 : 13;
-    this.x(offsetX);
+    // const offsetX = rotateAngle === 0 ? 0 : 13;
+    // this.x(offsetX);
+
+    const { m } = this.$transform;
+    const w = m.at(4);
+    const h = m.at(5);
+    val === "landscape" ? this.position({ x: w, y: h }) : this.position({ x: w + 13, y: h });
   }
 
   setData(val) {
     this.removeChildren();
+    const { data, direction, size } = val;
+    this.width(size);
+
+    this.data = data;
+    this.autofit();
     // [{label, points}, {label, points}]
-    let total = val.reduce((prev, current) => {
-      return prev + (current.points.length ?? 0);
+    this.setDirection(direction);
+  }
+
+  renderData() {}
+
+  autofit() {
+    // const [, , , , w, h] = this.$transform.m;
+    const { m } = this.$transform;
+    const w = m.at(4);
+    const h = m.at(5);
+    const { direction, data } = this;
+    const stage = this.getStage();
+    if (!stage) {
+      return;
+    }
+
+    if (direction === "landscape") {
+      const size = stage.width() - 2 * w;
+      this.width(size);
+    } else {
+      const size = stage.height() - 2 * h;
+      this.width(size);
+    }
+
+    let total = data.reduce((prev, current) => {
+      return prev + (Object.entries(current)[0][1].length ?? 0);
     }, 0);
 
     let lastX = 0;
     let lastWidth = 0;
-    val.forEach((data) => {
+    this.removeChildren();
+    data.forEach((d) => {
       const seg = new SubSegment();
-      const { label, points } = data;
-      seg.width((points.length / total) * this.width());
+      const [label, points] = Object.entries(d)[0];
+      const length = points.length;
+      seg.width((length / total) * this.width());
       seg.setText(label);
 
       seg.x(lastX + lastWidth);
@@ -40,6 +77,8 @@ class Segment extends Group {
 
       this.add(seg);
     });
+
+    this.setDirection(direction);
   }
 }
 
@@ -48,7 +87,7 @@ class SubSegment extends Group {
     super(config);
     const lineProp = {
       points: [0, 0, 0, 11],
-      stroke: "gray",
+      stroke: "white",
       strokeWidth: 1,
       lineCap: "round",
       lineJoin: "round",
@@ -66,6 +105,7 @@ class SubSegment extends Group {
     const line3 = new Line(
       Object.assign(lineProp, {
         id: "line3",
+        y: 13,
       })
     );
 

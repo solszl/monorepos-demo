@@ -1,11 +1,11 @@
-import { UIComponent } from "@pkg/tools/src";
+import { Group } from "konva/lib/Group";
 import { Circle } from "konva/lib/shapes/Circle";
 import { Wedge } from "konva/lib/shapes/Wedge";
 
-class Vernier extends UIComponent {
+class Vernier extends Group {
   constructor(bizzConfig = {}, config = {}) {
     super(config);
-    this._currentIndex = -1;
+    this._currentIndex = 0;
     this._path = [];
 
     // count: 有几瓣三角形
@@ -27,8 +27,9 @@ class Vernier extends UIComponent {
 
     // dragMode 0: 不可抓取， 1：锁定Y, 2:锁定X，3：自由抓取
     const { dragMode = 0 } = bizzConfig;
+
     if (dragMode > 0) {
-      this.draggable(true);
+      this.draggable(dragMode > 0);
       const anchor = new Circle({
         fill: "rgba(0,0,0,0.1)",
         radius: 7,
@@ -36,7 +37,6 @@ class Vernier extends UIComponent {
         strokeWidth: 0,
       });
       this.add(anchor);
-      // this.hitStrokeWidth(20);
 
       this.on("dragmove", (e) => {
         if (dragMode === 1) {
@@ -56,6 +56,9 @@ class Vernier extends UIComponent {
   set path(arr = []) {
     // TODO: 抽象path 支持centerline2d/3d 格式
     this._path = arr;
+
+    // path 经过transform变化后，需要重新定位游标位置以及观看朝向
+    this.autofix();
   }
 
   get path() {
@@ -91,7 +94,36 @@ class Vernier extends UIComponent {
 
   /** 设置当前索引。并看向下一个点 */
   set currentIndex(val) {
+    // if (this.currentIndex === val) {
+    //   return;
+    // }
+
     this._currentIndex = val;
+    const currentPosition = this.path[this.currentIndex];
+    this.position({
+      x: currentPosition[0],
+      y: currentPosition[1],
+    });
+
+    this.originPosition = currentPosition;
+    this.lookAtNextPoint();
+
+    // 派发事件
+    this?.getStage()?.fire("tx_vernier_index_changed", {
+      index: this.currentIndex,
+      total: this.path.length,
+    });
+  }
+
+  get currentIndex() {
+    return this._currentIndex;
+  }
+
+  get total() {
+    return this.path.length;
+  }
+
+  autofix() {
     const currentPosition = this.path[this.currentIndex];
     this.position({
       x: currentPosition[0],
@@ -102,13 +134,12 @@ class Vernier extends UIComponent {
     this.lookAtNextPoint();
   }
 
-  get currentIndex() {
-    return this._currentIndex;
-  }
-
   _calcAngle(p1, p2) {
     const [x1, y1] = p1;
     const [x2, y2] = p2;
+    if (x1 === x2 && y1 === y2) {
+      return this.rotation() + 90;
+    }
 
     const x = x2 - x1;
     const y = y2 - y1;
@@ -141,6 +172,9 @@ class Vernier extends UIComponent {
 
     return index;
   }
+
+  setData(data) {}
+  renderData() {}
 }
 
 /*************************************************/
@@ -154,9 +188,9 @@ let DEFAULT_CONFIG = {
   fillRadialGradientEndRadius: 15,
   fillRadialGradientColorStops: [0, "#F9A72700", 1, "#F9A727"],
   lineJoin: "round",
-  angle: 20,
-  radius: 30,
-  rotation: -10,
+  angle: 15,
+  radius: 20,
+  rotation: 7.5,
   shadowColor: "black",
   shadowOffsetX: 2,
   shadowOffsetY: 2,

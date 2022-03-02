@@ -1,5 +1,7 @@
 // import { CombineFrenet } from "../../cpr/frenet";
 // import { lps2NearestLocation } from "../../cpr/utils";
+import Centerline2DBizz from "../bizz/centerline/centerline-2d";
+import { VIEWER_INTERNAL_EVENTS_EXTENDS } from "../constants";
 import AbstractRemoteDicomViewport from "./base/abstract-remote-dicom";
 class RemoteLumenViewport extends AbstractRemoteDicomViewport {
   constructor(option = {}) {
@@ -11,6 +13,12 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     this.angle = angle;
     this.direction = direction;
     this.angleStep = angleStep;
+
+    // attribute change variables.
+    // 角度变更
+    this.angleChanged = true;
+    // 方向变更
+    this.directionChanged = true;
   }
 
   async initialAsyncWorkflow() {
@@ -74,22 +82,62 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
 
   async propertyChanged() {
     await super.propertyChanged();
-    if (this.directionChanged || this.vesselNameChanged) {
-      const { vesselName, direction } = this;
-      // TODO: 处理中线问题
-      const lines = await this?.getLines(vesselName, direction);
-    }
 
     if (this.directionChanged || this.angleChanged || this.vesselNameChanged) {
       const { vesselName, angle, direction } = this;
       const uri = await this?.getLumenImage(vesselName, angle, direction);
       const { httpServer } = this.option;
-      this.setUrl(`${httpServer}${uri}`);
+      await this.setUrl(`${httpServer}${uri}`);
       this.angleChanged = false;
+    }
+
+    if (this.directionChanged || this.vesselNameChanged) {
+      const { vesselName, direction } = this;
+      const linesData = await this?.getLines(vesselName, direction);
+      let centerline2d = new Centerline2DBizz();
+      centerline2d.setData(linesData);
+      this.centerline2d = centerline2d;
+      // 此处不做处理，因为分段信息需要对应的名字
+      this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
+        viewportId: this.id,
+        data: linesData,
+        segment: true,
+        direction: this.direction,
+      });
     }
 
     this.vesselNameChanged = false;
     this.directionChanged = false;
+  }
+
+  setCenterlineVisibility(val) {
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_STATE_CHANGED, {
+      viewportId: this.id,
+      state: val,
+    });
+  }
+
+  setSegmentVisibility(val) {
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.SEGMENT_STATE_CHANGED, {
+      viewportId: this.id,
+      state: val,
+    });
+  }
+
+  setVesselObjKeymap(obj) {
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VESSEL_KEYMAP_CHANGED, {
+      viewportId: this.id,
+      keymap: obj,
+    });
+  }
+
+  setVernierIndex(index) {
+    const { centerline2d } = this;
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
+      viewportId: this.id,
+      index,
+      total: centerline2d.total,
+    });
   }
 
   // setTheta(theta) {

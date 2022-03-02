@@ -1,13 +1,13 @@
 import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
-import Centerline2D from "../../packages/bizz/tools/centerline/centerline-2d";
-import Segment from "../../packages/bizz/tools/segments/segment";
-import Tag from "../../packages/bizz/tools/tag/tag";
-import Vernier from "../../packages/bizz/tools/vernier/vernier";
+import Centerline2D from "../../packages/tools/src/extends/centerline/centerline-2d";
+import Segment from "../../packages/tools/src/extends/segments/segment";
+import Tag from "../../packages/tools/src/extends/tag/tag";
+import Vernier from "../../packages/tools/src/extends/vernier/vernier";
 const { roi } = ToolsMisc;
 const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403.6";
 const fs = "http://172.16.6.14:8000";
-let currentIndex = 50;
+let currentIndex = 0;
 const API_GRAY = "/api/v1/series/";
 const API_COLOR = "/api/v1/series/ssr/";
 
@@ -95,24 +95,27 @@ fetchData(seriesId).then(async (json) => {
       });
       layer.add(tag);
 
-      const segData = [
-        { label: "helloaaaaaaaaaaaaaaaaaa", points: [[], [], [], []] },
-        { label: "work123123", points: [[], [], [], [], [], [], [], []] },
-        { label: "vanilla", points: [[], [], [], [], [], []] },
-      ];
+      const segData = {
+        data: [
+          { helloaaaaaaaaaaaaaaaaaa: [[], [], [], []] },
+          { work123123: [[], [], [], [], [], [], [], []] },
+          { vanilla: [[], [], [], [], [], []] },
+        ],
+        size: 400,
+        direction: "portrait",
+      };
+
       let segment = new Segment();
-      segment.width(400);
+      layer.add(segment);
       segment.setData(segData);
       segment.setPosition({ y: 100 });
-      segment.setDirection("landscape1");
-      layer.add(segment);
 
       let i = 0;
-      setInterval(() => {
-        i += 1;
-        i %= testData.length;
-        vernier.currentIndex = i;
-      }, 100);
+      // setInterval(() => {
+      //   i += 1;
+      //   i %= testData.length;
+      //   vernier.currentIndex = i;
+      // }, 100);
     }, 50);
   });
 });

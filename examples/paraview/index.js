@@ -1,4 +1,4 @@
-import { MOUSE_BUTTON, Resource, TOOL_TYPE, ViewportManager } from "@pkg/entry/src";
+import { MOUSE_BUTTON, Resource, TOOL_TYPE, ViewportEvents, ViewportManager } from "@pkg/entry/src";
 
 let tags = null;
 
@@ -22,6 +22,7 @@ const vm = new ViewportManager();
 vm.resource = new Resource();
 
 const HOST = "10.0.50.6";
+const WS_HOST = "ws://10.0.50.6:8000";
 const HTTP_PORT = "19570";
 let WS_PORT = "-1";
 
@@ -67,13 +68,15 @@ const main = async () => {
   await resource.initTransfer([
     {
       mode: "socket",
-      host: HOST,
-      port: WS_PORT,
+      host: WS_HOST,
       routes: [
         // `vtkserver/${SERIES_ID}/vr`,
-        `vtkserver/${SERIES_ID}/cpr`,
-        `vtkserver/${SERIES_ID}/mip`,
-        `vtkserver/${SERIES_ID}/render`,
+        // `vtkserver/${SERIES_ID}/cpr`,
+        // `vtkserver/${SERIES_ID}/mip`,
+        // `vtkserver/${SERIES_ID}/render`,
+        `volumerender/${WS_PORT}/${SERIES_ID}/cpr`,
+        `volumerender/${WS_PORT}/${SERIES_ID}/mip`,
+        `volumerender/${WS_PORT}/${SERIES_ID}/render`,
       ],
     },
   ]);
@@ -104,9 +107,9 @@ const main = async () => {
 
   await axialViewport.imageView.initialAsyncWorkflow();
   window.mipViewport = axialViewport;
-  axialViewport.imageView.getImage(100, "axial", 10, true);
-  axialViewport.useTool(TOOL_TYPE.STACK_SCROLL);
-  axialViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+  // axialViewport.imageView.getImage(100, "axial", 10, true);
+  // axialViewport.useTool(TOOL_TYPE.STACK_SCROLL);
+  // axialViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
 
   const lumenViewport = vm.addViewport({
     plane: "remote_lumen",
@@ -124,6 +127,9 @@ const main = async () => {
   lumenViewport.imageView.setAngle(35);
   lumenViewport.useTool(TOOL_TYPE.STACK_SCROLL, MOUSE_BUTTON.LEFT);
   lumenViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+  lumenViewport.on(ViewportEvents.VERNIER_INDEX_CHANGED, (e) => {
+    cprViewport.imageView.setVernierIndex(e.index);
+  });
   window.lumenViewport = lumenViewport;
 
   const cprViewport = vm.addViewport({

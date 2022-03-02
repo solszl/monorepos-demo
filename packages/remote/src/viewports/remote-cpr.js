@@ -2,8 +2,9 @@
 /* eslint-disable camelcase */
 // import { CombineFrenet } from "../../cpr/frenet";
 // import { lps2NearestLocation } from "../../cpr/utils";
+import Centerline2DBizz from "../bizz/centerline/centerline-2d";
+import { VIEWER_INTERNAL_EVENTS_EXTENDS } from "../constants";
 import AbstractRemoteDicomViewport from "./base/abstract-remote-dicom";
-
 class RemoteCPRViewport extends AbstractRemoteDicomViewport {
   constructor(option = {}) {
     super(option);
@@ -79,16 +80,47 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     if (this.vesselNameChanged || this.angleChanged) {
       const { vesselName, theta, phi } = this;
       const { centerline, uri } = await this?.getCprImage(vesselName, theta, phi);
+      // 2d中线逻辑
+      const centerline2d = new Centerline2DBizz();
+      centerline2d.setData(centerline);
+      this.centerline2d = centerline2d;
+      this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
+        viewportId: this.id,
+        data: centerline,
+        segment: false,
+      });
 
       //设置图像
       const { httpServer } = this.option;
-      this.setUrl(`${httpServer}${uri}`);
+      await this.setUrl(`${httpServer}${uri}`);
 
       // 设置中线
-      // TODO: 设置中线
       this.vesselNameChanged = false;
       this.angleChanged = false;
     }
+  }
+
+  setCenterlineVisibility(val) {
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_STATE_CHANGED, {
+      viewportId: this.id,
+      state: val,
+    });
+  }
+
+  setVesselObjKeymap(obj) {
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VESSEL_KEYMAP_CHANGED, {
+      viewportId: this.id,
+      keymap: obj,
+    });
+  }
+
+  setVernierIndex(index) {
+    const { centerline2d } = this;
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
+      viewportId: this.id,
+      index,
+      total: centerline2d.total,
+    });
   }
 
   // setTheta(theta) {

@@ -51,7 +51,7 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
   }
 
   setIndex(val) {
-    if (this.index === val || !val) {
+    if (this.index === val || val < 0) {
       return;
     }
 

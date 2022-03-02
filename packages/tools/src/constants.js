@@ -54,6 +54,14 @@ export const TOOL_TYPE = {
   DATA_CMD: "data_cmd",
 };
 
+export const TOOL_TYPE_EXTENDS = {
+  VESSEL_SEGMENT: "vessel_segment",
+  CENTERLINE2D: "centerline2d",
+  // CENTERLINE3D: "centerline3d",
+  TAG: "tag",
+  VERNIER: "vernier",
+};
+
 export const MOUSE_BUTTON = {
   LEFT: 1,
   MIDDLE: 2,
@@ -78,4 +86,5 @@ export const INTERNAL_EVENTS = {
   DATA_CUSTOM_OPERATE: "tx_data_custom_operate",
   REMOVE_SPECIFIED_DATA: "tx_remove_specified_data",
   TOOL_SCALE_FIT: "tx_tool_scale_fit",
+  VERNIER_INDEX_CHANGED: "tx_vernier_index_changed",
 };

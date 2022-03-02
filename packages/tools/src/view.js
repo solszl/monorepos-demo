@@ -70,6 +70,12 @@ class View extends Component {
 
     stage.add(
       new Layer({
+        id: "staticLayer",
+      })
+    );
+
+    stage.add(
+      new Layer({
         id: "toolsLayer",
       })
     );
@@ -141,6 +147,47 @@ class View extends Component {
       item?.renderData();
     });
     layer.batchDraw();
+
+    const staticLayer = this.stage.findOne("#staticLayer");
+    if (!staticLayer) {
+      return;
+    }
+
+    const { children } = staticLayer;
+    children.forEach((child) => {
+      child.autofit?.();
+    });
+  }
+
+  renderStaticData(data) {
+    const layer = this.stage.findOne("#staticLayer");
+    if (!layer) {
+      return;
+    }
+
+    // layer.removeChildren();
+    const { type } = data;
+    const item = new TOOL_CONSTRUCTOR[type]();
+    layer.add(item);
+    item.$transform = this.transform;
+    item?.setData(data);
+    item?.renderData?.();
+  }
+
+  updateData(data) {
+    const { layerId, toolId, props, toolClass } = data;
+    const layer = this.stage.findOne(`#${layerId}`);
+    if (toolId) {
+      const item = layer.findOne(`#${toolId}`);
+      item?.updateProps(props);
+    }
+
+    if (toolClass) {
+      const items = layer.find(`.${toolClass}`);
+      items.forEach((item) => {
+        item?.updateProps(props);
+      });
+    }
   }
 
   getCanvas() {

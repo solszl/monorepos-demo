@@ -13,4 +13,6 @@ export const EVENTS = {
   TOOL_DATA_REMOVED: "tool_data_removed",
   /** 工具右键点击派发事件 */
   TOOL_DATA_CONTEXTMENU_CLICK: "tool_data_contextmenu_click",
+  /** 拉直、拉伸图像中，游标位置变化事件 */
+  VERNIER_INDEX_CHANGED: "vernier_index_changed",
 };

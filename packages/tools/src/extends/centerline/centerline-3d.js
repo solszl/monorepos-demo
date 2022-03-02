@@ -10,6 +10,10 @@ class Centerline3D {
   get path() {
     return this._path;
   }
+
+  setData(data) {}
+
+  renderData() {}
 }
 
 export default Centerline3D;

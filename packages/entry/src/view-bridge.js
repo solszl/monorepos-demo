@@ -1,5 +1,6 @@
 import { Component } from "@pkg/core/src";
-import { API, TOOLVIEW_INTERNAL_EVENTS, View } from "@pkg/tools/src";
+import { VIEWER_INTERNAL_EVENTS_EXTENDS } from "@pkg/remote/src";
+import { API, TOOLVIEW_INTERNAL_EVENTS, TOOL_TYPE_EXTENDS, View } from "@pkg/tools/src";
 import { factory as ViewFactory, VIEWER_INTERNAL_EVENTS } from "@pkg/viewer/src";
 import ResizeObserver from "resize-observer-polyfill";
 import { EVENTS } from "./constants";
@@ -89,6 +90,77 @@ class Viewport extends Component {
       lastRenderDataElapsed = now;
     });
 
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_STATE_CHANGED, (info) => {
+      console.log("bridge", info);
+      const { state } = info;
+      toolView.updateData({
+        layerId: "staticLayer",
+        toolId: "centerline2d",
+        props: {
+          visible: state,
+        },
+      });
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.SEGMENT_STATE_CHANGED, (info) => {
+      console.log("bridge", info);
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, (info) => {
+      const { viewportId, data, segment } = info;
+      console.log("中线数据发生变更", data, segment);
+      if (viewportId !== this.id) {
+        return;
+      }
+
+      // 设置中线数据
+      toolView.renderStaticData({
+        type: TOOL_TYPE_EXTENDS.CENTERLINE2D,
+        data,
+      });
+      // 设置分段信息数据
+      if (segment) {
+        const {
+          direction,
+          renderer: { renderData },
+        } = imageView;
+
+        toolView.renderStaticData({
+          type: TOOL_TYPE_EXTENDS.VESSEL_SEGMENT,
+          data,
+          direction: direction,
+          size: imageView.direction === "landscape" ? renderData.width : renderData.height,
+        });
+      }
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, (info) => {
+      const { index, total, viewportId } = info;
+      toolView.updateData({
+        layerId: "staticLayer",
+        toolId: "centerline2d",
+        props: {
+          vernierIndex: index,
+        },
+      });
+
+      this.emit(EVENTS.VERNIER_INDEX_CHANGED, {
+        viewportId,
+        currentIndex: index,
+        total,
+      });
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.SEGMENT_DATA_CHANGED, (info) => {
+      const { viewportId, data } = info;
+      console.log("中线数据发生变更", this.id, viewportId);
+      if (viewportId !== this.id) {
+        return;
+      }
+
+      // 设置分段
+    });
+
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {
       const { sliceKey } = this;
       const sliceData = this.data?.[sliceKey] ?? new Map();
@@ -122,7 +194,16 @@ class Viewport extends Component {
       });
     });
 
-    [api, toolView].map((obj) => {
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.VERNIER_INDEX_CHANGED, (data) => {
+      const { index, total } = data;
+      this.emit(EVENTS.VERNIER_INDEX_CHANGED, {
+        viewportId: this.id,
+        index,
+        total,
+      });
+    });
+
+    [(api, toolView)].map((obj) => {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) =>
         imageView.setRotation(info.rotate, info.dispatch)
       );
