@@ -12,21 +12,21 @@ let planeEls = document.querySelectorAll(".plane");
 let horizonEl = document.querySelector(".horizon");
 let portraitEl = document.querySelector(".portrait");
 
-const PATIENT_ID = "CN010002-13696724";
-const STUDY_ID = "1.2.840.113619.2.416.10634142502611409964348085056782520111";
-const SERIES_ID = "1.2.840.113619.2.416.77348009424380358976506205963520437809";
+const PATIENT_ID = "CE027001-118040304613";
+const STUDY_ID = "1.2.840.20180404.118040304613";
+const SERIES_ID = "1.2.392.200036.9116.2.6.1.3268.2059767860.1522820353.891250";
 const PREDICT_TYPE = "ct_cerebral";
 
 /** @type { ViewportManager } */
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
-const HOST = "10.0.50.6";
-const WS_HOST = "ws://10.0.50.6:8000";
-const HTTP_PORT = "19570";
+const HOST = "172.16.3.35";
+const WS_HOST = "ws://172.16.3.35:8000";
+const HTTP_PORT = "8000";
 let WS_PORT = "-1";
 
-const useProxy = false;
+const useProxy = true;
 
 const HTTP_API = {
   create: useProxy ? "api/wsApi/create" : "create",
@@ -102,14 +102,14 @@ const main = async () => {
     transferMode: "socket",
     alias: "axial",
     route: "mip",
-    httpServer: "http://10.0.50.6:8000",
+    httpServer: "http://172.16.3.35:8000",
   });
 
   await axialViewport.imageView.initialAsyncWorkflow();
   window.mipViewport = axialViewport;
-  // axialViewport.imageView.getImage(100, "axial", 10, true);
-  // axialViewport.useTool(TOOL_TYPE.STACK_SCROLL);
-  // axialViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+  axialViewport.imageView.getImage(100, "axial", 10, true);
+  axialViewport.useTool(TOOL_TYPE.STACK_SCROLL);
+  axialViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
 
   const lumenViewport = vm.addViewport({
     plane: "remote_lumen",
@@ -119,7 +119,7 @@ const main = async () => {
     alias: "cpr",
     route: "cpr",
     direction: "portrait",
-    httpServer: "http://10.0.50.6:8000",
+    httpServer: "http://172.16.3.35:8000",
     vesselName: "vessel11",
   });
   await lumenViewport.imageView.initialAsyncWorkflow();
@@ -157,7 +157,7 @@ const main = async () => {
     transferMode: "socket",
     alias: "cpr",
     route: "cpr",
-    httpServer: "http://10.0.50.6:8000",
+    httpServer: "http://172.16.3.35:8000",
     vesselName: "vessel11",
   });
   await cprViewport.imageView.initialAsyncWorkflow();
@@ -178,7 +178,7 @@ const main = async () => {
       transferMode: "socket",
       alias: "probe",
       route: "cpr",
-      httpServer: "http://10.0.50.6:8000",
+      httpServer: "http://172.16.3.35:8000",
     });
 
     await probeViewport.imageView.initialAsyncWorkflow();

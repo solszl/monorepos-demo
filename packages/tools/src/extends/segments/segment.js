@@ -121,12 +121,6 @@ class SubSegment extends Group {
         id: "line2",
       })
     );
-    const line3 = new Line(
-      Object.assign(lineProp, {
-        id: "line3",
-        y: 13,
-      })
-    );
 
     const textField = new Text({
       id: "textField",
@@ -140,7 +134,7 @@ class SubSegment extends Group {
 
     this.add(line1);
     this.add(line2);
-    this.add(line3);
+    // this.add(line3);
     this.add(textField);
   }
 
@@ -155,9 +149,6 @@ class SubSegment extends Group {
     // 设置右边标尺的线的位置
     const line2 = this.findOne("#line2");
     line2.x(this.width());
-    // 设置底部线
-    const line3 = this.findOne("#line3");
-    line3.points([0, textField.height() + 1, this.width(), textField.height() + 1]);
   }
 
   getText() {

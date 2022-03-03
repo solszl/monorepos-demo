@@ -32,6 +32,9 @@ class Tag extends Group {
     const aim = this.findOne("#aim");
     aim.visible(!aim.visible());
 
+    this.getStage().fire("tx_tag_state_changed", {
+      data: this.getData(),
+    });
     console.log(aim.data);
   }
 
@@ -43,6 +46,11 @@ class Tag extends Group {
 
   getData() {
     return this._data;
+  }
+
+  setOpen(val) {
+    const aim = this.findOne("#aim");
+    aim.visible(val);
   }
 
   renderData() {}

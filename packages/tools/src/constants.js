@@ -87,4 +87,5 @@ export const INTERNAL_EVENTS = {
   REMOVE_SPECIFIED_DATA: "tx_remove_specified_data",
   TOOL_SCALE_FIT: "tx_tool_scale_fit",
   VERNIER_INDEX_CHANGED: "tx_vernier_index_changed",
+  TAG_STATE_CHANGED: "tx_tag_state_changed",
 };

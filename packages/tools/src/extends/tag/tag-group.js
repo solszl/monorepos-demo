@@ -4,6 +4,7 @@ import Tag from "./tag";
 class TagGroup extends Group {
   constructor(config = {}) {
     super(config);
+    this.id("tagGroup");
   }
 
   setData(data) {
@@ -22,14 +23,28 @@ class TagGroup extends Group {
         tag.setData({ ...t, subname: tagKey });
         const { location } = t;
         const position = path[location];
+        const p = this.$transform.transformPoint(position[0], position[1]);
         tag.position({
-          x: position[0],
-          y: position[1],
+          x: p[0],
+          y: p[1],
         });
         this.add(tag);
 
         if (highlightTag) {
         }
+      });
+    });
+  }
+
+  autofit() {
+    const { children, path } = this;
+    children.forEach((child) => {
+      const { location } = child.getData();
+      const position = path[location];
+      const p = this.$transform.transformPoint(position[0], position[1]);
+      child.position({
+        x: p[0],
+        y: p[1],
       });
     });
   }
@@ -58,6 +73,18 @@ class TagGroup extends Group {
         highlightTag: this.highlightTag,
       });
     }
+
+    const { highlightTag } = props;
+    if (highlightTag >= 0) {
+      children.forEach((child) => {
+        const data = child.getData();
+        const { location } = data;
+        child.setOpen(highlightTag === location);
+      });
+    }
+
+    const { visible } = props;
+    this.visible(visible ?? true);
   }
 }
 

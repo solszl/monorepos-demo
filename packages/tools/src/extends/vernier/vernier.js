@@ -5,6 +5,7 @@ import { Wedge } from "konva/lib/shapes/Wedge";
 class Vernier extends Group {
   constructor(bizzConfig = {}, config = {}) {
     super(config);
+
     this._currentIndex = 0;
     this._path = [];
 
@@ -31,11 +32,8 @@ class Vernier extends Group {
     if (dragMode > 0) {
       this.draggable(dragMode > 0);
       const anchor = new Circle({
-        fill: "rgba(0,0,0,0.1)",
+        fill: "rgba(0,0,0,1)",
         radius: 7,
-        stroke: "red",
-        strokeWidth: 0,
-        dragDistance: 15,
       });
       this.add(anchor);
 
@@ -49,6 +47,7 @@ class Vernier extends Group {
         const { x, y } = this.position();
         const index = this._findNearIndex([x, y]);
         this.currentIndex = index;
+        this.moveToTop();
         this.fire("index_changed", {
           index,
         });
@@ -98,11 +97,6 @@ class Vernier extends Group {
 
   /** 设置当前索引。并看向下一个点 */
   set currentIndex(val) {
-    // if (this.currentIndex === val) {
-    //   return;
-    // }
-
-    this._currentIndex = val;
     const currentPosition = this.path[this.currentIndex];
     this.position({
       x: currentPosition[0],
@@ -111,6 +105,11 @@ class Vernier extends Group {
 
     this.originPosition = currentPosition;
     this.lookAtNextPoint();
+
+    if (this.currentIndex === val) {
+      return;
+    }
+    this._currentIndex = val;
 
     // 派发事件
     this?.getStage()?.fire("tx_vernier_index_changed", {

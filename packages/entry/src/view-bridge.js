@@ -137,13 +137,14 @@ class Viewport extends Component {
         });
       }
 
-      const { tags, highlightTag } = info;
+      const { tags, highlightTag, flatData } = info;
       if (tags) {
         toolView.renderStaticData({
-          type: TOOL_TYPE_EXTENDS.TAG,
-          toolId: "tag",
+          type: TOOL_TYPE_EXTENDS.TAG_GROUP,
+          toolId: "tagGroup",
           tags,
           highlightTag,
+          path: flatData,
         });
       }
     });
@@ -160,7 +161,7 @@ class Viewport extends Component {
 
       this.emit(EVENTS.VERNIER_INDEX_CHANGED, {
         viewportId,
-        currentIndex: index,
+        index,
         total,
       });
     });
@@ -192,6 +193,17 @@ class Viewport extends Component {
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_HIGHLIGHT_CHANGED, (tag) => {
       // cpr 高亮某个tag
+    });
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_STATE_CHANGED, (info) => {
+      const { state } = info;
+      // cpr 隐藏所有tags
+      toolView.updateData({
+        layerId: "staticLayer",
+        toolId: "tagGroup",
+        props: {
+          visible: state,
+        },
+      });
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {
@@ -236,7 +248,15 @@ class Viewport extends Component {
       });
     });
 
-    [(api, toolView)].map((obj) => {
+    toolView.on(TOOLVIEW_INTERNAL_EVENTS.TAG_STATE_CHANGED, (data) => {
+      const { data: info } = data;
+      this.emit(EVENTS.TAG_STATE_CHANGED, {
+        viewportId: this.id,
+        info,
+      });
+    });
+
+    [api, toolView].map((obj) => {
       obj.on(TOOLVIEW_INTERNAL_EVENTS.TOOL_ROTATION, (info) =>
         imageView.setRotation(info.rotate, info.dispatch)
       );

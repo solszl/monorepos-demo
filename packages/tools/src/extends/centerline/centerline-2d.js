@@ -49,7 +49,7 @@ class Centerline2D extends Group {
     this.autofit();
 
     const vernier = this.findOne("#vernier");
-    vernier.currentIndex = this.vernierIndex;
+    vernier.setCurrentIndex(this.vernierIndex);
   }
 
   renderData() {}
@@ -75,7 +75,7 @@ class Centerline2D extends Group {
     if (vernierIndex !== undefined) {
       const vernier = this.findOne("#vernier");
       this.vernierIndex = vernierIndex;
-      vernier.currentIndex = vernierIndex;
+      vernier.setCurrentIndex(vernierIndex);
     }
   }
 }

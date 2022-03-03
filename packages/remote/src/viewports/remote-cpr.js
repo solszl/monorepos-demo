@@ -88,6 +88,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
         viewportId: this.id,
         data: centerline,
+        flatData: centerline2d.path,
         tags,
         highlightTag,
       });
@@ -118,6 +119,12 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
 
   setVernierIndex(index) {
     const { centerline2d } = this;
+
+    if (this.currentVernierIndex === index) {
+      return;
+    }
+
+    this.currentVernierIndex = index;
     this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
       viewportId: this.id,
       index,
@@ -138,6 +145,13 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_HIGHLIGHT_CHANGED, {
       viewportId: this.id,
       highlight: obj,
+    });
+  }
+
+  setTagsVisibility(val) {
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_STATE_CHANGED, {
+      viewportId: this.id,
+      state: val,
     });
   }
 

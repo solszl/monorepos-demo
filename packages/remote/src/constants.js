@@ -27,6 +27,8 @@ export const VIEWER_INTERNAL_EVENTS_EXTENDS = {
   VERNIER_INDEX_CHANGED: `${PREFIX}vernier_index_changed`,
   /** cpr tag 数据变更 */
   CPR_TAGS_CHANGED: `${PREFIX}cpr_tags_changed`,
+  /** CPR TAG 显隐控制 */
+  CPR_TAGS_STATE_CHANGED: `${PREFIX}cpr_tag_state_changed`,
   /** cpr 高亮变更 */
   CPR_HIGHLIGHT_CHANGED: `${PREFIX}cpr_highlight_changed`,
 };

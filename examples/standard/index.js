@@ -4,8 +4,8 @@ import Centerline2D from "../../packages/tools/src/extends/centerline/centerline
 import TagGroup from "../../packages/tools/src/extends/tag/tag-group";
 import Vernier from "../../packages/tools/src/extends/vernier/vernier";
 const { roi } = ToolsMisc;
-const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403.6";
-const fs = "http://172.16.6.14:8000";
+const SERIES_ID = "1.2.392.200036.9116.2.6.1.3268.2059767860.1522820353.891250";
+const fs = "http://172.16.3.35:8000";
 let currentIndex = 0;
 const API_GRAY = "/api/v1/series/";
 const API_COLOR = "/api/v1/series/ssr/";
@@ -27,7 +27,7 @@ const fetchData = async (seriesId) => {
   return json;
 };
 
-fetchData(seriesId).then(async (json) => {
+fetchData(SERIES_ID).then(async (json) => {
   const imageUrls = json.data.images.map((i) => {
     return `${fs}/${i.storagePath}`;
   });
@@ -36,10 +36,10 @@ fetchData(seriesId).then(async (json) => {
   await resource.initTransfer([{ mode: "web" }]);
   const { transferMode, alias } = standard.option;
   const transfer = resource.getTransfer(transferMode);
-  transfer.addItemUrls(seriesId, imageUrls, alias);
+  transfer.addItemUrls(SERIES_ID, imageUrls, alias);
 
   setTimeout(async () => {
-    const image = await transfer.getImage(seriesId, currentIndex, alias);
+    const image = await transfer.getImage(SERIES_ID, currentIndex, alias);
     standard.imageView.showImage(image);
   }, 0);
 
