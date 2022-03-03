@@ -102,6 +102,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
         viewportId: this.id,
         data: linesData,
         segment: true,
+        segmentKeymap: this.keymap,
         direction: this.direction,
       });
     }
@@ -125,6 +126,8 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
   }
 
   setVesselObjKeymap(obj) {
+    console.log("设置名字");
+    this.keymap = obj;
     this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VESSEL_KEYMAP_CHANGED, {
       viewportId: this.id,
       keymap: obj,

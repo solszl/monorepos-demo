@@ -17,6 +17,12 @@ class Centerline2D extends Group {
     this.add(line);
     let vernier = new Vernier({ count: 2, offset: 2, dragMode: 3 }, { id: "vernier" });
     this.add(vernier);
+
+    vernier.on("index_changed", (data) => {
+      const { index } = data;
+      this.vernierIndex = index;
+    });
+    this.vernierIndex = 0;
   }
 
   set path(arr = []) {
@@ -43,7 +49,7 @@ class Centerline2D extends Group {
     this.autofit();
 
     const vernier = this.findOne("#vernier");
-    vernier.currentIndex = 0;
+    vernier.currentIndex = this.vernierIndex;
   }
 
   renderData() {}
@@ -68,6 +74,7 @@ class Centerline2D extends Group {
     const { vernierIndex } = props;
     if (vernierIndex !== undefined) {
       const vernier = this.findOne("#vernier");
+      this.vernierIndex = vernierIndex;
       vernier.currentIndex = vernierIndex;
     }
   }

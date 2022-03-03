@@ -165,13 +165,22 @@ class View extends Component {
       return;
     }
 
+    const { toolId } = data;
+    const item = layer.findOne(`#${toolId}`);
+    if (item) {
+      item.$transform = this.transform;
+      item?.setData(data);
+      item?.renderData?.();
+      return;
+    }
+
     // layer.removeChildren();
     const { type } = data;
-    const item = new TOOL_CONSTRUCTOR[type]();
-    layer.add(item);
-    item.$transform = this.transform;
-    item?.setData(data);
-    item?.renderData?.();
+    const item2 = new TOOL_CONSTRUCTOR[type]();
+    layer.add(item2);
+    item2.$transform = this.transform;
+    item2?.setData(data);
+    item2?.renderData?.();
   }
 
   updateData(data) {

@@ -5,6 +5,10 @@ import { Text } from "konva/lib/shapes/Text";
 class Segment extends Group {
   constructor(config = {}) {
     super(config);
+    this.id("segment");
+
+    this.keymap = null;
+    console.log("创建分段信息");
   }
 
   /**
@@ -27,9 +31,10 @@ class Segment extends Group {
 
   setData(val) {
     this.removeChildren();
-    const { data, direction, size } = val;
+    const { data, direction, size, keymap } = val;
     this.width(size);
 
+    this.keymap = keymap;
     this.data = data;
     this.autofit();
     // [{label, points}, {label, points}]
@@ -69,7 +74,7 @@ class Segment extends Group {
       const [label, points] = Object.entries(d)[0];
       const length = points.length;
       seg.width((length / total) * this.width());
-      seg.setText(label);
+      seg.setText(this.keymap?.[label] ?? label ?? "");
 
       seg.x(lastX + lastWidth);
       lastX = seg.x();
@@ -79,6 +84,20 @@ class Segment extends Group {
     });
 
     this.setDirection(direction);
+  }
+
+  updateProps(props) {
+    console.log("segment", props);
+    const { keymap } = props;
+    if (keymap) {
+      this.keymap = keymap;
+      const { children } = this;
+      children.forEach((child) => {
+        const label = child.getText();
+        const replaceLabel = keymap[label] ?? "";
+        child.setText(replaceLabel);
+      });
+    }
   }
 }
 
@@ -139,6 +158,11 @@ class SubSegment extends Group {
     // 设置底部线
     const line3 = this.findOne("#line3");
     line3.points([0, textField.height() + 1, this.width(), textField.height() + 1]);
+  }
+
+  getText() {
+    const textField = this.findOne("#textField");
+    return textField?.text() ?? "";
   }
 
   updateUI() {}

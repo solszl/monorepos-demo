@@ -58,7 +58,7 @@ export const TOOL_TYPE_EXTENDS = {
   VESSEL_SEGMENT: "vessel_segment",
   CENTERLINE2D: "centerline2d",
   // CENTERLINE3D: "centerline3d",
-  TAG: "tag",
+  TAG_GROUP: "tag_group",
   VERNIER: "vernier",
 };
 

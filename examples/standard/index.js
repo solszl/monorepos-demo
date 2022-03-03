@@ -1,8 +1,7 @@
 import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 import Centerline2D from "../../packages/tools/src/extends/centerline/centerline-2d";
-import Segment from "../../packages/tools/src/extends/segments/segment";
-import Tag from "../../packages/tools/src/extends/tag/tag";
+import TagGroup from "../../packages/tools/src/extends/tag/tag-group";
 import Vernier from "../../packages/tools/src/extends/vernier/vernier";
 const { roi } = ToolsMisc;
 const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952070.403.6";
@@ -88,27 +87,28 @@ fetchData(seriesId).then(async (json) => {
       layer.add(centerline2d);
       centerline2d.path = testData;
 
-      let tag = new Tag();
-      tag.position({
-        x: 435.4,
-        y: 122.93,
+      let tagGroup = new TagGroup();
+      // prettier-ignore
+      tagGroup.setData({
+        tags: {
+          "vessel2-d": [
+            { coords: [], id: "vessel2", level: 1, text: "LAD-d 轻微狭窄", location: 5, name: "aaa" },
+          ],
+          "vessel2-m": [
+            { coords: [], id: "vessel2", level: 2, text: "LAD-m 轻微狭窄", location: 10, name: "bbb" },
+            { coords: [], id: "vessel2", level: 3, text: "LAD-m 中度狭窄", location: 15, name: "vvv" },
+          ],
+          "vessel2-p": [
+            { coords: [], id: "vessel2", level: 4, text: "LAD-p 重度狭窄", location: 25, name: "ddd" },
+            { coords: [], id: "vessel2", level: 5, text: "LAD-p 闭塞", location: 35, name: "eee" },
+            { coords: [], id: "vessel2", level: 1, text: "LAD-p 轻微狭窄", location: 45, name: "fff" },
+          ],
+        },
+        path: testData,
       });
-      layer.add(tag);
 
-      const segData = {
-        data: [
-          { helloaaaaaaaaaaaaaaaaaa: [[], [], [], []] },
-          { work123123: [[], [], [], [], [], [], [], []] },
-          { vanilla: [[], [], [], [], [], []] },
-        ],
-        size: 400,
-        direction: "portrait",
-      };
-
-      let segment = new Segment();
-      layer.add(segment);
-      segment.setData(segData);
-      segment.setPosition({ y: 100 });
+      window.aaa = tagGroup;
+      layer.add(tagGroup);
 
       let i = 0;
       // setInterval(() => {

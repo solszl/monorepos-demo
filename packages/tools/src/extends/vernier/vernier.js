@@ -35,6 +35,7 @@ class Vernier extends Group {
         radius: 7,
         stroke: "red",
         strokeWidth: 0,
+        dragDistance: 15,
       });
       this.add(anchor);
 
@@ -48,6 +49,9 @@ class Vernier extends Group {
         const { x, y } = this.position();
         const index = this._findNearIndex([x, y]);
         this.currentIndex = index;
+        this.fire("index_changed", {
+          index,
+        });
       });
     }
   }
@@ -117,6 +121,10 @@ class Vernier extends Group {
 
   get currentIndex() {
     return this._currentIndex;
+  }
+
+  setCurrentIndex(val) {
+    this._currentIndex = val;
   }
 
   get total() {

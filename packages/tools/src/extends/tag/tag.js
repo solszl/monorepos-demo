@@ -31,11 +31,25 @@ class Tag extends Group {
   _onCircleClickHandler(e) {
     const aim = this.findOne("#aim");
     aim.visible(!aim.visible());
+
+    console.log(aim.data);
   }
 
-  setData(data) {}
+  setData(data) {
+    this._data = data;
+    const aim = this.findOne("#aim");
+    aim.data = data;
+  }
+
+  getData() {
+    return this._data;
+  }
 
   renderData() {}
+
+  updateProps(props) {}
+
+  clear() {}
 }
 
 export default Tag;

@@ -9,7 +9,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
   constructor(option = {}) {
     super(option);
 
-    const { vesselName = "", theta = -1, phi = -1, angleStep = 1 } = option;
+    const { vesselName = "", theta = -1, phi = 0, angleStep = 1 } = option;
     this.vesselName = vesselName;
     this.theta = theta;
     this.phi = phi;
@@ -84,10 +84,12 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       const centerline2d = new Centerline2DBizz();
       centerline2d.setData(centerline);
       this.centerline2d = centerline2d;
+      const { tags, highlightTag } = this;
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
         viewportId: this.id,
         data: centerline,
-        segment: false,
+        tags,
+        highlightTag,
       });
 
       //设置图像
@@ -120,6 +122,22 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       viewportId: this.id,
       index,
       total: centerline2d.total,
+    });
+  }
+
+  setTags(obj) {
+    this.tags = obj;
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_CHANGED, {
+      viewportId: this.id,
+      tags: obj,
+    });
+  }
+
+  setHighlightTag(obj) {
+    this.highlightTag = obj;
+    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_HIGHLIGHT_CHANGED, {
+      viewportId: this.id,
+      highlight: obj,
     });
   }
 

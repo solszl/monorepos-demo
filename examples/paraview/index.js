@@ -130,6 +130,24 @@ const main = async () => {
   lumenViewport.on(ViewportEvents.VERNIER_INDEX_CHANGED, (e) => {
     cprViewport.imageView.setVernierIndex(e.index);
   });
+
+  lumenViewport.imageView.setVesselObjKeymap({
+    vessel1: "L-ICA",
+    vessel10: "L-ACA",
+    vessel11: "R-ACA",
+    vessel12: "L-MCA",
+    vessel13: "R-MCA",
+    vessel14: "R-PCA",
+    vessel15: "L-PCA",
+    vessel2: "R-ICA",
+    vessel23: "R-VA",
+    vessel24: "AOAR",
+    vessel3: "L-CCA",
+    vessel4: "R-CCA",
+    vessel7: "L-SA",
+    vessel8: "R-SA",
+    vessel9: "INA",
+  });
   window.lumenViewport = lumenViewport;
 
   const cprViewport = vm.addViewport({
@@ -148,6 +166,7 @@ const main = async () => {
   cprViewport.imageView.setTheta(35);
   // 这里使用滚轮工具， 调整角度
   cprViewport.useTool(TOOL_TYPE.STACK_SCROLL);
+  cprViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
   window.cprViewport = cprViewport;
 
   let index = (Math.random() * 100) >> 0;

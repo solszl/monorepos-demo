@@ -113,9 +113,11 @@ class Viewport extends Component {
         return;
       }
 
+      // toolView.clearLayer("staticLayer");
       // 设置中线数据
       toolView.renderStaticData({
         type: TOOL_TYPE_EXTENDS.CENTERLINE2D,
+        toolId: "centerline2d",
         data,
       });
       // 设置分段信息数据
@@ -125,11 +127,23 @@ class Viewport extends Component {
           renderer: { renderData },
         } = imageView;
 
+        const { segmentKeymap } = info;
         toolView.renderStaticData({
           type: TOOL_TYPE_EXTENDS.VESSEL_SEGMENT,
           data,
+          keymap: segmentKeymap,
           direction: direction,
           size: imageView.direction === "landscape" ? renderData.width : renderData.height,
+        });
+      }
+
+      const { tags, highlightTag } = info;
+      if (tags) {
+        toolView.renderStaticData({
+          type: TOOL_TYPE_EXTENDS.TAG,
+          toolId: "tag",
+          tags,
+          highlightTag,
         });
       }
     });
@@ -159,6 +173,25 @@ class Viewport extends Component {
       }
 
       // 设置分段
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.VESSEL_KEYMAP_CHANGED, (info) => {
+      const { keymap } = info;
+      toolView.updateData({
+        layerId: "staticLayer",
+        toolId: "segment",
+        props: {
+          keymap,
+        },
+      });
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_CHANGED, (info) => {
+      // CPR tag 更新
+    });
+
+    imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_HIGHLIGHT_CHANGED, (tag) => {
+      // cpr 高亮某个tag
     });
 
     toolView.on(TOOLVIEW_INTERNAL_EVENTS.DATA_CREATED, (data) => {

@@ -25,4 +25,8 @@ export const VIEWER_INTERNAL_EVENTS_EXTENDS = {
   VESSEL_KEYMAP_CHANGED: `${PREFIX}vessel_keymap_changed`,
   /** 游标索引变更 */
   VERNIER_INDEX_CHANGED: `${PREFIX}vernier_index_changed`,
+  /** cpr tag 数据变更 */
+  CPR_TAGS_CHANGED: `${PREFIX}cpr_tags_changed`,
+  /** cpr 高亮变更 */
+  CPR_HIGHLIGHT_CHANGED: `${PREFIX}cpr_highlight_changed`,
 };
