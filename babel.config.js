@@ -6,7 +6,7 @@ module.exports = (props) => {
     },
     useBuiltIns: "usage",
     corejs: {
-      version: 3,
+      version: 3.21,
       proposals: true,
     },
   };

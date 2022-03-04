@@ -137,7 +137,6 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
   }
 
   setVesselObjKeymap(obj) {
-    console.log("设置名字");
     this.keymap = obj;
     this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VESSEL_KEYMAP_CHANGED, {
       viewportId: this.id,

@@ -32,7 +32,8 @@ class Vernier extends Group {
     if (dragMode > 0) {
       this.draggable(dragMode > 0);
       const anchor = new Circle({
-        fill: "rgba(0,0,0,1)",
+        fill: "rgba(192,192,192,0.05)",
+        // fill: "red",
         radius: 7,
       });
       this.add(anchor);
@@ -47,7 +48,6 @@ class Vernier extends Group {
         const { x, y } = this.position();
         const index = this._findNearIndex([x, y]);
         this.currentIndex = index;
-        this.moveToTop();
         this.fire("index_changed", {
           index,
         });
@@ -61,7 +61,7 @@ class Vernier extends Group {
     this._path = arr;
 
     // path 经过transform变化后，需要重新定位游标位置以及观看朝向
-    this.autofix();
+    this.autofit();
   }
 
   get path() {
@@ -124,13 +124,14 @@ class Vernier extends Group {
 
   setCurrentIndex(val) {
     this._currentIndex = val;
+    this.autofit();
   }
 
   get total() {
     return this.path.length;
   }
 
-  autofix() {
+  autofit() {
     const currentPosition = this.path[this.currentIndex];
     this.position({
       x: currentPosition[0],
