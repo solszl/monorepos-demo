@@ -13,7 +13,7 @@ class Centerline2D extends Group {
     super(Object.assign({}, config, { id: "centerline2d" }));
     this._path = [];
 
-    let line = new Line(Object.assign({}, DEFAULT_CONFIG, { id: "line" }));
+    let line = new Line(Object.assign({}, DEFAULT_CONFIG, { id: "line", visible: false }));
     this.add(line);
     let vernier = new Vernier({ count: 2, offset: 2, dragMode: 3 }, { id: "vernier" });
     this.add(vernier);

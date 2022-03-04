@@ -91,7 +91,6 @@ class Viewport extends Component {
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_STATE_CHANGED, (info) => {
-      console.log("bridge", info);
       const { state } = info;
       toolView.updateData({
         layerId: "staticLayer",
@@ -103,7 +102,7 @@ class Viewport extends Component {
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.SEGMENT_STATE_CHANGED, (info) => {
-      console.log("bridge", info);
+      // TODO: 分段信息显隐控制
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, (info) => {
