@@ -150,7 +150,7 @@ class Viewport extends Component {
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, (info) => {
-      const { index, total, viewportId } = info;
+      const { index, total, viewportId, dispatch } = info;
       toolView.updateData({
         layerId: "staticLayer",
         toolId: "centerline2d",
@@ -159,11 +159,13 @@ class Viewport extends Component {
         },
       });
 
-      this.emit(EVENTS.VERNIER_INDEX_CHANGED, {
-        viewportId,
-        index,
-        total,
-      });
+      if (dispatch) {
+        this.emit(EVENTS.VERNIER_INDEX_CHANGED, {
+          viewportId,
+          index,
+          total,
+        });
+      }
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.SEGMENT_DATA_CHANGED, (info) => {

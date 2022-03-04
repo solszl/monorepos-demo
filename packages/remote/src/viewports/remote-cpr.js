@@ -117,7 +117,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     });
   }
 
-  setVernierIndex(index) {
+  setVernierIndex(index, withEvent = true) {
     const { centerline2d } = this;
 
     if (this.currentVernierIndex === index) {
@@ -129,6 +129,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       viewportId: this.id,
       index,
       total: centerline2d.total,
+      dispatch: withEvent,
     });
   }
 

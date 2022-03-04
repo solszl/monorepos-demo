@@ -144,7 +144,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     });
   }
 
-  setVernierIndex(index) {
+  setVernierIndex(index, withEvent = true) {
     const { centerline2d } = this;
     if (!centerline2d) {
       this.tempIndex = index;
@@ -160,6 +160,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       viewportId: this.id,
       index,
       total: centerline2d.total,
+      dispatch: withEvent,
     });
   }
 
