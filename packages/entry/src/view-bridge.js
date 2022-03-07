@@ -112,7 +112,6 @@ class Viewport extends Component {
         return;
       }
 
-      // toolView.clearLayer("staticLayer");
       // 设置中线数据
       toolView.renderStaticData({
         type: TOOL_TYPE_EXTENDS.CENTERLINE2D,
@@ -136,6 +135,7 @@ class Viewport extends Component {
         });
       }
 
+      // 标签TAG组
       const { tags, highlightTag, flatData } = info;
       if (tags) {
         toolView.renderStaticData({

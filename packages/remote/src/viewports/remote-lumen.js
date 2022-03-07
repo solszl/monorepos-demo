@@ -46,9 +46,9 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       return;
     }
 
+    this.resetDisplayInfo();
     this.directionChanged = true;
     this.direction = dir;
-
     this.renderSchedule.invalidate(this.propertyChanged, this);
   }
 
@@ -57,6 +57,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       return;
     }
 
+    this.resetDisplayInfo();
     this.vesselNameChanged = true;
     this.vesselName = name;
     this.renderSchedule.invalidate(this.propertyChanged, this);
@@ -83,6 +84,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
   async propertyChanged() {
     await super.propertyChanged();
 
+    // 请求新的图像
     if (this.directionChanged || this.angleChanged || this.vesselNameChanged) {
       const { vesselName, angle, direction } = this;
       const uri = await this?.getLumenImage(vesselName, angle, direction);
@@ -91,6 +93,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       this.angleChanged = false;
     }
 
+    // 方向和名字发生变化的时候，请求新的中线数据
     if (this.directionChanged || this.vesselNameChanged) {
       const { vesselName, direction } = this;
       const linesData = await this?.getLines(vesselName, direction);
@@ -117,9 +120,20 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
         direction: this.direction,
       });
     }
-
     this.vesselNameChanged = false;
     this.directionChanged = false;
+
+    // 游标变化
+    if (this.currentVernierIndexChanged) {
+      const { currentVernierIndex, currentVernierChangeWithEvent, centerline2d, id } = this;
+      this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
+        viewportId: id,
+        index: currentVernierIndex,
+        total: centerline2d.total,
+        dispatch: currentVernierChangeWithEvent,
+      });
+      this.currentVernierIndexChanged = false;
+    }
   }
 
   setCenterlineVisibility(val) {
@@ -145,23 +159,24 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
   }
 
   setVernierIndex(index, withEvent = true) {
-    const { centerline2d } = this;
-    if (!centerline2d) {
-      this.tempIndex = index;
-      return;
-    }
-
     if (this.currentVernierIndex === index) {
       return;
     }
 
     this.currentVernierIndex = index;
-    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
-      viewportId: this.id,
-      index,
-      total: centerline2d.total,
-      dispatch: withEvent,
-    });
+    this.currentVernierChangeWithEvent = withEvent;
+    this.currentVernierIndexChanged = true;
+    this.renderSchedule.invalidate(this.propertyChanged, this);
+  }
+
+  /**
+   * 由于变更血管名称等，需要重置业务数据
+   */
+  resetDisplayInfo() {
+    this.currentVernierIndex = 0;
+    this.currentVernierChangeWithEvent = true;
+
+    this.centerline2d = null;
   }
 
   // setTheta(theta) {

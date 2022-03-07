@@ -38,6 +38,8 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
 
     this.vesselName = name;
     this.vesselNameChanged = true;
+
+    this.resetDisplayInfo();
     this.renderSchedule.invalidate(this.propertyChanged, this);
   }
 
@@ -77,6 +79,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
 
   async propertyChanged() {
     await super.propertyChanged();
+    console.log("enterframe");
     if (this.vesselNameChanged || this.angleChanged) {
       const { vesselName, theta, phi } = this;
       const { centerline, uri } = await this?.getCprImage(vesselName, theta, phi);
@@ -85,6 +88,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       centerline2d.setData(centerline);
       this.centerline2d = centerline2d;
       const { tags, highlightTag } = this;
+      console.log("[cpr]", tags);
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
         viewportId: this.id,
         data: centerline,
@@ -100,6 +104,34 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       // 设置中线
       this.vesselNameChanged = false;
       this.angleChanged = false;
+    }
+
+    // 游标变化
+    if (this.currentVernierIndexChanged) {
+      const {
+        currentVernierIndex,
+        currentVernierChangeWithEvent,
+        centerline2d,
+        id: viewportId,
+      } = this;
+      this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
+        viewportId,
+        index: currentVernierIndex,
+        total: centerline2d.total,
+        dispatch: currentVernierChangeWithEvent,
+      });
+
+      this.currentVernierIndexChanged = false;
+    }
+
+    if (this.tagsChanged) {
+      const { tags, id: viewportId } = this;
+      this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_CHANGED, {
+        viewportId,
+        tags,
+      });
+
+      this.tagsChanged = false;
     }
   }
 
@@ -118,27 +150,20 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
   }
 
   setVernierIndex(index, withEvent = true) {
-    const { centerline2d } = this;
-
     if (this.currentVernierIndex === index) {
       return;
     }
 
     this.currentVernierIndex = index;
-    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
-      viewportId: this.id,
-      index,
-      total: centerline2d.total,
-      dispatch: withEvent,
-    });
+    this.currentVernierChangeWithEvent = withEvent;
+    this.currentVernierIndexChanged = true;
+    this.renderSchedule.invalidate(this.propertyChanged, this);
   }
 
   setTags(obj) {
     this.tags = obj;
-    this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_CHANGED, {
-      viewportId: this.id,
-      tags: obj,
-    });
+    this.tagsChanged = true;
+    this.renderSchedule.invalidate(this.propertyChanged, this);
   }
 
   setHighlightTag(obj) {
@@ -154,6 +179,17 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       viewportId: this.id,
       state: val,
     });
+  }
+
+  /**
+   * 由于变更血管名称等，需要重置业务数据
+   */
+  resetDisplayInfo() {
+    this.currentVernierIndex = 0;
+    this.currentVernierChangeWithEvent = true;
+
+    this.tags = {};
+    this.centerline2d = null;
   }
 
   // setTheta(theta) {

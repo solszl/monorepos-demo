@@ -9,7 +9,6 @@ class Segment extends Group {
     this.id("segment");
 
     this.keymap = null;
-    console.log("创建分段信息");
   }
 
   /**
@@ -20,9 +19,6 @@ class Segment extends Group {
     this.direction = val;
     const rotateAngle = val === "landscape" ? 0 : 90;
     this.rotation(rotateAngle);
-    // 偏移lineHeight
-    // const offsetX = rotateAngle === 0 ? 0 : 13;
-    // this.x(offsetX);
 
     const { m } = this.$transform;
     const w = m.at(4);
@@ -45,7 +41,6 @@ class Segment extends Group {
   renderData() {}
 
   autofit() {
-    // const [, , , , w, h] = this.$transform.m;
     const { direction, data } = this;
     const stage = this.getStage();
     if (!stage) {
@@ -104,7 +99,7 @@ class SubSegment extends Group {
     super(config);
     const lineProp = {
       points: [0, 0, 0, 11],
-      stroke: "white",
+      stroke: "gray",
       strokeWidth: 1,
       lineCap: "round",
       lineJoin: "round",
@@ -125,7 +120,7 @@ class SubSegment extends Group {
       fontSize: 12,
       align: "center",
       verticalAlign: "bottom",
-      fill: "white",
+      fill: "gray",
       ellipsis: true,
       wrap: "none",
     });
