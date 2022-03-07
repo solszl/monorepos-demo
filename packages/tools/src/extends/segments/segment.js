@@ -1,6 +1,7 @@
 import { Group } from "konva/lib/Group";
 import { Line } from "konva/lib/shapes/Line";
 import { Text } from "konva/lib/shapes/Text";
+import { useViewportState } from "../../state/viewport-state";
 
 class Segment extends Group {
   constructor(config = {}) {
@@ -45,21 +46,18 @@ class Segment extends Group {
 
   autofit() {
     // const [, , , , w, h] = this.$transform.m;
-    const { m } = this.$transform;
-    const w = m.at(4);
-    const h = m.at(5);
     const { direction, data } = this;
     const stage = this.getStage();
     if (!stage) {
       return;
     }
 
+    const [getViewportState] = useViewportState(this.getStage().id());
+    const { width, height, scale } = getViewportState();
     if (direction === "landscape") {
-      const size = stage.width() - 2 * w;
-      this.width(size);
+      this.width(width * scale);
     } else {
-      const size = stage.height() - 2 * h;
-      this.width(size);
+      this.width(height * scale);
     }
 
     let total = data.reduce((prev, current) => {

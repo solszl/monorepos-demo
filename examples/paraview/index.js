@@ -13,8 +13,8 @@ let horizonEl = document.querySelector(".horizon");
 let portraitEl = document.querySelector(".portrait");
 
 const PATIENT_ID = "CE027001-118040304613";
-const STUDY_ID = "1.2.840.20180404.118040304613";
-const SERIES_ID = "1.2.392.200036.9116.2.6.1.3268.2059767860.1522820353.891250";
+const STUDY_ID = "1.2.840.113619.2.416.10634142502611409964348085056782520111";
+const SERIES_ID = "1.2.840.113619.2.416.77348009424380358976506205963520437809";
 const PREDICT_TYPE = "ct_cerebral";
 
 /** @type { ViewportManager } */
@@ -52,9 +52,6 @@ const fetchWSPort = async () => {
         render: { add_text: false, default: "neckBloodVesselInverseVMIP" },
         mip: {},
         cpr: {},
-        // vr: { add_text: true },
-        // mip: { add_text: true },
-        // vr_tree: { add_text: true },
       }),
     })
   ).json();
@@ -70,10 +67,6 @@ const main = async () => {
       mode: "socket",
       host: WS_HOST,
       routes: [
-        // `vtkserver/${SERIES_ID}/vr`,
-        // `vtkserver/${SERIES_ID}/cpr`,
-        // `vtkserver/${SERIES_ID}/mip`,
-        // `vtkserver/${SERIES_ID}/render`,
         `volumerender/${WS_PORT}/${SERIES_ID}/cpr`,
         `volumerender/${WS_PORT}/${SERIES_ID}/mip`,
         `volumerender/${WS_PORT}/${SERIES_ID}/render`,
@@ -81,19 +74,16 @@ const main = async () => {
     },
   ]);
 
-  // const conn = resource.getTransfer("socket").getConnection(`vtkserver/${SERIES_ID}/vr`);
-  // console.log(conn);
-
-  const vrViewport = vm.addViewport({
-    plane: "remote_stream",
-    renderer: "canvas",
-    el: vrEl,
-    transferMode: "socket",
-    alias: "render",
-    route: "render",
-  });
-  await vrViewport.imageView.initialAsyncWorkflow();
-  window.viewport = vrViewport;
+  // const vrViewport = vm.addViewport({
+  //   plane: "remote_stream",
+  //   renderer: "canvas",
+  //   el: vrEl,
+  //   transferMode: "socket",
+  //   alias: "render",
+  //   route: "render",
+  // });
+  // await vrViewport.imageView.initialAsyncWorkflow();
+  // window.viewport = vrViewport;
 
   const axialViewport = vm.addViewport({
     plane: "remote_mip",
@@ -125,8 +115,9 @@ const main = async () => {
   await lumenViewport.imageView.initialAsyncWorkflow();
   lumenViewport.imageView.setVesselName("vessel11");
   lumenViewport.imageView.setAngle(35);
-  lumenViewport.useTool(TOOL_TYPE.STACK_SCROLL, MOUSE_BUTTON.LEFT);
+  lumenViewport.useTool(TOOL_TYPE.TRANSLATE, MOUSE_BUTTON.LEFT);
   lumenViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+  lumenViewport.useTool(TOOL_TYPE.SCALE, MOUSE_BUTTON.RIGHT);
   lumenViewport.on(ViewportEvents.VERNIER_INDEX_CHANGED, (e) => {
     cprViewport.imageView.setVernierIndex(e.index);
   });
@@ -185,43 +176,6 @@ const main = async () => {
     probeViewport.imageView.setVesselName("vessel11");
     probeViewport.imageView.setIndex(index++);
   }
-
-  // const { transferMode, alias: alias0 } = axialViewport.option;
-  // let transfer = resource.getTransfer(transferMode);
-  // const img0 = await transfer.getImage(SERIES_ID, 100, alias0);
-  // axialViewport.imageView.showImage(img0);
-
-  // const coronalViewport = vm.addViewport({
-  //   plane: "pixel",
-  //   renderer: "canvas",
-  //   el: coronalEl,
-  //   transferMode: "socket",
-  //   alias: "coronary",
-  // });
-
-  // const { alias: alias1 } = coronalViewport.option;
-  // transfer = resource.getTransfer(transferMode);
-  // const img1 = await transfer.getImage(SERIES_ID, 100, alias1);
-  // coronalViewport.imageView.showImage(img1);
-
-  // const sagittalViewport = vm.addViewport({
-  //   plane: "pixel",
-  //   renderer: "canvas",
-  //   el: sagittalEl,
-  //   transferMode: "socket",
-  //   alias: "sagittal",
-  // });
-
-  // const { alias: alias2 } = sagittalViewport.option;
-  // transfer = resource.getTransfer(transferMode);
-  // const img2 = await transfer.getImage(SERIES_ID, 100, alias2);
-  // sagittalViewport.imageView.showImage(img2);
-
-  // const connection = resource.getTransfer("socket")?.connection;
-  // const viewport = new ParaViewClient({
-  //   connection,
-  //   el: vrEl,
-  // });
 
   // axialViewport.useTool(TOOL_TYPE.WWWC);
   // axialViewport.useTool(TOOL_TYPE.TRANSLATE, 2);
