@@ -17,7 +17,6 @@ const ulEl = document.getElementById("properties");
 const dragEl = document.getElementById("root");
 const tiEl = document.getElementById("tiTag");
 dragEl.addEventListener("dragenter", (e) => {
-  console.log("dragenter");
   e.preventDefault();
 });
 dragEl.addEventListener("dragover", (e) => {
@@ -25,9 +24,6 @@ dragEl.addEventListener("dragover", (e) => {
 });
 dragEl.addEventListener("drop", (e) => {
   e.preventDefault();
-  console.log("drop");
-  // inputFile.click();
-  console.log(e.dataTransfer.files);
   const file = e.dataTransfer.files[0];
   const fileReader = new FileReader();
   fileReader.onload = async (e) => {
