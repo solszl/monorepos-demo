@@ -79,7 +79,6 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
 
   async propertyChanged() {
     await super.propertyChanged();
-    console.log("enterframe");
     if (this.vesselNameChanged || this.angleChanged) {
       const { vesselName, theta, phi } = this;
       const { centerline, uri } = await this?.getCprImage(vesselName, theta, phi);

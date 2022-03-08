@@ -1,30 +1,24 @@
 import { Group } from "konva/lib/Group";
-import { Arrow } from "konva/lib/shapes/Arrow";
+import { Line } from "konva/lib/shapes/Line";
+// import { Arrow } from "konva/lib/shapes/Arrow";
 import { Rect } from "konva/lib/shapes/Rect";
 import { Text } from "konva/lib/shapes/Text";
+import { COLORS } from "./tag-constants";
 
-const COLORS = {
-  0: "#454545", //"rgba(69,69,69,1)",
-  1: "#2ac7f6", //"rgba(42,199, 246,1)",
-  2: "#0083f4", //"rgba(0,131, 244,1)",
-  3: "#f9a727", //"rgba(249, 167, 39,1)",
-  4: "#ff5959", //"rgba(255, 89, 89,1)",
-  5: "#c40000", //"rgba(196, 0, 0,1)",
-};
 class Aim extends Group {
   constructor(config = {}) {
     super(config);
-    const arrow = new Arrow({
-      points: [-50, 0, -10, 0],
-      pointerLength: 4,
-      pointerWidth: 4,
-      stroke: "pink",
+    const line = new Line({
+      stroke: "#27b2d3",
       strokeWidth: 2,
-      id: "arrow",
+      lineCap: "round",
+      lineJoin: "round",
+      points: [-50, 0, -16, 0],
+      id: "line",
     });
 
     const text = new Text({
-      text: "LM 轻微狭窄",
+      text: "",
       fontSize: 12,
       fontFamily: "Calibri",
       fill: "white",
@@ -44,7 +38,7 @@ class Aim extends Group {
       cornerRadius: 4,
       id: "bg",
     });
-    this.add(arrow);
+    this.add(line);
     this.add(rectBg);
     this.add(text);
     this._data = null;
@@ -65,8 +59,8 @@ class Aim extends Group {
     bg.width(text.width());
     bg.fill(COLORS[level]);
 
-    const arrow = this.findOne("#arrow");
-    arrow.stroke(COLORS[level]);
+    const line = this.findOne("#line");
+    line.stroke(COLORS[level]);
   }
 
   get data() {

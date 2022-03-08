@@ -31,6 +31,7 @@ class TagGroup extends Group {
         this.add(tag);
 
         if (highlightTag) {
+          tag.setOpen(highlightTag === t.location);
         }
       });
     });

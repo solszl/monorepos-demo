@@ -189,11 +189,27 @@ class Viewport extends Component {
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_CHANGED, (info) => {
+      const { tags } = info;
       // CPR tag 更新
+      toolView.updateData({
+        layerId: "staticLayer",
+        toolId: "tagGroup",
+        props: {
+          tags,
+        },
+      });
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_HIGHLIGHT_CHANGED, (tag) => {
+      const { highlight } = tag;
       // cpr 高亮某个tag
+      toolView.updateData({
+        layerId: "staticLayer",
+        toolId: "tagGroup",
+        props: {
+          highlightTag: highlight,
+        },
+      });
     });
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_STATE_CHANGED, (info) => {
       const { state } = info;
