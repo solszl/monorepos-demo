@@ -1,5 +1,6 @@
 import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
+import Centerline3DBizz from "../../packages/remote/src/bizz/centerline/centerline-3d";
 const { roi } = ToolsMisc;
 const SERIES_ID = "1.2.392.200036.9116.2.6.1.3268.2059767860.1522820353.891250";
 const fs = "http://172.16.3.35:8000";
@@ -39,6 +40,31 @@ fetchData(SERIES_ID).then(async (json) => {
     const image = await transfer.getImage(SERIES_ID, currentIndex, alias);
     standard.imageView.showImage(image);
   }, 0);
+
+  let centerline3d = new Centerline3DBizz();
+  let centerline3dData = {
+    points: {
+      vessel1: [
+        [-2.839989421390214, -22.890295537994533, 148.779645748274],
+        [-2.444517408664711, -23.19688207148523, 148.79037559291575],
+        [-2.039614771976814, -23.48915201856105, 148.8180404795996],
+      ],
+      vessel2: [
+        [-10.723136775631954, -19.597208916901963, 148.660507404509],
+        [-10.28287451588358, -19.459901299854046, 148.8841738036279],
+        [-9.798088213507794, -19.39275178032453, 149.04214351017538],
+      ],
+      vessel3: [[-16.829339278014597, 3.9024291540678178, 63.88581719273201]],
+    },
+    spacing: [0.558594, 0.558594, 0.625],
+    origin: [-143.0, -135.908, -123.349],
+  };
+
+  centerline3d.setData(centerline3dData);
+
+  const { flatPoints } = centerline3d;
+  window.c = centerline3d;
+  console.log(centerline3d);
 
   // standard.on("slice_changed", () => {
   //   // [x]: remove me
