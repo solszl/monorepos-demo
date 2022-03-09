@@ -1,6 +1,5 @@
-import { ToolsMisc, ViewportManager } from "@pkg/entry/src";
+import { Centerline3DBizz, ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
-import Centerline3DBizz from "../../packages/remote/src/bizz/centerline/centerline-3d";
 const { roi } = ToolsMisc;
 const SERIES_ID = "1.2.392.200036.9116.2.6.1.3268.2059767860.1522820353.891250";
 const fs = "http://172.16.3.35:8000";

@@ -18,6 +18,7 @@ export const decode = async (meta, pixelDataSource) => {
       meta = decodeRLE(meta, pixelDataSource);
       break;
     case "1.2.840.10008.1.2.4.80":
+      console.warn("unsupported: ", transferSyntax);
       // JPEG-LS Lossless Image Compression
       // meta = await decodeJPEGLS(meta, pixelDataSource);
       break;

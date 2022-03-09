@@ -1,3 +1,4 @@
+import Centerline3DBizz from "./bizz/centerline/centerline-3d";
 import { VIEWER_INTERNAL_EVENTS_EXTENDS } from "./constants";
 import { createImage } from "./image";
 import SocketTransfer from "./socket-transfer";
@@ -12,3 +13,4 @@ export { RemoteVRViewport };
 export { RemoteMIPViewport };
 export { RemoteCPRViewport, RemoteLumenViewport, RemoteProbeViewport };
 export { VIEWER_INTERNAL_EVENTS_EXTENDS };
+export { Centerline3DBizz };

@@ -194,7 +194,7 @@ let DEFAULT_CONFIG = {
   fillRadialGradientStartRadius: 0,
   fillRadialGradientEndPoint: { x: 0, y: 0 },
   fillRadialGradientEndRadius: 15,
-  fillRadialGradientColorStops: [0, "#F9A72700", 1, "#F9A727"],
+  fillRadialGradientColorStops: [0, "rgba(249, 167, 39, 0)", 1, "#F9A727"], // konva 底层不支持 #f9a72700 这样的8位颜色值
   lineJoin: "round",
   angle: 15,
   radius: 20,

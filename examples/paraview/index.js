@@ -12,17 +12,17 @@ let planeEls = document.querySelectorAll(".plane");
 let horizonEl = document.querySelector(".horizon");
 let portraitEl = document.querySelector(".portrait");
 
-const PATIENT_ID = "CE027001-118040304613";
-const STUDY_ID = "1.2.840.113619.2.416.10634142502611409964348085056782520111";
-const SERIES_ID = "1.2.840.113619.2.416.77348009424380358976506205963520437809";
+const PATIENT_ID = "CN010002-02698293";
+const STUDY_ID = "1.2.840.113820.104.9976.120211008094320497";
+const SERIES_ID = "1.2.840.113704.1.111.7216.1633659411.16";
 const PREDICT_TYPE = "ct_cerebral";
 
 /** @type { ViewportManager } */
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
-const HOST = "172.16.3.35";
-const WS_HOST = "ws://172.16.3.35:8000";
+const HOST = "10.0.70.41";
+const WS_HOST = "ws://10.0.70.41:8000";
 const HTTP_PORT = "8000";
 let WS_PORT = "-1";
 
@@ -92,7 +92,7 @@ const main = async () => {
     transferMode: "socket",
     alias: "axial",
     route: "mip",
-    httpServer: "http://172.16.3.35:8000",
+    httpServer: "http://10.0.70.41:8000",
   });
 
   await axialViewport.imageView.initialAsyncWorkflow();
@@ -109,7 +109,7 @@ const main = async () => {
     alias: "cpr",
     route: "cpr",
     direction: "portrait",
-    httpServer: "http://172.16.3.35:8000",
+    httpServer: "http://10.0.70.41:8000",
     vesselName: "vessel11",
   });
   await lumenViewport.imageView.initialAsyncWorkflow();
@@ -148,7 +148,7 @@ const main = async () => {
     transferMode: "socket",
     alias: "cpr",
     route: "cpr",
-    httpServer: "http://172.16.3.35:8000",
+    httpServer: "http://10.0.70.41:8000",
     vesselName: "vessel11",
   });
   await cprViewport.imageView.initialAsyncWorkflow();
@@ -169,7 +169,7 @@ const main = async () => {
       transferMode: "socket",
       alias: "probe",
       route: "cpr",
-      httpServer: "http://172.16.3.35:8000",
+      httpServer: "http://10.0.70.41:8000",
     });
 
     await probeViewport.imageView.initialAsyncWorkflow();

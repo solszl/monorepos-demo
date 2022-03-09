@@ -43,7 +43,7 @@ class Centerline3DBizz {
   /**
    * 根据3D中线中的索引 返回平面上的XYZ坐标点
    *
-   * @param {*} index
+   * @param { number } index
    * @memberof Centerline3DBizz
    */
   getXYZByIndex(index) {
