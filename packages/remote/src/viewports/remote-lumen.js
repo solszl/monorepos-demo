@@ -91,25 +91,12 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       const { httpServer } = this.option;
       await this.setUrl(`${httpServer}${uri}`);
       this.angleChanged = false;
-    }
 
-    // 方向和名字发生变化的时候，请求新的中线数据
-    if (this.directionChanged || this.vesselNameChanged) {
-      const { vesselName, direction } = this;
+      // 方向和名字发生变化的时候，请求新的中线数据
       const linesData = await this?.getLines(vesselName, direction);
       let centerline2d = new Centerline2DBizz();
       centerline2d.setData(linesData);
       this.centerline2d = centerline2d;
-
-      // 如果请求结果还没回来，就设置的索引。 就重新派发一次
-      if (this.tempIndex > -1) {
-        this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
-          viewportId: this.id,
-          index: this.tempIndex,
-          total: centerline2d.total,
-        });
-        delete this.tempIndex;
-      }
 
       // 此处不做处理，因为分段信息需要对应的名字
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
@@ -124,7 +111,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     this.directionChanged = false;
 
     // 游标变化
-    if (this.currentVernierIndexChanged) {
+    if (this.currentVernierIndexChanged && this.centerline2d) {
       const { currentVernierIndex, currentVernierChangeWithEvent, centerline2d, id } = this;
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
         viewportId: id,

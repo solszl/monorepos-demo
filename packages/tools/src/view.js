@@ -179,6 +179,7 @@ class View extends Component {
     const { type } = data;
     const item2 = new TOOL_CONSTRUCTOR[type]();
     layer.add(item2);
+    item2.$stage = this.stage;
     item2.$transform = this.transform;
     item2?.setData(data);
     item2?.renderData?.();

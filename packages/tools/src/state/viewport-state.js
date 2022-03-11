@@ -9,6 +9,8 @@ const initialState = {
   rootHeight: 0,
   centerX: 0,
   centerY: 0,
+  positionX: 0,
+  positionY: 0,
 };
 
 let stateInitialDictionary = {};
@@ -38,7 +40,9 @@ export const useViewportState = (stageId) => {
     Object.assign(state, { width } ?? {});
     Object.assign(state, { height } ?? {});
     Object.assign(state, { centerX: width / 2, centerY: height / 2 } ?? {});
-    Object.assign(state, { position } ?? {});
+    Object.assign(state, { position: position } ?? {});
+    Object.assign(state, { positionX: position[0] } ?? {});
+    Object.assign(state, { positionY: position[1] } ?? {});
     Object.assign(state, { flip } ?? {});
     // Object.assign(state, { id } ?? {});
     Object.assign(state, { stageId });

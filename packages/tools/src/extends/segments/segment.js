@@ -23,7 +23,11 @@ class Segment extends Group {
     const { m } = this.$transform;
     const w = m.at(4);
     const h = m.at(5);
-    val === "landscape" ? this.position({ x: w, y: h }) : this.position({ x: w + 13, y: h });
+    const [getViewportState] = useViewportState(this.getStage().id());
+    const { width, height, scale } = getViewportState();
+    val === "landscape"
+      ? this.position({ x: w, y: height * scale + m[5] - this.height() }) // 图像缩放后的高度+偏移-文本的高度
+      : this.position({ x: w, y: h });
   }
 
   setData(val) {
@@ -49,6 +53,7 @@ class Segment extends Group {
 
     const [getViewportState] = useViewportState(this.getStage().id());
     const { width, height, scale } = getViewportState();
+
     if (direction === "landscape") {
       this.width(width * scale);
     } else {
@@ -64,23 +69,22 @@ class Segment extends Group {
     this.removeChildren();
     data.forEach((d) => {
       const seg = new SubSegment();
+      this.add(seg);
       const [label, points] = Object.entries(d)[0];
       const length = points.length;
       seg.width((length / total) * this.width());
       seg.setText(this.keymap?.[label] ?? label ?? "");
 
       seg.x(lastX + lastWidth);
+      this.height(seg.height());
       lastX = seg.x();
       lastWidth = seg.width();
-
-      this.add(seg);
     });
 
     this.setDirection(direction);
   }
 
   updateProps(props) {
-    console.log("segment", props);
     const { keymap } = props;
     if (keymap) {
       this.keymap = keymap;
@@ -98,7 +102,7 @@ class SubSegment extends Group {
   constructor(config = {}) {
     super(config);
     const lineProp = {
-      points: [0, 0, 0, 11],
+      points: [0, 0, 0, 12],
       stroke: "gray",
       strokeWidth: 1,
       lineCap: "round",
@@ -120,28 +124,43 @@ class SubSegment extends Group {
       fontSize: 12,
       align: "center",
       verticalAlign: "bottom",
-      fill: "gray",
+      fill: "#ffffff",
+      stroke: "#afb2c4",
+      strokeWidth: 0.2,
+      shadowColor: "rgba(0,0,0,0.6)",
+      shadowBlur: 0,
+      shadowOffsetX: 1,
+      shadowOpacity: 1,
       ellipsis: true,
       wrap: "none",
     });
 
     this.add(line1);
     this.add(line2);
-    // this.add(line3);
     this.add(textField);
   }
 
   setText(val) {
+    const [getViewportState] = useViewportState(this.getStage().id());
+    const { scale = 3 } = getViewportState();
     // 设置文案
     const textField = this.findOne("#textField");
     textField.text(val);
 
+    textField.fontSize(Math.min(scale * 6, 12));
+    // textField.y(this.height() - textField.height());
     // 设置宽度， 存在文案宽度大于容器宽度。此时限定文案宽度。 使其出现'...'
     textField.width(this.width());
 
     // 设置右边标尺的线的位置
     const line2 = this.findOne("#line2");
+    line2.points([0, 0, 0, textField.fontSize()]);
     line2.x(this.width());
+
+    const line1 = this.findOne("#line1");
+    line1.points([0, 0, 0, textField.fontSize()]);
+
+    this.height(textField.height());
   }
 
   getText() {

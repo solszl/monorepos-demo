@@ -107,7 +107,7 @@ class Viewport extends Component {
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, (info) => {
       const { viewportId, data, segment } = info;
-      console.log("中线数据发生变更", data, segment);
+      // console.log("中线数据发生变更", data, segment);
       if (viewportId !== this.id) {
         return;
       }
@@ -118,6 +118,7 @@ class Viewport extends Component {
         toolId: "centerline2d",
         data,
       });
+
       // 设置分段信息数据
       if (segment) {
         const {
@@ -128,6 +129,7 @@ class Viewport extends Component {
         const { segmentKeymap } = info;
         toolView.renderStaticData({
           type: TOOL_TYPE_EXTENDS.VESSEL_SEGMENT,
+          toolId: "segment",
           data,
           keymap: segmentKeymap,
           direction: direction,
@@ -169,7 +171,7 @@ class Viewport extends Component {
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.SEGMENT_DATA_CHANGED, (info) => {
       const { viewportId, data } = info;
-      console.log("中线数据发生变更", this.id, viewportId);
+      // console.log("中线数据发生变更", this.id, viewportId);
       if (viewportId !== this.id) {
         return;
       }

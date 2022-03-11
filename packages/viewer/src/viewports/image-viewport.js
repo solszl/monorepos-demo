@@ -64,6 +64,8 @@ class ImageViewport extends AbstractViewport {
       this.renderer.renderData.width = columns;
       this.renderer.renderData.height = rows;
       this._calcSuitableSizeRatio();
+      // 只要尺寸不一样。 位置一定会发生变化
+      this._positionChanged = true;
     }
     this._displayChanged = true;
     this.renderSchedule.invalidate(this.render, this, image);
@@ -241,10 +243,10 @@ class ImageViewport extends AbstractViewport {
       scaleResult = height / rh;
     }
 
-    const { scale = 1 } = this.displayState;
-    if (Math.abs(scaleResult - scale) < 1e-4) {
-      return;
-    }
+    // const { scale = 1 } = this.displayState;
+    // if (Math.abs(scaleResult - scale) < 1e-4) {
+    //   return;
+    // }
 
     this.setScale(scaleResult);
   }

@@ -27,6 +27,7 @@ class Centerline3DBizz {
     this.spacing = spacing;
     this.points = points;
 
+    // this.origin = [-120.638, -122.074, 218.627];
     let flatPoints = [];
     Object.entries(points).forEach(([, pts]) => {
       flatPoints = flatPoints.concat(pts);
@@ -176,9 +177,32 @@ class Centerline3DBizz {
    * @memberof Centerline3DBizz
    */
   getLinkData(sliceIndex, point, forward = true) {
-    const currentIndex = this.getIndexByIJK(point);
-    let targetIndex = -1;
+    // 业务传进来77， 显示78， 要获取77层的数据
     const points = this.getIJKBySliceId(sliceIndex);
+
+    if (points.length === 0) {
+      return {
+        point: undefined,
+        index: -1,
+      };
+    }
+    // 如果没有对应的point，证明从外面进来，如果是forward = true 取目标层面数据集合的第一个，否则取最后一个
+    // 如：血管形状是 "M"，forward = true, 那么返回 M 的左上角的点
+    // 如：血管形状是 "W"，forward = false, 那么返回 W 的右下角的点
+    if (!point) {
+      if (points.length === 0) {
+        // 没有交集对应的点的话。返回默认空数据
+        return {
+          point: undefined,
+          index: -1,
+        };
+      }
+
+      point = forward ? points.shift() : points.pop();
+    }
+
+    const currentIndex = this.getIndexByIJK(point);
+    let targetIndex = forward ? currentIndex : -1;
     points.forEach((point) => {
       const index = this.getIndexByIJK(point);
       if (forward) {
@@ -232,8 +256,8 @@ class Centerline3DBizz {
 
   _getXYZByPoint(point) {
     const { origin, spacing } = this;
-    const [x, y, z] = vec3.round([], vec3.divide([], vec3.subtract([], point, origin), spacing));
-    return [x, y, z];
+    const xyz = vec3.round([], vec3.divide([], vec3.subtract([], origin, point), spacing)); // return [x,y,z]
+    return xyz;
   }
 }
 

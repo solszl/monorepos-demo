@@ -46,10 +46,9 @@ class Centerline2D extends Group {
     this.originPath = path.reduce((prev, curr) => {
       return prev.concat(Object.values(curr).flat());
     }, []);
-    this.autofit();
 
-    const vernier = this.findOne("#vernier");
-    vernier.setCurrentIndex(this.vernierIndex);
+    this.vernierIndex = 0;
+    this.autofit();
   }
 
   renderData() {}
@@ -62,6 +61,7 @@ class Centerline2D extends Group {
     this.path = path;
     const vernier = this.findOne("#vernier");
     vernier.path = this.path;
+    vernier.setCurrentIndex(this.vernierIndex);
   }
 
   updateProps(props) {

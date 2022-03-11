@@ -59,7 +59,7 @@ class Vernier extends Group {
   set path(arr = []) {
     // TODO: 抽象path 支持centerline2d/3d 格式
     this._path = arr;
-
+    this._currentIndex = 0;
     // path 经过transform变化后，需要重新定位游标位置以及观看朝向
     this.autofit();
   }
