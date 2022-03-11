@@ -23,9 +23,14 @@ class RenderSchedule {
    * @memberof RenderSchedule
    */
   invalidate(fn, ctx, ...args) {
+    const key = `${ctx.id ?? ""}-${fn.name}`;
+    // console.log("插入新调度函数了", key, Date.now());
     // 因为函数bind 会返回新的函数， 将旧函数作为闭包包进新函数内。导致map set的时候无法覆盖同一个key
-    this.deferredQueue.set(`${ctx.id ?? ""}-${fn.name}`, { fn, ctx, args });
-    // console.log(this.deferredQueue.size, fn.name, ctx.id);
+    this.deferredQueue.set(key, { fn, ctx, args });
+
+    if (this.stage.isRunning) {
+      return;
+    }
     this.stage.startRender();
   }
 
@@ -44,7 +49,7 @@ class RenderSchedule {
    * @return {*}
    * @memberof RenderSchedule
    */
-  onValidate() {
+  async onValidate() {
     const { size } = this.deferredQueue;
     if (size === 0) {
       this.stage.stopRender();
@@ -52,16 +57,17 @@ class RenderSchedule {
     }
 
     // console.log("call exec.");
-    for (const [key, values] of this.deferredQueue?.entries()) {
+    for await (const [key, values] of this.deferredQueue?.entries()) {
       const { fn, ctx, args } = values;
-      fn?.apply(ctx, args);
+      await fn?.apply(ctx, args);
       this.deferredQueue.delete(key);
     }
+    this.stage.stopRender();
 
     // 渲染过程中，又来了新的
     const { size: remainSize } = this.deferredQueue;
     if (remainSize > 0) {
-      this.validateNow();
+      this.stage.startRender();
     }
   }
 }
