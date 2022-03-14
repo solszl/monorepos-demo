@@ -1,5 +1,5 @@
 import { Group } from "konva/lib/Group";
-import { Circle } from "konva/lib/shapes/Circle";
+import { Rect } from "konva/lib/shapes/Rect";
 import { Wedge } from "konva/lib/shapes/Wedge";
 
 class Vernier extends Group {
@@ -15,7 +15,7 @@ class Vernier extends Group {
     const perAngle = ~~(360 / count);
     Array.from({ length: count }).forEach((_, index) => {
       const vernier = new Triangle();
-      const r = perAngle * index - 10;
+      const r = perAngle * index;
       vernier.rotation(r);
       if (offset !== 0) {
         vernier.position({
@@ -31,12 +31,16 @@ class Vernier extends Group {
 
     if (dragMode > 0) {
       this.draggable(dragMode > 0);
-      const anchor = new Circle({
-        fill: "rgba(192,192,192,0.05)",
-        // fill: "red",
-        radius: 7,
-      });
-      this.add(anchor);
+      // 用来drag的
+      this.add(
+        new Rect({
+          fill: "rgba(255,0,0,0.01)",
+          width: 50,
+          height: 20,
+          x: -25,
+          y: -10,
+        })
+      );
 
       this.on("dragmove", (e) => {
         if (dragMode === 1) {
@@ -78,7 +82,7 @@ class Vernier extends Group {
     const nextPosition = this.path[nextIndex];
     const currentPosition = this.path[this.currentIndex];
     const angle = this._calcAngle(currentPosition, nextPosition);
-    this.rotation(angle - 90);
+    this.rotation(angle - 90 - 8); // 减半个三角形的角度
   }
 
   /** 看当前索引的上一个点的位置。 如果已经出于第一个点，看后面那个点 */
@@ -92,7 +96,7 @@ class Vernier extends Group {
     const prevPosition = this.path[prevIndex];
     const currentPosition = this.path[this.currentIndex];
     const angle = this._calcAngle(currentPosition, prevPosition);
-    this.rotation(angle - 90);
+    this.rotation(angle - 90 - 8);
   }
 
   /** 设置当前索引。并看向下一个点 */
@@ -146,7 +150,7 @@ class Vernier extends Group {
     const [x1, y1] = p1;
     const [x2, y2] = p2;
     if (x1 === x2 && y1 === y2) {
-      return this.rotation() + 90;
+      return this.rotation() + 90 + 8;
     }
 
     const x = x2 - x1;
@@ -191,14 +195,14 @@ class Vernier extends Group {
 
 let DEFAULT_CONFIG = {
   fillRadialGradientStartPoint: { x: 0, y: 0 },
-  fillRadialGradientStartRadius: 0,
+  fillRadialGradientStartRadius: 5,
   fillRadialGradientEndPoint: { x: 0, y: 0 },
-  fillRadialGradientEndRadius: 15,
+  fillRadialGradientEndRadius: 25,
   fillRadialGradientColorStops: [0, "rgba(249, 167, 39, 0)", 1, "#F9A727"], // konva 底层不支持 #f9a72700 这样的8位颜色值
   lineJoin: "round",
-  angle: 15,
-  radius: 20,
-  rotation: 7.5,
+  angle: 16,
+  radius: 25,
+  rotation: 0,
   shadowColor: "black",
   shadowOffsetX: 2,
   shadowOffsetY: 2,
