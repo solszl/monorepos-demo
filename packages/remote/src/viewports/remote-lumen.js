@@ -98,13 +98,15 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       centerline2d.setData(linesData);
       this.centerline2d = centerline2d;
 
+      const { centerlineVisibility } = this;
       // 此处不做处理，因为分段信息需要对应的名字
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
         viewportId: this.id,
         data: linesData,
         segment: true,
         segmentKeymap: this.keymap,
-        direction: this.direction,
+        direction,
+        centerlineVisibility,
       });
     }
     this.vesselNameChanged = false;
@@ -124,6 +126,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
   }
 
   setCenterlineVisibility(val) {
+    this.centerlineVisibility = val;
     this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_STATE_CHANGED, {
       viewportId: this.id,
       state: val,

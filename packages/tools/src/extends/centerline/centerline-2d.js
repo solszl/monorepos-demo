@@ -35,7 +35,7 @@ class Centerline2D extends Group {
   }
 
   setData(data) {
-    const { data: path } = data;
+    const { data: path, centerlineVisibility } = data;
     /**
      * 中线数据格式为
      * [
@@ -49,6 +49,11 @@ class Centerline2D extends Group {
 
     this.vernierIndex = 0;
     this.autofit();
+
+    if (centerlineVisibility !== undefined) {
+      const line = this.findOne("#line");
+      line.visible(centerlineVisibility);
+    }
   }
 
   renderData() {}

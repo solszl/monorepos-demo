@@ -86,14 +86,15 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       const centerline2d = new Centerline2DBizz();
       centerline2d.setData(centerline);
       this.centerline2d = centerline2d;
-      const { tags, highlightTag } = this;
-      console.log("[cpr]", tags);
+      const { tags, highlightTag, tagsVisibility, centerlineVisibility } = this;
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, {
         viewportId: this.id,
         data: centerline,
         flatData: centerline2d.path,
         tags,
         highlightTag,
+        tagsVisibility,
+        centerlineVisibility,
       });
 
       //设置图像
@@ -135,6 +136,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
   }
 
   setCenterlineVisibility(val) {
+    this.centerlineVisibility = val;
     this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_STATE_CHANGED, {
       viewportId: this.id,
       state: val,
@@ -174,6 +176,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
   }
 
   setTagsVisibility(val) {
+    this.tagsVisibility = val;
     this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.CPR_TAGS_STATE_CHANGED, {
       viewportId: this.id,
       state: val,

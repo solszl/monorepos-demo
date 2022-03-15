@@ -9,7 +9,7 @@ class TagGroup extends Group {
 
   setData(data) {
     this.removeChildren();
-    const { tags, highlightTag, path } = data;
+    const { tags, highlightTag, path, tagsVisibility } = data;
     this.path = path;
     this.highlightTag = highlightTag;
     this.tags = tags;
@@ -35,6 +35,10 @@ class TagGroup extends Group {
         }
       });
     });
+
+    if (tagsVisibility !== undefined) {
+      this.visible(tagsVisibility);
+    }
   }
 
   autofit() {
@@ -85,7 +89,9 @@ class TagGroup extends Group {
     }
 
     const { visible } = props;
-    this.visible(visible ?? true);
+    if (visible !== undefined) {
+      this.visible(visible);
+    }
   }
 }
 

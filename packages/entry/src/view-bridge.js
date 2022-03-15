@@ -109,7 +109,7 @@ class Viewport extends Component {
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, (info) => {
-      const { viewportId, data, segment } = info;
+      const { viewportId, data, segment, centerlineVisibility } = info;
       // console.log("中线数据发生变更", data, segment);
       if (viewportId !== this.id) {
         return;
@@ -120,6 +120,7 @@ class Viewport extends Component {
         type: TOOL_TYPE_EXTENDS.CENTERLINE2D,
         toolId: "centerline2d",
         data,
+        centerlineVisibility,
       });
 
       // 设置分段信息数据
@@ -141,13 +142,14 @@ class Viewport extends Component {
       }
 
       // 标签TAG组
-      const { tags, highlightTag, flatData } = info;
+      const { tags, highlightTag, flatData, tagsVisibility } = info;
       if (tags) {
         toolView.renderStaticData({
           type: TOOL_TYPE_EXTENDS.TAG_GROUP,
           toolId: "tagGroup",
           tags,
           highlightTag,
+          tagsVisibility,
           path: flatData,
         });
       }
