@@ -80,6 +80,11 @@ class ImageViewport extends AbstractViewport {
 
   async render(image) {
     await super.render();
+
+    if (!this.renderer) {
+      return;
+    }
+
     if (!image) {
       return;
     }

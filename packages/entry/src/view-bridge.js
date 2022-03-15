@@ -29,6 +29,9 @@ class Viewport extends Component {
     // 使用一个polyfill, 去除操作dom 添加iframe而引发的性能降低
     this.resizeObserver = new ResizeObserver(() => {
       const { clientWidth: width, clientHeight: height } = el;
+      if (width === 0 || height === 0) {
+        return;
+      }
       imageView?.resize(width, height);
       toolView?.resize(width, height);
     });
@@ -433,10 +436,12 @@ class Viewport extends Component {
    * @memberof Viewport
    */
   destroy() {
+    this.data = {};
+    const { el } = this.option;
+    this.resizeObserver.unobserve(el);
+    this?.resizeObserver.disconnect();
     this.toolView.destroy();
     this.imageView.destroy();
-    this.data = {};
-    this?.resizeObserver.disconnect();
   }
 
   /**

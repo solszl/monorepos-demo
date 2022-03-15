@@ -27,7 +27,7 @@ class Segment extends Group {
     const { width, height, scale } = getViewportState();
     val === "landscape"
       ? this.position({ x: w, y: height * scale + m[5] - this.height() }) // 图像缩放后的高度+偏移-文本的高度
-      : this.position({ x: w, y: h });
+      : this.position({ x: w + this.height(), y: h });
   }
 
   setData(val) {

@@ -35,6 +35,11 @@ class Centerline3DBizz {
     });
 
     this.flatPoints = flatPoints;
+
+    // flatPoints.forEach((point) => {
+    //   const [, , z] = this._getXYZByPoint(point);
+    //   console.log("这根血管经过", z);
+    // });
   }
 
   get total() {
@@ -256,7 +261,15 @@ class Centerline3DBizz {
 
   _getXYZByPoint(point) {
     const { origin, spacing } = this;
-    const xyz = vec3.round([], vec3.divide([], vec3.subtract([], origin, point), spacing)); // return [x,y,z]
+    // xyz = (point - origin) / spacing
+    const xyz = vec3.round(
+      [],
+      vec3.divide(
+        [],
+        vec3.subtract([], point, origin).map((i) => Math.abs(i)),
+        spacing
+      )
+    ); // return [x,y,z]
     return xyz;
   }
 }

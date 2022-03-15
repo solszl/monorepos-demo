@@ -32,6 +32,10 @@ class AbstractRemoteDicomViewport extends ImageViewport {
   }
 
   async setUrl(url) {
+    if (this.loader.isLoading) {
+      this.loader.abort();
+    }
+
     const image = await this.loader.load(url);
     if (!image) {
       return;
@@ -41,7 +45,7 @@ class AbstractRemoteDicomViewport extends ImageViewport {
       ww: image.windowWidth,
       wc: image.windowCenter,
     };
-    this.showImage(image);
+    this.showImage(image, false);
     // console.log("影像加载完成", image);
     return image;
   }

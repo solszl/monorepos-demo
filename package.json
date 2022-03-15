@@ -39,6 +39,7 @@
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.15.6",
     "@webpack-cli/serve": "^1.5.2",
+    "abort-controller": "^3.0.0",
     "babel-loader": "^8.2.2",
     "cheerio": "^1.0.0-rc.10",
     "core-js": "^3.21.1",
@@ -66,6 +67,7 @@
   },
   "private": true,
   "dependencies": {
+    "curve-interpolator": "^2.0.8",
     "d3-contour": "^3.0.1",
     "dicom-parser": "1.8.13",
     "event-emitter": "^0.3.5",
@@ -77,9 +79,8 @@
     "nanoid": "^3.3.1",
     "paraviewweb": "^3.2.21",
     "promise-worker": "^2.0.1",
-    "simplify-js": "^1.2.4",
-    "wslink": "^1.4.1",
     "resize-observer-polyfill": "^1.5.1",
-    "curve-interpolator": "^2.0.8"
+    "simplify-js": "^1.2.4",
+    "wslink": "^1.4.1"
   }
 }

@@ -1,12 +1,19 @@
 import { createImage } from "@pkg/dicom/src";
+import AbortController from "abort-controller";
 
 class SimpleLoader {
-  constructor() {}
+  constructor() {
+    this.isLoading = false;
+    this.abortController = new AbortController();
+  }
 
   async load(url) {
     let ab;
     try {
-      ab = await (await fetch(url)).arrayBuffer();
+      this.isLoading = true;
+      const { signal } = this.abortController;
+      ab = await (await fetch(url, { signal })).arrayBuffer();
+      this.isLoading = false;
     } catch (error) {}
 
     if (!ab) {
@@ -23,6 +30,12 @@ class SimpleLoader {
     }
 
     return img || null;
+  }
+
+  abort() {
+    console.log("abort");
+    this.abortController.abort();
+    this.isLoading = false;
   }
 
   destroy() {}
