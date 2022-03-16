@@ -20,6 +20,7 @@ class TagGroup extends Group {
           return;
         }
         const tag = new Tag();
+        this.add(tag);
         tag.setData({ ...t, subname: tagKey });
         const { location } = t;
         const position = path[location];
@@ -28,7 +29,6 @@ class TagGroup extends Group {
           x: p[0],
           y: p[1],
         });
-        this.add(tag);
 
         if (highlightTag) {
           tag.setOpen(highlightTag === t.location);

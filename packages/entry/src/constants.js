@@ -5,7 +5,11 @@ export const EVENTS = {
   MATRIX_CHANGED: "matrix_changed",
   /** 影像渲染完后派发 */
   IMAGE_RENDERED: "image_rendered",
-  /** 影像渲染完后，派发所有的数据给前台, 但是不建议监听该事件*/
+  /**
+   * @deprecated
+   * 影像渲染完后，派发所有的数据给前台, 但是不建议监听该事件。
+   * 不建议监听该事件， 正常来讲，matrix_changed 和 image_rendered 各司其职， 但是业务端同时监听后，无法快速往redux里写数据
+   */
   RENDER_COMPLETED: "render_completed",
   /** Tool data 数据变更 */
   TOOL_DATA_UPDATED: "tool_data_updated",

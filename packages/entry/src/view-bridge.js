@@ -12,8 +12,8 @@ class Viewport extends Component {
     this.data = {};
     this.currentIndex = 0;
 
+    /** @type { ResizeObserver } dom尺寸变更监听 */
     this.resizeObserver;
-
     this.init();
   }
 
@@ -366,7 +366,9 @@ class Viewport extends Component {
       });
     });
 
+    /** @type { View } 工具视图 */
     this._toolView = toolView;
+    /** @type { AbstractViewport } 抽象视图层的实现类 */
     this._imageView = imageView;
     this.api = api;
 
