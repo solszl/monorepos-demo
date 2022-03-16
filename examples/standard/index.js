@@ -1,9 +1,9 @@
 import { Centerline3DBizz, ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 const { roi } = ToolsMisc;
-const SERIES_ID = "1.2.840.113619.2.416.77348009424380358976506205963520437809";
+const SERIES_ID = "1.2.840.113619.2.437.3.2831215364.545.1555459452.845";
 const fs = "http://172.16.3.35:8000";
-let currentIndex = 0;
+let currentIndex = 20;
 const API_GRAY = "/api/v1/series/";
 const API_COLOR = "/api/v1/series/ssr/";
 

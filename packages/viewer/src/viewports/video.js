@@ -14,7 +14,7 @@ class VideoViewport extends ImageViewport {
     const video = document.createElement("video");
     video.style.position = "absolute";
     video.style.display = "block";
-    let { width, height } = this._getRootSize();
+    let { width, height } = this.getRootSize();
     video.width = width;
     video.height = height;
     this.video = video;
