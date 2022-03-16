@@ -27,7 +27,13 @@ export const getColorLut = (image, displayState, colormap) => {};
 
 const generateLut = (image, windowWidth, windowCenter, invert) => {
   const { minPixelValue, maxPixelValue } = image;
-  const offset = Math.min(minPixelValue, 0);
+
+  let offset = 0;
+  if (minPixelValue < 0) {
+    offset = minPixelValue;
+  } else {
+    offset = Math.max(0, minPixelValue);
+  }
 
   const length = maxPixelValue - offset + 1;
   let lut = new Uint8ClampedArray(length);
@@ -38,7 +44,8 @@ const generateLut = (image, windowWidth, windowCenter, invert) => {
 
   if (!invert) {
     for (let i = minPixelValue; i <= maxPixelValue; i += 1) {
-      lut[i - offset] = wwwcLutFn(mLutFn(i));
+      const hu = wwwcLutFn(mLutFn(i));
+      lut[i - offset] = hu;
     }
   } else {
     for (let i = minPixelValue; i <= maxPixelValue; i += 1) {
