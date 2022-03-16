@@ -1,7 +1,7 @@
 import { Centerline3DBizz, ToolsMisc, ViewportManager } from "@pkg/entry/src";
 import { Resource } from "@pkg/loader/src";
 const { roi } = ToolsMisc;
-const SERIES_ID = "1.2.392.200036.9116.2.6.1.3268.2059767860.1522820353.891250";
+const SERIES_ID = "1.2.840.113619.2.416.77348009424380358976506205963520437809";
 const fs = "http://172.16.3.35:8000";
 let currentIndex = 0;
 const API_GRAY = "/api/v1/series/";
@@ -68,7 +68,7 @@ fetchData(SERIES_ID).then(async (json) => {
   // standard.on("slice_changed", () => {
   //   // [x]: remove me
   //   setTimeout(() => {
-  //     const layer = viewport.toolView.stage.findOne("#toolsLayer");
+  //     const layer = viewport.toolView.stage.findOne("#staticLayer");
   //     // let triangle = new Triangle({});
   //     let vernier = new Vernier({ count: 2, offset: 3, dragMode: 3 });
 
@@ -110,6 +110,7 @@ fetchData(SERIES_ID).then(async (json) => {
   //     centerline2d.path = testData;
 
   //     let tagGroup = new TagGroup();
+  //     tagGroup.$transform = standard.toolView.transform;
   //     // prettier-ignore
   //     tagGroup.setData({
   //       tags: {

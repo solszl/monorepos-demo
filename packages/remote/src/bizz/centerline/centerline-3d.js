@@ -261,7 +261,7 @@ class Centerline3DBizz {
 
   _getXYZByPoint(point) {
     const { origin, spacing } = this;
-    // xyz = (point - origin) / spacing
+    // xyz = [x,y,z] = (point - origin) / spacing
     const xyz = vec3.round(
       [],
       vec3.divide(
@@ -269,7 +269,7 @@ class Centerline3DBizz {
         vec3.subtract([], point, origin).map((i) => Math.abs(i)),
         spacing
       )
-    ); // return [x,y,z]
+    );
     return xyz;
   }
 }

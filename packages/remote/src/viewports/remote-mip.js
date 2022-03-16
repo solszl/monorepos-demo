@@ -3,6 +3,7 @@ import AbstractRemoteDicomViewport from "./base/abstract-remote-dicom";
 class RemoteMIPViewport extends AbstractRemoteDicomViewport {
   constructor(options = {}) {
     super(options);
+    this.lastIndex = -1;
   }
 
   async initialAsyncWorkflow() {
@@ -57,19 +58,25 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
 
     this.index = val;
     this._propertyChanged = true;
-    this.renderSchedule.invalidate(this.propertyChanged, this);
+    this.renderSchedule.invalidate(this.propertyChanged, this, this);
   }
 
   setTotal(val) {
     this.total = val;
   }
 
-  async propertyChanged() {
+  async propertyChanged(that) {
     await super.propertyChanged();
 
     if (this._propertyChanged) {
-      const { withBone, azimuth, index, count } = this;
-      await this.getMipImage(index, azimuth, count, withBone);
+      const { withBone, azimuth, index, count } = that;
+      if (index === this.lastIndex) {
+        this._propertyChanged = false;
+        return;
+      }
+
+      await that.getMipImage(index, azimuth, count, withBone);
+      this.lastIndex = index;
       this._propertyChanged = false;
     }
   }

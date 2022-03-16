@@ -24,7 +24,7 @@ export const snapshotMode1 = (el) => {
  * @returns
  */
 export const snapshotMode2 = async (config) => {
-  const { imageView, toolView, sliceKey, data, showTypes } = config;
+  const { imageView, toolView, sliceKey, data, showTypes, hideLayers = [] } = config;
   const { image, renderer } = imageView;
   const { columns, rows } = image;
   const canvas = document.createElement("canvas");
@@ -45,6 +45,10 @@ export const snapshotMode2 = async (config) => {
     return showTypes.includes(data.type);
   });
   toolView.renderData(filteredData);
+  hideLayers.forEach((layerId) => {
+    const layer = toolView.stage.findOne(`#${layerId}`);
+    layer.hide();
+  });
 
   // 要重绘的区域
   let c2 = toolView.getCanvas();
@@ -62,6 +66,10 @@ export const snapshotMode2 = async (config) => {
   // 等一会
   await delay(10);
   toolView.renderData(sliceData);
+  hideLayers.forEach((layerId) => {
+    const layer = toolView.stage.findOne(`#${layerId}`);
+    layer.show();
+  });
 
   // const base64 = canvas.toDataURL("image/png");
   // const a = document.createElement("a");

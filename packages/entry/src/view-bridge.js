@@ -458,7 +458,7 @@ class Viewport extends Component {
     let ret = null;
     const { el } = this.option;
     // mode 1: 所见即所得模式， 2：标准影像大小模式
-    const { mode = 1, showTypes = [] } = config;
+    const { mode = 1, showTypes = [], hideLayers } = config;
     switch (mode) {
       case 1:
         ret = snapshotMode1(el);
@@ -470,6 +470,7 @@ class Viewport extends Component {
           sliceKey: this.sliceKey,
           data: this.data,
           showTypes,
+          hideLayers,
         };
         ret = snapshotMode2(cfg);
         break;
