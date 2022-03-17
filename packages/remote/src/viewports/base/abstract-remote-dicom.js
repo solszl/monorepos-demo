@@ -32,10 +32,6 @@ class AbstractRemoteDicomViewport extends ImageViewport {
   }
 
   async setUrl(url) {
-    if (this.loader.isLoading) {
-      this.loader.abort();
-    }
-
     const image = await this.loader.load(url);
     if (!image) {
       return;

@@ -17,6 +17,8 @@ export const MsgTypes = {
   VRTREE_VESSEL_TEXT: "vr_tree|>vessel.text",
   /** 头颈CTA中，切换各种视图的函数 */
   RENDER_TYPE_TOGGLE: "render|>render.type.toggle",
+  /** 强行与后端进行模拟鼠标交互 */
+  MOUSE_INTERACTION: "render|>viewport.mouse.interaction",
   /** 获取MIP下不同面的总层数 */
   MIP_GET_COUNT: "mip|>get.total.count",
   /** 获取MIP下不同层面的dicom图像 */

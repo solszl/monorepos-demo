@@ -279,6 +279,7 @@ class ImageViewport extends AbstractViewport {
       flip: this.displayState.flip,
       rootWidth,
       rootHeight,
+      id: this.id,
     };
   }
 
@@ -304,6 +305,7 @@ class ImageViewport extends AbstractViewport {
       slope: this.image.slope,
       intercept: this.image.intercept,
       imageType: this.image.imageType ?? "dicom",
+      id: this.id,
     };
   }
 }

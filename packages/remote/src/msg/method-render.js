@@ -33,4 +33,34 @@ export const METHODS = {
     this.validateNow();
     return true;
   },
+  stopMouseInteraction: async function (mouse) {
+    const [route, method] = this._splitMessageType(MsgTypes.MOUSE_INTERACTION);
+    const session = this.connection.getSession();
+    // 需要传入一个当前鼠标的相对的百分比位置
+    const data = await session.call(
+      method,
+      [
+        Object.assign(
+          {},
+          {
+            action: "up",
+            altKey: false,
+            buttonLeft: false,
+            buttonMiddle: false,
+            buttonRight: false,
+            ctrlKey: false,
+            metaKey: false,
+            shiftKey: false,
+            view: -1,
+            x: 0.5,
+            y: 0.5,
+          },
+          mouse ?? {}
+        ),
+      ],
+      {}
+    );
+
+    return data;
+  },
 };
