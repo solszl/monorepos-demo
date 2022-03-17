@@ -3,8 +3,8 @@ import { LINK_DATA_PROPERTY } from "../../packages/entry/src/linkage-manager";
 import { MOUSE_BUTTON } from "../../packages/tools/src/constants";
 import ToolBar from "../toolbar/toolBar";
 
-const seriesId = "1.2.840.113619.2.404.3.1074448704.467.1622952050.644";
-const fs = "http://172.16.6.14:8000";
+const seriesId = "1.2.840.113619.2.437.3.2831215364.545.1555459452.845";
+const fs = "http://172.16.3.35:8000";
 let currentIndex = 0;
 
 const vm = new ViewportManager();
