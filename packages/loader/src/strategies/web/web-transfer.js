@@ -105,12 +105,17 @@ class WebTransfer {
   }
 
   getIllegalIndex(index, seriesId, plane, loop) {
-    const { length } = this.taskManager.getTask(seriesId, plane);
+    const length = this.getTotal(seriesId, plane);
     if (loop && index >= length) {
       return 0;
     }
 
     return Math.max(0, Math.min(index, length - 1));
+  }
+
+  getTotal(seriesId, plane) {
+    const { length } = this.taskManager.getTask(seriesId, plane);
+    return length;
   }
 }
 
