@@ -88,6 +88,16 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     if (this.directionChanged || this.angleChanged || this.vesselNameChanged) {
       const { vesselName, angle, direction } = this;
       const uri = await this?.getLumenImage(vesselName, angle, direction);
+
+      if (uri === "") {
+        console.warn(
+          `[lumen] wrong, vessel:${vesselName}, angle:${angle}, direction:${direction}.`
+        );
+        this.vesselNameChanged = false;
+        this.directionChanged = false;
+        return;
+      }
+
       const { httpServer } = this.option;
       await this.setUrl(`${httpServer}${uri}`);
       this.angleChanged = false;

@@ -44,6 +44,13 @@ class RemoteProbeViewport extends AbstractRemoteDicomViewport {
     if (this.vesselNameChanged || this.indexChanged) {
       const { vesselName, index } = this;
       const data = await this?.getProbeImage(vesselName, index);
+
+      if (data.length === 0) {
+        this.vesselNameChanged = false;
+        this.indexChanged = false;
+        console.warn(`[probe] wrong, vessel:${vesselName}, index:${index}.`);
+        return;
+      }
       const uri = data[0];
       const { httpServer } = this.option;
       this.setUrl(`${httpServer}${uri}`);

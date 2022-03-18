@@ -81,7 +81,14 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     await super.propertyChanged();
     if (this.vesselNameChanged || this.angleChanged) {
       const { vesselName, theta, phi } = this;
-      const { centerline, uri } = await this?.getCprImage(vesselName, theta, phi);
+      const { centerline = [], uri } = await this?.getCprImage(vesselName, theta, phi);
+
+      if (centerline.length === 0 || uri === "") {
+        console.warn(`[cpr] wrong, vessel:${vesselName}, theta:${theta}, phi:${phi}.`);
+        this.vesselNameChanged = false;
+        this.angleChanged = false;
+        return;
+      }
       // 2d中线逻辑
       const centerline2d = new Centerline2DBizz();
       centerline2d.setData(centerline);
