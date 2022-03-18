@@ -130,6 +130,13 @@ class TaskManager {
 
     this.tasks = this.tasks.filter((task) => !task?.remove).map((task) => task);
   }
+
+  clear() {
+    this.tasks = [];
+    this.pendingTask = [];
+    this.loadingTask = {};
+    this.pendingTaskResolves = {};
+  }
 }
 
 /**

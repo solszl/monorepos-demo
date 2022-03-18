@@ -98,6 +98,10 @@ class LoaderManager {
       setTimeout(resolve, ms, value);
     });
   }
+
+  clear() {
+    this.workers = [];
+  }
 }
 
 export default LoaderManager;

@@ -47,6 +47,14 @@ class SocketTransfer {
   getIllegalIndex(index, seriesId, plane, loop) {
     return index;
   }
+
+  dispose() {
+    this.sockets.forEach((socket) => {
+      socket.destroy();
+    });
+
+    this.sockets.clear();
+  }
 }
 
 export default SocketTransfer;

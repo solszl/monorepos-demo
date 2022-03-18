@@ -117,6 +117,17 @@ class WebTransfer {
     const { length } = this.taskManager.getTask(seriesId, plane);
     return length;
   }
+
+  dispose() {
+    // 缓存管理器
+    this.cacheManager.purge();
+    // 任务管理器
+    this.taskManager.clear();
+    // 加载管理器
+    this.loaderManager.clear();
+    // 预加载管理器
+    this.preloadManager.clear();
+  }
 }
 
 export default WebTransfer;

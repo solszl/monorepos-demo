@@ -44,6 +44,8 @@ class PreloadManager {
       this.taskManager.addPendingTask(preloadTasks.shift());
     }
   }
+
+  clear() {}
 }
 
 export default PreloadManager;

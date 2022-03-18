@@ -40,6 +40,20 @@ class Resource {
   getTransfer(transferMode = "web") {
     return this.transfers.get(transferMode);
   }
+
+  /**
+   * 销毁传输对象，该操作通常用于切换序列以及SDK销毁时进行调用。从而释放对应内存句柄。
+   *
+   * @memberof Resource
+   */
+  disposeTransfer() {
+    this.transfers.forEach((transfer) => {
+      transfer.dispose();
+    });
+
+    this.transfers.clear();
+    this.transferInited = false;
+  }
 }
 
 export default Resource;
