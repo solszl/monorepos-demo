@@ -23,4 +23,8 @@ export const MsgTypes = {
   MIP_GET_COUNT: "mip|>get.total.count",
   /** 获取MIP下不同层面的dicom图像 */
   MIP_GET_DICOM: "mip|>generate.mip.dcm",
+  /** VR上切换显示others血管 */
+  VR_OTHER_VESSEL_VISIBILITY: "vr|>show.others.vessel",
+  /** VR上编辑血管名称实时预览 */
+  VR_VESSEL_NAME_MAPPING: "vr|>edit.vessel.preview",
 };
