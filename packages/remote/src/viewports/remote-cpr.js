@@ -209,6 +209,17 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     this.centerline2d = null;
   }
 
+  _getImageObj() {
+    let superObj = super._getImageObj();
+    const { theta, phi } = this;
+    return {
+      ...superObj,
+      angle: theta,
+      theta,
+      phi,
+    };
+  }
+
   static create(option) {
     return new RemoteCPRViewport(option);
   }
