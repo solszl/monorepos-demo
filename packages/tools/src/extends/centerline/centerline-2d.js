@@ -35,7 +35,7 @@ class Centerline2D extends Group {
   }
 
   setData(data) {
-    const { data: path, centerlineVisibility } = data;
+    const { data: path, centerlineVisibility, vesselChanged = true } = data;
     /**
      * 中线数据格式为
      * [
@@ -47,7 +47,10 @@ class Centerline2D extends Group {
       return prev.concat(Object.values(curr).flat());
     }, []);
 
-    this.vernierIndex = 0;
+    // 如果血管发生了变化，那么索引就要重置成0， 否则可能显示不对，例如 新中线一共有100个点， 但是前中线索引为200。
+    if (vesselChanged) {
+      this.vernierIndex = 0;
+    }
     this.autofit();
 
     if (centerlineVisibility !== undefined) {

@@ -102,6 +102,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
         highlightTag,
         tagsVisibility,
         centerlineVisibility,
+        vesselChanged: this.vesselNameChanged,
       });
 
       //设置图像

@@ -109,7 +109,7 @@ class Viewport extends Component {
     });
 
     imageView.on(VIEWER_INTERNAL_EVENTS_EXTENDS.CENTERLINE_DATA_CHANGED, (info) => {
-      const { viewportId, data, segment, centerlineVisibility } = info;
+      const { viewportId, data, segment, centerlineVisibility, vesselChanged } = info;
       // console.log("中线数据发生变更", data, segment);
       if (viewportId !== this.id) {
         return;
@@ -121,6 +121,7 @@ class Viewport extends Component {
         toolId: "centerline2d",
         data,
         centerlineVisibility,
+        vesselChanged,
       });
 
       // 设置分段信息数据

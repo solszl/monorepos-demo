@@ -117,6 +117,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
         segmentKeymap: this.keymap,
         direction,
         centerlineVisibility,
+        vesselChanged: this.vesselNameChanged,
       });
     }
     this.vesselNameChanged = false;

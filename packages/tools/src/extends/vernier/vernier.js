@@ -1,8 +1,9 @@
-import { Group } from "konva/lib/Group";
+// import { Group } from "konva/lib/Group";
 import { Rect } from "konva/lib/shapes/Rect";
 import { Wedge } from "konva/lib/shapes/Wedge";
+import UIComponent from "../../shape/parts/ui-component";
 
-class Vernier extends Group {
+class Vernier extends UIComponent {
   constructor(bizzConfig = {}, config = {}) {
     super(config);
 
