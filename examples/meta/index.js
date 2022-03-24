@@ -16,6 +16,7 @@ const standard = vm.addViewport({
 const ulEl = document.getElementById("properties");
 const dragEl = document.getElementById("root");
 const tiEl = document.getElementById("tiTag");
+const tiRemoteEl = document.getElementById("tiRemoteURL");
 dragEl.addEventListener("dragenter", (e) => {
   e.preventDefault();
 });
@@ -28,25 +29,27 @@ dragEl.addEventListener("drop", (e) => {
   const fileReader = new FileReader();
   fileReader.onload = async (e) => {
     const arrayBuffer = e.target.result;
-    const image = await createImage(arrayBuffer);
-    standard.imageView.showImage(image);
+    // const image = await createImage(arrayBuffer);
+    // standard.imageView.showImage(image);
 
-    const { allTags } = image;
-    console.log(allTags);
+    // const { allTags } = image;
+    // console.log(allTags);
 
-    ulEl.innerHTML = "";
+    // ulEl.innerHTML = "";
 
-    Object.entries(allTags).forEach(([key, tag]) => {
-      const domStr = `<li ">
-        <div style="display:flex;" id=${key}>
-          <div style="width:90px;">${tag.tag}</div>
-          <div style="width:225px;">${tag.attr}</div>
-          <div>${tag.value}</div>
-        </div>
-      </li>`;
-      const el = new DOMParser().parseFromString(domStr, "text/html").querySelector("li");
-      ulEl.appendChild(el);
-    });
+    // Object.entries(allTags).forEach(([key, tag]) => {
+    //   const domStr = `<li ">
+    //     <div style="display:flex;" id=${key}>
+    //       <div style="width:90px;">${tag.tag}</div>
+    //       <div style="width:225px;">${tag.attr}</div>
+    //       <div>${tag.value}</div>
+    //     </div>
+    //   </li>`;
+    //   const el = new DOMParser().parseFromString(domStr, "text/html").querySelector("li");
+    //   ulEl.appendChild(el);
+    // });
+
+    await generateInfo(arrayBuffer);
   };
   fileReader.readAsArrayBuffer(file);
 });
@@ -66,3 +69,39 @@ tiEl.addEventListener("keyup", (e) => {
     li.classList.add("searched");
   }
 });
+
+tiRemoteEl.addEventListener("keyup", async (e) => {
+  if (e.code !== "Enter") {
+    return;
+  }
+
+  const ab = await (await fetch(tiRemoteEl.value)).arrayBuffer();
+  generateInfo(ab);
+});
+
+//默认选中所有，方便下次粘贴
+tiRemoteEl.addEventListener("focus", (e) => {
+  tiRemoteEl.select();
+});
+
+const generateInfo = async (arrayBuffer) => {
+  const image = await createImage(arrayBuffer);
+  standard.imageView.showImage(image);
+
+  const { allTags } = image;
+  console.log(allTags);
+
+  ulEl.innerHTML = "";
+
+  Object.entries(allTags).forEach(([key, tag]) => {
+    const domStr = `<li ">
+        <div style="display:flex;" id=${key}>
+          <div style="width:90px;">${tag.tag}</div>
+          <div style="width:225px;">${tag.attr}</div>
+          <div>${tag.value}</div>
+        </div>
+      </li>`;
+    const el = new DOMParser().parseFromString(domStr, "text/html").querySelector("li");
+    ulEl.appendChild(el);
+  });
+};
