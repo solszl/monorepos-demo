@@ -41,23 +41,29 @@ class RemoteProbeViewport extends AbstractRemoteDicomViewport {
 
   async propertyChanged() {
     await super.propertyChanged();
-    if (this.vesselNameChanged || this.indexChanged) {
-      const { vesselName, index } = this;
-      const data = await this?.getProbeImage(vesselName, index);
+    /*
+     FIXME: 问题原因， setVesselName 和 setIndex 都触发了propertyChanged.
+     而第一次执行过后，将vesselNameChanged 和 indexChanged 都设置成了false
+     从而第二次propertyChanged 事件无法进入。此处暂这样解开。有时间需要处理RenderSchedule的大并发调度问题
+    */
 
-      if (data.length === 0) {
-        this.vesselNameChanged = false;
-        this.indexChanged = false;
-        console.warn(`[probe] wrong, vessel:${vesselName}, index:${index}.`);
-        return;
-      }
-      const uri = data[0];
-      const { httpServer } = this.option;
-      this.setUrl(`${httpServer}${uri}`);
+    // if (this.vesselNameChanged || this.indexChanged) {
+    const { vesselName, index } = this;
+    const data = await this?.getProbeImage(vesselName, index);
 
+    if (data.length === 0) {
       this.vesselNameChanged = false;
       this.indexChanged = false;
+      console.warn(`[probe] wrong, vessel:${vesselName}, index:${index}.`);
+      return;
     }
+    const uri = data[0];
+    const { httpServer } = this.option;
+    this.setUrl(`${httpServer}${uri}`);
+
+    this.vesselNameChanged = false;
+    this.indexChanged = false;
+    // }
   }
 
   static create(option) {

@@ -31,6 +31,7 @@ class RenderSchedule {
     if (this.stage.isRunning) {
       return;
     }
+
     this.stage.startRender();
   }
 
@@ -59,8 +60,8 @@ class RenderSchedule {
     // console.log("call exec.");
     for await (const [key, values] of this.deferredQueue?.entries()) {
       const { fn, ctx, args } = values;
-      await fn?.apply(ctx, args);
       this.deferredQueue.delete(key);
+      await fn?.apply(ctx, args);
     }
     this.stage.stopRender();
 
