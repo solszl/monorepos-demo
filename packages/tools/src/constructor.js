@@ -1,5 +1,6 @@
 import { TOOL_TYPE, TOOL_TYPE_EXTENDS } from "./constants";
 import Centerline2D from "./extends/centerline/centerline-2d";
+import MarkLine from "./extends/markline/markline";
 // import Centerline3D from "./extends/centerline/centerline-3d";
 import Segment from "./extends/segments/segment";
 import TagGroup from "./extends/tag/tag-group";
@@ -37,4 +38,5 @@ export const TOOL_CONSTRUCTOR = {
   [TOOL_TYPE_EXTENDS.CENTERLINE2D]: Centerline2D,
   // [TOOL_TYPE_EXTENDS.CENTERLINE3D]: Centerline3D,
   [TOOL_TYPE_EXTENDS.TAG_GROUP]: TagGroup,
+  [TOOL_TYPE_EXTENDS.MARKLINE]: MarkLine,
 };

@@ -60,6 +60,7 @@ export const TOOL_TYPE_EXTENDS = {
   // CENTERLINE3D: "centerline3d",
   TAG_GROUP: "tag_group",
   VERNIER: "vernier",
+  MARKLINE: "markline",
 };
 
 export const MOUSE_BUTTON = {
