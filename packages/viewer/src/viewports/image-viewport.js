@@ -68,7 +68,7 @@ class ImageViewport extends AbstractViewport {
       this._positionChanged = true;
     }
     this._displayChanged = true;
-    this.renderSchedule.invalidate(this.render, this, image);
+    this.renderSchedule.invalidate(this.render, this);
     const data = {
       seriesId: image.seriesId,
       sliceId: image.instanceNumber,
@@ -78,15 +78,16 @@ class ImageViewport extends AbstractViewport {
     this.tryDispatchInjectEvents("slice", data, dispatch);
   }
 
-  async render(image) {
+  async render() {
     await super.render();
 
+    const { image } = this;
     if (!this.renderer) {
-      return;
+      return false;
     }
 
     if (!image) {
-      return;
+      return false;
     }
 
     let needDraw = false;
@@ -139,8 +140,11 @@ class ImageViewport extends AbstractViewport {
       if (this.displayState.currentTransform) {
         ctx.setTransform(...this.displayState.currentTransform);
       }
+
       // 使用renderData 进行绘制
       ctx.drawImage(renderData, 0, 0, width, height, 0, 0, width, height);
+      const { tracer } = this;
+      tracer.measure(tracer.key(this.id, this.option.plane, "render"), "创建到显示");
       this.emit(VIEWER_INTERNAL_EVENTS.IMAGE_RENDERED, this._getImageObj());
     }
 
@@ -151,13 +155,15 @@ class ImageViewport extends AbstractViewport {
       );
     }
     needDraw = false;
+
+    return true;
   }
 
   resize(width, height) {
     super.resize(width, height);
     this._sizeChanged = true;
     this._calcSuitableSizeRatio();
-    this.renderSchedule.invalidate(this.render, this, this.image);
+    this.renderSchedule.invalidate(this.render, this);
     this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, { width, height });
   }
 
@@ -228,7 +234,7 @@ class ImageViewport extends AbstractViewport {
     }
 
     this[effectProperty] = true;
-    this.renderSchedule.invalidate(this.render, this, this.image);
+    this.renderSchedule.invalidate(this.render, this);
     return true;
   }
 

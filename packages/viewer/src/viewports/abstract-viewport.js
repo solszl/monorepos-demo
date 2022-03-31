@@ -4,9 +4,13 @@ class AbstractViewport extends Component {
   constructor(option = {}) {
     super(option);
     this.option = option;
+    this.tracer = option.tracer;
     this.el = option.el;
 
     this.renderer = null;
+
+    const { tracer } = this;
+    tracer.mark(tracer.key(this.id, option.plane, "render"));
   }
 
   init() {}

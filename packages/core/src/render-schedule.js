@@ -12,6 +12,8 @@ class RenderSchedule {
     /** @type { Stage } */
     this.stage = stage;
     this.stage.on(INTERNAL_EVENT.ENTER_FRAME, this.onValidate.bind(this));
+
+    this.queue2 = new Map();
   }
 
   /**
@@ -24,14 +26,14 @@ class RenderSchedule {
    */
   invalidate(fn, ctx, ...args) {
     const key = `${ctx.id ?? ""}-${fn.name}`;
-    // console.log("插入新调度函数了", key, Date.now());
-    // 因为函数bind 会返回新的函数， 将旧函数作为闭包包进新函数内。导致map set的时候无法覆盖同一个key
-    this.deferredQueue.set(key, { fn, ctx, args });
 
     if (this.stage.isRunning) {
+      this.queue2.set(key, { fn, ctx, args });
       return;
     }
 
+    // 因为函数bind 会返回新的函数， 将旧函数作为闭包包进新函数内。导致map set的时候无法覆盖同一个key
+    this.deferredQueue.set(key, { fn, ctx, args });
     this.stage.startRender();
   }
 
@@ -57,18 +59,43 @@ class RenderSchedule {
       return;
     }
 
-    // console.log("call exec.");
-    for await (const [key, values] of this.deferredQueue?.entries()) {
-      const { fn, ctx, args } = values;
-      this.deferredQueue.delete(key);
-      await fn?.apply(ctx, args);
-    }
+    // for await (const [key, values] of this.deferredQueue?.entries()) {
+    //   const { fn, ctx, args } = values;
+    //   this.deferredQueue.delete(key);
+    //   if (ctx.option.plane === "remote_cpr") {
+    //     console.log("cpr call", fn.name, Date.now());
+    //   }
+
+    //   console.log("cpr all call", ctx.option.plane, fn.name, Date.now());
+    //   await fn?.apply(ctx, args);
+    // }
+
+    const allNeedCallFns = this.deferredQueue?.values().reduce((prev, curr) => {
+      const { fn, ctx, args } = curr;
+      prev.push(fn?.apply(ctx, args));
+      return prev;
+    }, []);
+
+    // const names = this.deferredQueue?.values().reduce((prev, curr) => {
+    //   const { fn, ctx, args } = curr;
+    //   prev.push(fn?.name);
+    //   return prev;
+    // }, []);
+    const result = await Promise.all(allNeedCallFns);
+
+    this.deferredQueue.clear();
+    // console.log("cpr", names, result);
     this.stage.stopRender();
 
     // 渲染过程中，又来了新的
-    const { size: remainSize } = this.deferredQueue;
+    const { size: remainSize } = this.queue2;
     if (remainSize > 0) {
-      this.stage.startRender();
+      for (const [key, values] of this.queue2.entries()) {
+        this.deferredQueue.set(key, values);
+      }
+
+      this.queue2.clear();
+      this.validateNow();
     }
   }
 }

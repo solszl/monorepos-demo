@@ -87,7 +87,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
         console.warn(`[cpr] wrong, vessel:${vesselName}, theta:${theta}, phi:${phi}.`);
         this.vesselNameChanged = false;
         this.angleChanged = false;
-        return;
+        return false;
       }
       // 2d中线逻辑
       const centerline2d = new Centerline2DBizz();
@@ -105,8 +105,11 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
         vesselChanged: this.vesselNameChanged,
       });
 
+      const { tracer, id } = this;
       //设置图像
-      const { httpServer } = this.option;
+      const { httpServer, plane } = this.option;
+
+      tracer.mark(tracer.key(id, plane, "cprRender"));
       await this.setUrl(`${httpServer}${uri}`);
 
       // 设置中线
@@ -151,6 +154,8 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
 
       this.highlightTagChanged = false;
     }
+
+    return true;
   }
 
   setCenterlineVisibility(val) {
@@ -197,6 +202,18 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       viewportId: this.id,
       state: val,
     });
+  }
+
+  async render() {
+    const {
+      tracer,
+      id,
+      option: { plane },
+    } = this;
+
+    await super.render();
+    tracer.measure(tracer.key(id, plane, "cprRender"), "加载CPR图像到显示");
+    return true;
   }
 
   /**

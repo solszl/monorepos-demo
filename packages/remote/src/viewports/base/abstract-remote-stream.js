@@ -21,6 +21,17 @@ class AbstractRemoteStreamViewport extends AbstractViewport {
     const protocols = ["MouseHandler", "ViewPort", "ViewPortImageDelivery"];
     const client = ParaViewWebClient.createClient(conn, protocols);
     const renderer = new RemoteRenderer(client);
+    // 根据渲染完成输出一些必要参数
+    renderer.once("image-loaded", (e) => {
+      // prettier-ignore
+      const { tracer:{ enable }, id, option:{ plane } } = this;
+      if (enable) {
+        const key = `${id} - ${plane} - render`;
+        const extendMsg = "体渲染";
+        const now = performance.now();
+        console.log(`[${key}]: ${extendMsg} now: ${now}`);
+      }
+    });
     renderer.setContainer(option.el);
     this.remoteRenderer = renderer;
 

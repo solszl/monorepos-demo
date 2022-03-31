@@ -55,15 +55,34 @@ class RemoteProbeViewport extends AbstractRemoteDicomViewport {
       this.vesselNameChanged = false;
       this.indexChanged = false;
       console.warn(`[probe] wrong, vessel:${vesselName}, index:${index}.`);
-      return;
+      return false;
     }
     const uri = data[0];
-    const { httpServer } = this.option;
+
+    const {
+      tracer,
+      id,
+      option: { httpServer, plane },
+    } = this;
+    tracer.mark(tracer.key(id, plane, "probeRender"));
     this.setUrl(`${httpServer}${uri}`);
 
     this.vesselNameChanged = false;
     this.indexChanged = false;
     // }
+
+    return true;
+  }
+
+  async render() {
+    await super.render();
+    const {
+      tracer,
+      id,
+      option: { plane },
+    } = this;
+    tracer.measure(tracer.key(id, plane, "probeRender"), "加载probe图像到显示");
+    return true;
   }
 
   static create(option) {

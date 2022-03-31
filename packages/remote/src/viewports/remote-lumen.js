@@ -95,10 +95,15 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
         );
         this.vesselNameChanged = false;
         this.directionChanged = false;
-        return;
+        return false;
       }
 
-      const { httpServer } = this.option;
+      const {
+        tracer,
+        id,
+        option: { httpServer, plane },
+      } = this;
+      tracer.mark(tracer.key(id, plane, "lumenRender"));
       await this.setUrl(`${httpServer}${uri}`);
       this.angleChanged = false;
 
@@ -134,6 +139,7 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       });
       this.currentVernierIndexChanged = false;
     }
+    return true;
   }
 
   setCenterlineVisibility(val) {
@@ -178,6 +184,17 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     this.currentVernierChangeWithEvent = true;
 
     this.centerline2d = null;
+  }
+
+  async render() {
+    await super.render();
+    const {
+      tracer,
+      id,
+      option: { plane },
+    } = this;
+    tracer.measure(tracer.key(id, plane, "lumenRender"), "加载Lumen图像到显示");
+    return true;
   }
 
   _getImageObj() {

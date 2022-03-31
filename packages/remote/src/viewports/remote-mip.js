@@ -73,17 +73,30 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
 
       if (this.lastProps.join("") === [withBone, azimuth, index, count].join("")) {
         this._propertyChanged = false;
-        return;
+        return false;
       }
 
       await this.getMipImage(index, azimuth, count, withBone);
       this.lastProps = [withBone, azimuth, index, count];
       this._propertyChanged = false;
     }
+
+    return true;
   }
 
   getImage(index) {
     this.setIndex(index);
+  }
+
+  async render() {
+    await super.render();
+    const {
+      tracer,
+      id,
+      option: { plane },
+    } = this;
+    tracer.measure(tracer.key(id, plane, "mipRender"), "加载Mip图像到显示");
+    return true;
   }
 
   static create(option) {

@@ -9,11 +9,17 @@ export const METHODS = {
   getCount: async function (azimuth, count) {
     const [route, method] = this._splitMessageType(MsgTypes.MIP_GET_COUNT);
     const session = this.connection.getSession();
+
+    // prettier-ignore
+    const { tracer, id, option:{ plane } } = this;
+    const key = tracer.key(id, plane, "getMIPImgCount");
+    tracer.mark(key);
+
     const { total_count } = await session.call(method, [], {
       slice_index: count,
       azimuth_type: azimuth,
     });
-
+    tracer.measure(key, "请求MIP图像数量");
     return total_count;
   },
 
@@ -30,14 +36,21 @@ export const METHODS = {
     this.currentShowIndex = index;
     const [route, method] = this._splitMessageType(MsgTypes.MIP_GET_DICOM);
     const session = this.connection.getSession();
+
+    // prettier-ignore
+    const { tracer, id, option:{ plane } } = this;
+    tracer.mark(tracer.key(id, plane, "getMIPImg"));
+
     const { dcm_path } = await session.call(method, [], {
       with_bone: bone ?? this.withBone ?? true,
       slice_index: index,
       slab_thickness: count ?? this.count ?? 1,
       azimuth_type: azimuth ?? this.azimuth ?? "axial",
     });
+    tracer.measure(tracer.key(id, plane, "getMIPImg"), "请求MIP图像数据");
 
     const { httpServer } = this.option;
+    tracer.mark(tracer.key(id, plane, "mipRender"));
     await this.setUrl(`${httpServer}${dcm_path}`);
   },
 };

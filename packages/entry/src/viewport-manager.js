@@ -1,5 +1,6 @@
 import { Core } from "@pkg/core/src";
 import LinkageManager from "./linkage-manager";
+import TimeTracer from "./utils/time-tracer";
 import Viewport from "./view-bridge";
 class ViewportManager {
   constructor() {
@@ -7,6 +8,7 @@ class ViewportManager {
     this.viewports = new Map();
     // TODO: 理论上会有动态调整参数的概念，但是还未实现
     this.core = new Core({ fps: 30 });
+    this.tracer = new TimeTracer();
     this.linkManager = new LinkageManager(this.viewports);
     window.__TX_VIEWPORT_MANAGER__ = this;
   }
@@ -20,7 +22,7 @@ class ViewportManager {
    */
   addViewport(option) {
     // 将核心选调度器传入
-    Object.assign(option, { core: this.core, resource: this.resource });
+    Object.assign(option, { core: this.core, resource: this.resource, tracer: this.tracer });
     let viewport = new Viewport(option);
     this.viewports.set(viewport.id, viewport);
     return viewport;
@@ -60,6 +62,10 @@ class ViewportManager {
    */
   getViewport(id) {
     return this.viewports.get(id);
+  }
+
+  verboseLogging(val) {
+    this.tracer.enable = val;
   }
 }
 
