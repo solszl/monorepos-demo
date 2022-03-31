@@ -31,6 +31,12 @@ class AbstractRemoteStreamViewport extends AbstractViewport {
         const now = performance.now();
         console.log(`[${key}]: ${extendMsg} now: ${now}`);
       }
+
+      // TODO: 服务端渲染解决后，将代码移除
+      // 可能存在黑屏的情况。当第一次接收后，无论是黑屏还是正常，均多刷新一次
+      setTimeout(() => {
+        renderer.render(true);
+      }, 1000);
     });
     renderer.setContainer(option.el);
     this.remoteRenderer = renderer;
