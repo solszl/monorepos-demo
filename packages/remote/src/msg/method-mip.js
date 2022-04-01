@@ -53,4 +53,13 @@ export const METHODS = {
     tracer.mark(tracer.key(id, plane, "mipRender"));
     await this.setUrl(`${httpServer}${dcm_path}`);
   },
+  setVesselNameVisibility: async function (val) {
+    const [route, method] = this._splitMessageType(MsgTypes.MIP_VESSEL_TEXT);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      add_text: val,
+    });
+    this.validateNow();
+    return data;
+  },
 };

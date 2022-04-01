@@ -45,4 +45,14 @@ export const METHODS = {
 
     return data;
   },
+  /** 区别于冠脉旧版 */
+  setVesselNameVisibility: async function (val) {
+    const [route, method] = this._splitMessageType(MsgTypes.VR_VESSEL_TEXT);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      add_text: val,
+    });
+    this.validateNow();
+    return data;
+  },
 };
