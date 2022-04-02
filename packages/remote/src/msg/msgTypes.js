@@ -9,6 +9,8 @@ export const MsgTypes = {
   LUMEN_DCM: "cpr|>lumen.dcm",
   /** 获取拉伸图像影像资源 */
   CPR_DCM: "cpr|>cpr.dcm",
+  /** 血管名称高亮 */
+  VR_VESSEL_HIGHLIGHT: "vr|>vessel.highlight",
   /** 体渲染控制血管名称显隐 */
   VR_VESSEL_TEXT: "vr|>vessel.text",
   /** VMIP控制血管名称显隐 */
