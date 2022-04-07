@@ -26,7 +26,6 @@ class RenderSchedule {
    */
   invalidate(fn, ctx, ...args) {
     const key = `${ctx.id ?? ""}-${fn.name}`;
-
     if (this.stage.isRunning) {
       this.queue2.set(key, { fn, ctx, args });
       return;
@@ -69,7 +68,6 @@ class RenderSchedule {
     //   console.log("cpr all call", ctx.option.plane, fn.name, Date.now());
     //   await fn?.apply(ctx, args);
     // }
-
     const allNeedCallFns = this.deferredQueue?.values().reduce((prev, curr) => {
       const { fn, ctx, args } = curr;
       prev.push(fn?.apply(ctx, args));
@@ -84,7 +82,6 @@ class RenderSchedule {
     const result = await Promise.all(allNeedCallFns);
 
     this.deferredQueue.clear();
-    // console.log("cpr", names, result);
     this.stage.stopRender();
 
     // 渲染过程中，又来了新的
@@ -95,7 +92,7 @@ class RenderSchedule {
       }
 
       this.queue2.clear();
-      this.validateNow();
+      this.stage.startRender();
     }
   }
 }

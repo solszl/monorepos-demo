@@ -128,6 +128,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
         centerline2d,
         id: viewportId,
       } = this;
+
       this.emit(VIEWER_INTERNAL_EVENTS_EXTENDS.VERNIER_INDEX_CHANGED, {
         viewportId,
         index: currentVernierIndex,
