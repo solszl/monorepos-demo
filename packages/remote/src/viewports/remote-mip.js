@@ -68,18 +68,11 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
   async propertyChanged() {
     await super.propertyChanged();
 
-    if (this._propertyChanged) {
-      const { withBone, azimuth, index, count } = this;
-
-      if (this.lastProps.join("") === [withBone, azimuth, index, count].join("")) {
-        this._propertyChanged = false;
-        return false;
-      }
-
-      await this.getMipImage(index, azimuth, count, withBone);
-      this.lastProps = [withBone, azimuth, index, count];
-      this._propertyChanged = false;
-    }
+    // if (this._propertyChanged) {
+    await this.getMipImage(this.index, this.azimuth, this.count, this.withBone);
+    this.lastProps = [this.withBone, this.azimuth, this.index, this.count];
+    this._propertyChanged = false;
+    // }
 
     return true;
   }

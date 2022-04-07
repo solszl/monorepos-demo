@@ -14,6 +14,8 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     this.theta = theta;
     this.phi = phi;
     this.angleStep = angleStep;
+
+    this._needCalcSize = false;
   }
 
   async initialAsyncWorkflow() {
@@ -38,6 +40,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
 
     this.vesselName = name;
     this.vesselNameChanged = true;
+    this._needCalcSize = true;
 
     this.resetDisplayInfo();
     this.renderSchedule.invalidate(this.propertyChanged, this);
@@ -202,6 +205,11 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
       viewportId: this.id,
       state: val,
     });
+  }
+
+  showImage(image, dispatch = true) {
+    super.showImage(image, dispatch);
+    this._needCalcSize = false;
   }
 
   async render() {

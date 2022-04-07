@@ -63,7 +63,10 @@ class ImageViewport extends AbstractViewport {
     if (rw !== columns || rh !== rows) {
       this.renderer.renderData.width = columns;
       this.renderer.renderData.height = rows;
-      this._calcSuitableSizeRatio();
+
+      if (this._needCalcSize) {
+        this._calcSuitableSizeRatio();
+      }
       // 只要尺寸不一样。 位置一定会发生变化
       this._positionChanged = true;
     }
@@ -217,11 +220,14 @@ class ImageViewport extends AbstractViewport {
       rotate: 0,
       offset: { x: 0, y: 0 },
     };
+
+    /** 是否需要对图像尺寸进行重新计算, cpr影像导致的这个修改，CPR换角度的时候，产品经理要求不影响图像已有缩放尺寸变更，但是换血管要对影像大小进行重新计算 */
+    this._needCalcSize = true;
   }
 
   validateNow() {
     super.validateNow();
-    this.render(this.image);
+    this.render();
   }
 
   _propertySetter(val, effectProperty, merge = true) {
