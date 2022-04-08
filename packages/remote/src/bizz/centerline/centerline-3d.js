@@ -2,6 +2,7 @@ import { vec3 } from "gl-matrix";
 class Centerline3DBizz {
   constructor() {
     this.flatPoints = [];
+    this.pointCache = new Map();
   }
 
   /**
@@ -26,7 +27,7 @@ class Centerline3DBizz {
     this.origin = origin;
     this.spacing = spacing;
     this.points = points;
-
+    this.pointCache.clear();
     // this.origin = [-120.638, -122.074, 218.627];
     let flatPoints = [];
     Object.entries(points).forEach(([, pts]) => {
@@ -260,6 +261,10 @@ class Centerline3DBizz {
   }
 
   _getXYZByPoint(point) {
+    if (this.pointCache.has(point)) {
+      return this.pointCache.get(point);
+    }
+
     const { origin, spacing } = this;
     // xyz = [x,y,z] = (point - origin) / spacing
     const xyz = vec3.round(
@@ -270,6 +275,7 @@ class Centerline3DBizz {
         spacing
       )
     );
+    this.pointCache.set(point, xyz);
     return xyz;
   }
 }
