@@ -44,8 +44,8 @@ class ViewportManager {
       const { option } = this.viewports.get(id);
       const { transferMode, seriesId } = option;
       const transfer = this?.resource?.getTransfer(transferMode);
-      transfer?.purgeCache(seriesId);
-      transfer?.purgeTasks(seriesId);
+      transfer?.purgeCache?.(seriesId);
+      transfer?.purgeTasks?.(seriesId);
     }
 
     this.linkManager.removeViewport(id);
