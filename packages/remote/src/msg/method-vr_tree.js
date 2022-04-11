@@ -18,4 +18,15 @@ export const METHODS = {
     this.validateNow();
     return data;
   },
+  /** VR_TREE上血管名称高亮 */
+  setVesselHighlight: async function (vessel, mapping = {}) {
+    const [route, method] = this._splitMessageType(MsgTypes.VR_TREE_VESSEL_HIGHLIGHT);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      vessel_name: vessel,
+      vessel_mapping: mapping,
+    });
+    this.validateNow();
+    return data;
+  },
 };
