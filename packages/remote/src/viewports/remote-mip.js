@@ -124,7 +124,7 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
       } = this;
       // console.log("参数变更、清空缓存");
       const transfer = resource.getTransfer("web");
-      transfer.cacheManager.purge(seriesId, plane);
+      transfer?.cacheManager.purge(seriesId, plane);
     }
     this._azimuthChanged = false;
     this._countChanged = false;
