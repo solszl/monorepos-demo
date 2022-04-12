@@ -80,6 +80,7 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
     const transfer = resource.getTransfer("web");
     const img = transfer?.cacheManager.getItem(seriesId, this.index, plane);
     if (img) {
+      this.currentShowIndex = this.index;
       this.showImage(img);
       return true;
     }
