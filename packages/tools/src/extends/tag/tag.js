@@ -63,6 +63,19 @@ class Tag extends Group {
     aim.visible(val);
   }
 
+  setPosition(pos) {
+    super.setPosition(pos);
+    const aim = this.findOne("#aim");
+    const { y } = pos;
+    if (y < aim.height() + aim.y()) {
+      aim.setOffsetY(10);
+    }
+  }
+
+  getPosition() {
+    return super.getPosition();
+  }
+
   renderData() {}
 
   updateProps(props) {}

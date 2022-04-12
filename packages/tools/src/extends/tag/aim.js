@@ -61,10 +61,22 @@ class Aim extends Group {
 
     const line = this.findOne("#line");
     line.stroke(COLORS[level]);
+
+    this.height(bg.height());
   }
 
   get data() {
     return this._data;
+  }
+
+  setOffsetY(val) {
+    const line = this.findOne("#line");
+    line.points([-50, val, -16, 0]);
+
+    const text = this.findOne("#text");
+    text.y(-text.height() / 2 + val);
+    const bg = this.findOne("#bg");
+    bg.y(-text.height() / 2 + val);
   }
 }
 

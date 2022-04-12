@@ -25,7 +25,7 @@ class TagGroup extends Group {
         const { location } = t;
         const position = path[location];
         const p = this.$transform.transformPoint(position[0], position[1]);
-        tag.position({
+        tag.setPosition({
           x: p[0],
           y: p[1],
         });
