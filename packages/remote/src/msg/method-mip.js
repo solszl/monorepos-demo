@@ -28,6 +28,8 @@ export const METHODS = {
    * @param { string } azimuth 轴 axial, sagittal, coronal
    * @param { number } count 层数（多少层合一层）
    * @param { boolean } bone 是否带骨
+   *
+   * @returns 返回dicomImage
    */
   getMipImage: async function (index, azimuth, count, bone) {
     this.azimuth = azimuth;
@@ -51,7 +53,8 @@ export const METHODS = {
 
     const { httpServer } = this.option;
     tracer.mark(tracer.key(id, plane, "mipRender"));
-    await this.setUrl(`${httpServer}${dcm_path}`);
+    const img = await this.setUrl(`${httpServer}${dcm_path}`);
+    return img;
   },
   setVesselNameVisibility: async function (val) {
     const [route, method] = this._splitMessageType(MsgTypes.MIP_VESSEL_TEXT);

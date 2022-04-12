@@ -28,7 +28,9 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
 
     this.azimuth = val;
     this._propertyChanged = true;
+    this._azimuthChanged = true;
     this.renderSchedule.invalidate(this.propertyChanged, this);
+    this.tryToPurgeCache();
   }
 
   setWithBone(val) {
@@ -38,7 +40,9 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
 
     this.withBone = val;
     this._propertyChanged = true;
+    this._withBoneChanged = true;
     this.renderSchedule.invalidate(this.propertyChanged, this);
+    this.tryToPurgeCache();
   }
 
   setCount(val) {
@@ -48,7 +52,9 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
 
     this.count = val;
     this._propertyChanged = true;
+    this._countChanged = true;
     this.renderSchedule.invalidate(this.propertyChanged, this);
+    this.tryToPurgeCache();
   }
 
   setIndex(val) {
@@ -68,8 +74,24 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
   async propertyChanged() {
     await super.propertyChanged();
 
+    const {
+      option: { seriesId, plane, resource },
+    } = this;
+    const transfer = resource.getTransfer("web");
+    const img = transfer?.cacheManager.getItem(seriesId, this.index, plane);
+    if (img) {
+      this.showImage(img);
+      return true;
+    }
+
     // if (this._propertyChanged) {
-    await this.getMipImage(this.index, this.azimuth, this.count, this.withBone);
+    const respImg = await this.getMipImage(this.index, this.azimuth, this.count, this.withBone);
+    if (respImg) {
+      const { instanceNumber, seriesId: imgSeriesId } = respImg;
+      const id = seriesId ?? imgSeriesId;
+      transfer?.cacheManager.cacheItem(id, { key: instanceNumber - 1, value: respImg }, plane);
+    }
+
     this.lastProps = [this.withBone, this.azimuth, this.index, this.count];
     this._propertyChanged = false;
     // }
@@ -90,6 +112,23 @@ class RemoteMIPViewport extends AbstractRemoteDicomViewport {
     } = this;
     tracer.measure(tracer.key(id, plane, "mipRender"), "加载Mip图像到显示");
     return true;
+  }
+
+  tryToPurgeCache() {
+    // 当切换带骨、方位、几合一的时候。需要把缓存清空
+    const { _azimuthChanged: a, _countChanged: b, _withBoneChanged: c } = this;
+    if (a || b || c) {
+      const {
+        option: { seriesId, plane, resource },
+        index,
+      } = this;
+      // console.log("参数变更、清空缓存");
+      const transfer = resource.getTransfer("web");
+      transfer.cacheManager.purge(seriesId, plane);
+    }
+    this._azimuthChanged = false;
+    this._countChanged = false;
+    this._withBoneChanged = false;
   }
 
   static create(option) {
