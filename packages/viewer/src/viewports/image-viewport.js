@@ -165,6 +165,7 @@ class ImageViewport extends AbstractViewport {
   resize(width, height) {
     super.resize(width, height);
     this._sizeChanged = true;
+    this.displayState.offset = { x: 0, y: 0 };
     this._calcSuitableSizeRatio();
     this.renderSchedule.invalidate(this.render, this);
     this.emit(VIEWER_INTERNAL_EVENTS.ROOT_SIZE_CHANGED, { width, height });
