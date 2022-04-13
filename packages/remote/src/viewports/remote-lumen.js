@@ -19,6 +19,8 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     this.angleChanged = true;
     // 方向变更
     this.directionChanged = true;
+
+    this._needCalcSize = false;
   }
 
   async initialAsyncWorkflow() {
@@ -57,9 +59,12 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
       return;
     }
 
-    this.resetDisplayInfo();
     this.vesselNameChanged = true;
     this.vesselName = name;
+
+    this._needCalcSize = true;
+    this.displayState.offset = { x: 0, y: 0 };
+    this.resetDisplayInfo();
     this.renderSchedule.invalidate(this.propertyChanged, this);
   }
 
@@ -184,6 +189,11 @@ class RemoteLumenViewport extends AbstractRemoteDicomViewport {
     this.currentVernierChangeWithEvent = true;
 
     this.centerline2d = null;
+  }
+
+  showImage(image, dispatch = true) {
+    super.showImage(image, dispatch);
+    this._needCalcSize = false;
   }
 
   async render() {

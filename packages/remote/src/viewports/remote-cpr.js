@@ -41,6 +41,7 @@ class RemoteCPRViewport extends AbstractRemoteDicomViewport {
     this.vesselName = name;
     this.vesselNameChanged = true;
     this._needCalcSize = true;
+    this.displayState.offset = { x: 0, y: 0 };
 
     this.resetDisplayInfo();
     this.renderSchedule.invalidate(this.propertyChanged, this);
