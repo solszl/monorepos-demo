@@ -36,6 +36,10 @@ export const METHODS = {
     this.withBone = bone;
     this.count = count;
     this.currentShowIndex = index;
+
+    if (index === undefined) {
+      return;
+    }
     const [route, method] = this._splitMessageType(MsgTypes.MIP_GET_DICOM);
     const session = this.connection.getSession();
 
