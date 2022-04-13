@@ -61,8 +61,20 @@ class AbstractRemoteStreamViewport extends AbstractViewport {
     this.remoteRenderer.resize();
   }
 
+  validateNow() {
+    if (!this.renderer) {
+      return;
+    }
+
+    super.validateNow();
+  }
   destroy() {
     super.destroy();
+    // paraview client 可能存在一种情况，canvas 没有父容器，但是他的destroy 仍然会移除这个元素,而无法找到父容器的时候就会报错。
+    const { canvas } = this.remoteRenderer;
+    if (canvas && !canvas.parentNode) {
+      this.remoteRenderer.container.appendChild(canvas);
+    }
     this.remoteRenderer.destroy();
     this.remoteRenderer = null;
   }
