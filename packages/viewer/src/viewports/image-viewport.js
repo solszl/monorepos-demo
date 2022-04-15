@@ -60,13 +60,11 @@ class ImageViewport extends AbstractViewport {
     this.image = image;
     const { width: rw, height: rh } = this.renderer.renderData;
     const { columns, rows } = image;
-    if (rw !== columns || rh !== rows) {
+    if (rw !== columns || rh !== rows || this._needCalcSize) {
       this.renderer.renderData.width = columns;
       this.renderer.renderData.height = rows;
 
-      if (this._needCalcSize) {
-        this._calcSuitableSizeRatio();
-      }
+      this._calcSuitableSizeRatio();
       // 只要尺寸不一样。 位置一定会发生变化
       this._positionChanged = true;
     }
