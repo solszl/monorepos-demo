@@ -66,6 +66,11 @@ class AbstractRemoteStreamViewport extends AbstractViewport {
       return;
     }
 
+    if (!this.remoteRenderer) {
+      return;
+    }
+
+    this.remoteRenderer.render(true);
     super.validateNow();
   }
   destroy() {
