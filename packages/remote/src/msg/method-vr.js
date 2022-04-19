@@ -34,6 +34,7 @@ export const METHODS = {
       show_others: val,
     });
 
+    this.validateNow();
     return data;
   },
   setVesselNameMapping: async function (mapping) {
@@ -43,6 +44,7 @@ export const METHODS = {
       vessel_mapping: mapping,
     });
 
+    this.validateNow();
     return data;
   },
   /** 区别于冠脉旧版 */

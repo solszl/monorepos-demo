@@ -24,6 +24,8 @@ export const MsgTypes = {
   VR_TREE_VESSEL_HIGHLIGHT: "vr_tree|>vessel.highlight",
   /** VR_TREE控制血管名称显隐 */
   VRTREE_VESSEL_TEXT: "vr_tree|>vessel.text",
+  /** VR_TREE上切换显示others血管 */
+  VR_TREE_OTHER_VESSEL_VISIBILITY: "vr_tree|>show.others.vessel",
   // =========================== RENDER ========================
   /** 头颈CTA中，切换各种视图的函数 */
   RENDER_TYPE_TOGGLE: "render|>render.type.toggle",

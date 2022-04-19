@@ -29,4 +29,13 @@ export const METHODS = {
     this.validateNow();
     return data;
   },
+  setOtherVesselVisibility: async function (val) {
+    const [route, method] = this._splitMessageType(MsgTypes.VR_TREE_OTHER_VESSEL_VISIBILITY);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      show_others: val,
+    });
+    this.validateNow();
+    return data;
+  },
 };
