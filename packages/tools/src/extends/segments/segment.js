@@ -133,6 +133,7 @@ class SubSegment extends Group {
       shadowOpacity: 1,
       ellipsis: true,
       wrap: "none",
+      height: 12,
     });
 
     this.add(line1);
