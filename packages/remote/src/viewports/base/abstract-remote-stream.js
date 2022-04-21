@@ -52,10 +52,6 @@ class AbstractRemoteStreamViewport extends AbstractViewport {
     return messageType.split("|>");
   }
 
-  validateNow() {
-    this.remoteRenderer.render();
-  }
-
   resize(width, height) {
     super.resize(width, height);
     this.remoteRenderer.resize();

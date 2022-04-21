@@ -51,6 +51,8 @@ class ImageViewport extends AbstractViewport {
     let { width, height } = this.getRootSize();
     canvas.width = width;
     canvas.height = height;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
     this.canvas = canvas;
     this.canvas.id = this.id;
     this.viewerContainer.insertBefore(this.canvas, this.viewerContainer.firstChild);
@@ -63,6 +65,8 @@ class ImageViewport extends AbstractViewport {
     if (rw !== columns || rh !== rows || this._needCalcSize) {
       this.renderer.renderData.width = columns;
       this.renderer.renderData.height = rows;
+      this.renderer.renderData.style.width = `${columns}px`;
+      this.renderer.renderData.style.height = `${rows}px`;
 
       this._calcSuitableSizeRatio();
       // 只要尺寸不一样。 位置一定会发生变化
@@ -104,6 +108,8 @@ class ImageViewport extends AbstractViewport {
     if (this.canvas.width !== width || this.canvas.height !== height) {
       this.canvas.width = width;
       this.canvas.height = height;
+      this.canvas.style.width = `${width}px`;
+      this.canvas.style.height = `${height}px`;
     }
 
     if (

@@ -65,7 +65,7 @@ class CacheManager {
       return;
     }
 
-    delete this.cache[seriesId][plane];
+    delete this.cache?.[seriesId]?.[plane];
   }
 }
 

@@ -33,8 +33,10 @@ class AbstractViewport extends Component {
 
   destroy() {
     super.destroy();
-    this?.renderer?.destroy();
-    this.renderer = null;
+    if (this.renderer?.destroy) {
+      this.renderer.destroy();
+      this.renderer = null;
+    }
 
     this.el.innerText = "";
   }

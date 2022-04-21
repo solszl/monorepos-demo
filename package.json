@@ -1,6 +1,6 @@
 {
   "name": "saga",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -82,6 +82,8 @@
     "promise-worker": "^2.0.1",
     "resize-observer-polyfill": "^1.5.1",
     "simplify-js": "^1.2.4",
+    "three": "^0.139.2",
+    "vtk.js": "^24.5.2",
     "wslink": "^1.4.1"
   }
 }

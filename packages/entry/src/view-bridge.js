@@ -66,7 +66,9 @@ class Viewport extends Component {
     let lastRenderDataElapsed = Date.now();
     imageView.on(VIEWER_INTERNAL_EVENTS.SLICE_CHANGED, (info) => {
       // 更新视图， 根据传来的seriesId, currentIndex。
-      this.option.seriesId = info.seriesId;
+      if (!this.option.seriesId) {
+        this.option.seriesId = info.seriesId;
+      }
       const sliceKey = `${info.seriesId}-${info.currentIndex}`;
       this.sliceKey = sliceKey;
       this.currentIndex = info.currentIndex;

@@ -19,7 +19,7 @@ import MouseTrap from "./trap/mouse-trap";
 class View extends Component {
   constructor(option = {}) {
     super(option);
-
+    this.option = option;
     this.initContainer(option.el);
     this.transform = new Transform();
     this.toolState = new ToolState();
@@ -53,7 +53,12 @@ class View extends Component {
   initContainer(el) {
     const container = document.createElement("div");
     container.classList.add("tools-container");
-    container.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2;`;
+
+    const {
+      option: { plane },
+    } = this;
+    const mouseClass = /^vr_/.test(plane) ? "pointer-events: none;" : "";
+    container.style.cssText = `position: absolute;top: 0;left: 0;width: 100%;height: 100%;border: 0; z-index:2; ${mouseClass}`;
     el.appendChild(container);
 
     const stage = new Stage(
