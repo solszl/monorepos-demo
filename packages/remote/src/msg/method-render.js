@@ -63,4 +63,48 @@ export const METHODS = {
 
     return data;
   },
+
+  // ==================== 以下为 冠脉的方法集 =========================
+  setVesselNameMapping: async function (mapping) {
+    const [route, method] = this._splitMessageType(MsgTypes.RENDER_VESSEL_NAME_MAPPING);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      vessel_mapping: mapping,
+    });
+
+    this.validateNow();
+    return data;
+  },
+  setVesselNameVisibility: async function (val) {
+    const [route, method] = this._splitMessageType(MsgTypes.RENDER_VESSEL_TEXT);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      add_text: val,
+    });
+
+    this.validateNow();
+    return data;
+  },
+  /** 血管名称高亮 */
+  setVesselHighlight: async function (vessel, mapping = {}) {
+    const [route, method] = this._splitMessageType(MsgTypes.RENDER_VESSEL_HIGHLIGHT);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      vessel_name: vessel,
+      vessel_mapping: mapping,
+    });
+
+    this.validateNow();
+    return data;
+  },
+  setOtherVesselVisibility: async function (val) {
+    const [route, method] = this._splitMessageType(MsgTypes.RENDER_OTHER_VESSEL_VISIBILITY);
+    const session = this.connection.getSession();
+    const data = await session.call(method, [], {
+      show_others: val,
+    });
+
+    this.validateNow();
+    return data;
+  },
 };

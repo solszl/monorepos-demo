@@ -31,6 +31,15 @@ export const MsgTypes = {
   RENDER_TYPE_TOGGLE: "render|>render.type.toggle",
   /** 强行与后端进行模拟鼠标交互 */
   MOUSE_INTERACTION: "render|>viewport.mouse.interaction",
+
+  /** 血管名称高亮 */
+  RENDER_VESSEL_HIGHLIGHT: "render|>vessel.highlight",
+  /** 体渲染控制血管名称显隐 */
+  RENDER_VESSEL_TEXT: "render|>vessel.text",
+  /** VR上切换显示others血管 */
+  RENDER_OTHER_VESSEL_VISIBILITY: "render|>show.others.vessel",
+  /** VR上编辑血管名称实时预览 */
+  RENDER_VESSEL_NAME_MAPPING: "render|>edit.vessel.preview",
   // ========================== MIP ============================
   /** VMIP控制血管名称显隐 */
   MIP_VESSEL_TEXT: "mip|>vessel.text",

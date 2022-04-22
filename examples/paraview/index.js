@@ -1,4 +1,4 @@
-import { MOUSE_BUTTON, Resource, TOOL_TYPE, ViewportEvents, ViewportManager } from "@pkg/entry/src";
+import { Resource, ViewportManager } from "@pkg/entry/src";
 
 let tags = null;
 
@@ -12,21 +12,20 @@ let planeEls = document.querySelectorAll(".plane");
 let horizonEl = document.querySelector(".horizon");
 let portraitEl = document.querySelector(".portrait");
 
-const PATIENT_ID = "CN010002-02698293";
-const STUDY_ID = "1.2.840.113820.104.9976.120211008094320497";
-const SERIES_ID = "1.2.840.113704.1.111.7216.1633659411.16";
-const PREDICT_TYPE = "ct_cerebral";
+const PATIENT_ID = "CE027003-P0334790";
+const STUDY_ID = "1.2.840.113564.345052760333.89116.637575425287572800.2546";
+const SERIES_ID = "1.3.46.670589.33.1.63757623791121361400001.5682446356180329599";
+const PREDICT_TYPE = "ct_heart";
 
 /** @type { ViewportManager } */
 const vm = new ViewportManager();
 vm.resource = new Resource();
 
-const HOST = "10.0.70.41";
-const WS_HOST = "ws://10.0.70.41:8000";
-const HTTP_PORT = "8000";
+const useProxy = false;
+const HOST = "10.0.50.6";
+const WS_HOST = "ws://10.0.50.6:8000";
+const HTTP_PORT = useProxy ? "8000" : "19570";
 let WS_PORT = "-1";
-
-const useProxy = true;
 
 const HTTP_API = {
   create: useProxy ? "api/wsApi/create" : "create",
@@ -49,7 +48,7 @@ const fetchWSPort = async () => {
         study_iuid: STUDY_ID,
         series_iuid: SERIES_ID,
         predict_type: PREDICT_TYPE,
-        render: { add_text: false, default: "neckBloodVesselInverseVMIP" },
+        render: { add_text: false },
         mip: {},
         cpr: {},
       }),
@@ -67,115 +66,115 @@ const main = async () => {
       mode: "socket",
       host: WS_HOST,
       routes: [
+        `volumerender/${WS_PORT}/${SERIES_ID}/render`,
         `volumerender/${WS_PORT}/${SERIES_ID}/cpr`,
         `volumerender/${WS_PORT}/${SERIES_ID}/mip`,
-        `volumerender/${WS_PORT}/${SERIES_ID}/render`,
       ],
     },
   ]);
 
-  // const vrViewport = vm.addViewport({
-  //   plane: "remote_stream",
+  const vrViewport = vm.addViewport({
+    plane: "remote_stream",
+    renderer: "canvas",
+    el: vrEl,
+    transferMode: "socket",
+    alias: "render",
+    route: "render",
+  });
+  await vrViewport.imageView.initialAsyncWorkflow();
+  window.viewport = vrViewport;
+
+  // const axialViewport = vm.addViewport({
+  //   plane: "remote_mip",
   //   renderer: "canvas",
-  //   el: vrEl,
+  //   el: axialEl,
   //   transferMode: "socket",
-  //   alias: "render",
-  //   route: "render",
+  //   alias: "axial",
+  //   route: "mip",
+  //   httpServer: "http://10.0.50.6:8000",
   // });
-  // await vrViewport.imageView.initialAsyncWorkflow();
-  // window.viewport = vrViewport;
 
-  const axialViewport = vm.addViewport({
-    plane: "remote_mip",
-    renderer: "canvas",
-    el: axialEl,
-    transferMode: "socket",
-    alias: "axial",
-    route: "mip",
-    httpServer: "http://10.0.70.41:8000",
-  });
+  // await axialViewport.imageView.initialAsyncWorkflow();
+  // window.mipViewport = axialViewport;
+  // axialViewport.imageView.getImage(100, "axial", 10, true);
+  // axialViewport.useTool(TOOL_TYPE.STACK_SCROLL);
+  // axialViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
 
-  await axialViewport.imageView.initialAsyncWorkflow();
-  window.mipViewport = axialViewport;
-  axialViewport.imageView.getImage(100, "axial", 10, true);
-  axialViewport.useTool(TOOL_TYPE.STACK_SCROLL);
-  axialViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+  // const lumenViewport = vm.addViewport({
+  //   plane: "remote_lumen",
+  //   renderer: "canvas",
+  //   el: portraitEl,
+  //   transferMode: "socket",
+  //   alias: "cpr",
+  //   route: "cpr",
+  //   direction: "portrait",
+  //   httpServer: "http://10.0.70.41:8000",
+  //   vesselName: "vessel11",
+  // });
+  // await lumenViewport.imageView.initialAsyncWorkflow();
+  // lumenViewport.imageView.setVesselName("vessel11");
+  // lumenViewport.imageView.setAngle(35);
+  // lumenViewport.useTool(TOOL_TYPE.TRANSLATE, MOUSE_BUTTON.LEFT);
+  // lumenViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+  // lumenViewport.useTool(TOOL_TYPE.SCALE, MOUSE_BUTTON.RIGHT);
+  // lumenViewport.on(ViewportEvents.VERNIER_INDEX_CHANGED, (e) => {
+  //   cprViewport.imageView.setVernierIndex(e.index);
+  // });
 
-  const lumenViewport = vm.addViewport({
-    plane: "remote_lumen",
-    renderer: "canvas",
-    el: portraitEl,
-    transferMode: "socket",
-    alias: "cpr",
-    route: "cpr",
-    direction: "portrait",
-    httpServer: "http://10.0.70.41:8000",
-    vesselName: "vessel11",
-  });
-  await lumenViewport.imageView.initialAsyncWorkflow();
-  lumenViewport.imageView.setVesselName("vessel11");
-  lumenViewport.imageView.setAngle(35);
-  lumenViewport.useTool(TOOL_TYPE.TRANSLATE, MOUSE_BUTTON.LEFT);
-  lumenViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
-  lumenViewport.useTool(TOOL_TYPE.SCALE, MOUSE_BUTTON.RIGHT);
-  lumenViewport.on(ViewportEvents.VERNIER_INDEX_CHANGED, (e) => {
-    cprViewport.imageView.setVernierIndex(e.index);
-  });
+  // lumenViewport.imageView.setVesselObjKeymap({
+  //   vessel1: "L-ICA",
+  //   vessel10: "L-ACA",
+  //   vessel11: "R-ACA",
+  //   vessel12: "L-MCA",
+  //   vessel13: "R-MCA",
+  //   vessel14: "R-PCA",
+  //   vessel15: "L-PCA",
+  //   vessel2: "R-ICA",
+  //   vessel23: "R-VA",
+  //   vessel24: "AOAR",
+  //   vessel3: "L-CCA",
+  //   vessel4: "R-CCA",
+  //   vessel7: "L-SA",
+  //   vessel8: "R-SA",
+  //   vessel9: "INA",
+  // });
+  // window.lumenViewport = lumenViewport;
 
-  lumenViewport.imageView.setVesselObjKeymap({
-    vessel1: "L-ICA",
-    vessel10: "L-ACA",
-    vessel11: "R-ACA",
-    vessel12: "L-MCA",
-    vessel13: "R-MCA",
-    vessel14: "R-PCA",
-    vessel15: "L-PCA",
-    vessel2: "R-ICA",
-    vessel23: "R-VA",
-    vessel24: "AOAR",
-    vessel3: "L-CCA",
-    vessel4: "R-CCA",
-    vessel7: "L-SA",
-    vessel8: "R-SA",
-    vessel9: "INA",
-  });
-  window.lumenViewport = lumenViewport;
+  // const cprViewport = vm.addViewport({
+  //   plane: "remote_cpr",
+  //   renderer: "canvas",
+  //   el: cprEl,
+  //   transferMode: "socket",
+  //   alias: "cpr",
+  //   route: "cpr",
+  //   httpServer: "http://10.0.70.41:8000",
+  //   vesselName: "vessel11",
+  // });
+  // await cprViewport.imageView.initialAsyncWorkflow();
+  // // for verify render schedule validate function.
+  // cprViewport.imageView.setVesselName("vessel11");
+  // cprViewport.imageView.setTheta(35);
+  // // 这里使用滚轮工具， 调整角度
+  // cprViewport.useTool(TOOL_TYPE.STACK_SCROLL);
+  // cprViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
+  // window.cprViewport = cprViewport;
 
-  const cprViewport = vm.addViewport({
-    plane: "remote_cpr",
-    renderer: "canvas",
-    el: cprEl,
-    transferMode: "socket",
-    alias: "cpr",
-    route: "cpr",
-    httpServer: "http://10.0.70.41:8000",
-    vesselName: "vessel11",
-  });
-  await cprViewport.imageView.initialAsyncWorkflow();
-  // for verify render schedule validate function.
-  cprViewport.imageView.setVesselName("vessel11");
-  cprViewport.imageView.setTheta(35);
-  // 这里使用滚轮工具， 调整角度
-  cprViewport.useTool(TOOL_TYPE.STACK_SCROLL);
-  cprViewport.useTool(TOOL_TYPE.STACK_WHEEL_SCROLL, MOUSE_BUTTON.WHEEL);
-  window.cprViewport = cprViewport;
+  // let index = (Math.random() * 100) >> 0;
+  // for await (const el of planeEls) {
+  //   const probeViewport = vm.addViewport({
+  //     plane: "remote_probe",
+  //     renderer: "canvas",
+  //     el,
+  //     transferMode: "socket",
+  //     alias: "probe",
+  //     route: "cpr",
+  //     httpServer: "http://10.0.70.41:8000",
+  //   });
 
-  let index = (Math.random() * 100) >> 0;
-  for await (const el of planeEls) {
-    const probeViewport = vm.addViewport({
-      plane: "remote_probe",
-      renderer: "canvas",
-      el,
-      transferMode: "socket",
-      alias: "probe",
-      route: "cpr",
-      httpServer: "http://10.0.70.41:8000",
-    });
-
-    await probeViewport.imageView.initialAsyncWorkflow();
-    probeViewport.imageView.setVesselName("vessel11");
-    probeViewport.imageView.setIndex(index++);
-  }
+  //   await probeViewport.imageView.initialAsyncWorkflow();
+  //   probeViewport.imageView.setVesselName("vessel11");
+  //   probeViewport.imageView.setIndex(index++);
+  // }
 
   // axialViewport.useTool(TOOL_TYPE.WWWC);
   // axialViewport.useTool(TOOL_TYPE.TRANSLATE, 2);
